@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Courses - Salsabeel Academy{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 style="color: var(--color-navy); font-size: 2.5rem;">Explore Our Courses</h2>
+        <a href="/admin" id="addCourseBtn" class="btn-gold" style="font-size: 0.9rem; display: none;">+ Add New Course</a>
+    </div>
+    
+    <div class="course-grid">
+        {% for course in courses %}
+        <div class="course-card">
+            <img src="{{ course.image_url }}" alt="{{ course.title }}" class="course-img">
+            <div class="course-info">
+                <div class="course-category">
+                    <span>{{ course.category }}</span>
+                    <span style="float: right; color: var(--color-navy); font-weight: bold;">{{ course.price | default('$49.00') }}</span>
+                </div>
+                <h3 class="course-title">{{ course.title }}</h3>
+                <p class="course-desc">{{ course.description }}</p>
+                <button class="btn-primary enroll-btn" data-id="{{ course.id }}" data-price="{{ course.price | default('$49.00') }}" style="width: 100%">Enroll Now</button>
+                <button class="btn-primary delete-course-btn admin-only" data-id="{{ course.id }}" style="width: 100%; margin-top: 10px; background-color: #dc3545; display: none;">Delete Course</button>
+            </div>
+        </div>
+        {% else %}
+        <p>No courses available right now. Be the first to add one!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

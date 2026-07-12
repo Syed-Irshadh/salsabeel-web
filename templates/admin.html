@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Salsabeel Academy{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <h2 class="mb-2" style="color: var(--color-navy)">Admin Dashboard</h2>
+    
+    <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 2rem;">
+        <h3 class="mb-2">Add New Course</h3>
+        <form id="addCourseForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title">Course Title</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="category">Category</label>
+                <input type="text" id="category" name="category" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="image">Cover Image File</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="text" id="price" name="price" placeholder="$49.00" value="$49.00" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Short Description</label>
+                <textarea id="description" name="description" rows="3" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="content">Full Course Content</label>
+                <textarea id="content" name="content" rows="6" required></textarea>
+            </div>
+            
+            <button type="submit" class="btn-primary">Create Course</button>
+        </form>
+    </div>
+
+    <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <h3 class="mb-2">Student Enrollments</h3>
+        <table style="width: 100%; text-align: left; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid #eee;">
+                    <th style="padding: 10px;">Student Email</th>
+                    <th style="padding: 10px;">Course Enrolled</th>
+                    <th style="padding: 10px;">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for enrollment in enrollments %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 10px;">{{ enrollment.user.email }}</td>
+                    <td style="padding: 10px;">{{ enrollment.course.title }}</td>
+                    <td style="padding: 10px;">{{ enrollment.enrolled_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" style="padding: 10px; text-align: center; color: #666;">No enrollments yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

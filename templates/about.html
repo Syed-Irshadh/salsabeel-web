@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - Salsabeel Academy{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+        <h2 style="color: var(--color-navy); font-size: 2.5rem; margin-bottom: 1.5rem;">The Story of Salsabeel</h2>
+        <p style="font-size: 1.1rem; color: #475569; margin-bottom: 3rem;">
+            "Salsabeel" is a spring in Paradise, symbolizing purity, refreshment, and flowing abundance. 
+            At Salsabeel Academy, we believe knowledge should be just as pure and freely flowing. 
+            Our mission is to quench the thirst of the modern seeker with timeless wisdom.
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; text-align: left; margin-bottom: 4rem;">
+            <div style="background: white; padding: 2rem; border-radius: var(--radius-card); border-top: 4px solid var(--color-emerald); box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                <h3 style="color: var(--color-emerald); margin-bottom: 1rem;">Our Mission</h3>
+                <p>To provide accessible, high-quality education that bridges classical knowledge with modern pedagogical excellence.</p>
+            </div>
+            <div style="background: white; padding: 2rem; border-radius: var(--radius-card); border-top: 4px solid var(--color-gold); box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                <h3 style="color: var(--color-gold); margin-bottom: 1rem;">Our Vision</h3>
+                <p>A global community of enlightened learners, grounded in tradition, striving for excellence in all spheres of life.</p>
+            </div>
+        </div>
+
+        <h2 style="color: var(--color-navy); font-size: 2rem; margin-bottom: 2rem;">Our Instructors</h2>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+            <!-- Instructor 1 -->
+            <div style="text-align: center;">
+                <img src="https://ui-avatars.com/api/?name=Instructor+One&background=0F172A&color=fff&size=150" alt="Instructor" style="border-radius: var(--radius-dome); margin-bottom: 1rem; border: 2px solid var(--color-gold);">
+                <h4 style="color: var(--color-navy)">Dr. Instructor One</h4>
+                <p style="font-size: 0.9rem; color: #64748b;">Theology & History</p>
+            </div>
+            <!-- Instructor 2 -->
+            <div style="text-align: center;">
+                <img src="https://ui-avatars.com/api/?name=Instructor+Two&background=059669&color=fff&size=150" alt="Instructor" style="border-radius: var(--radius-dome); margin-bottom: 1rem; border: 2px solid var(--color-gold);">
+                <h4 style="color: var(--color-navy)">Ustadh Two</h4>
+                <p style="font-size: 0.9rem; color: #64748b;">Arabic Arts</p>
+            </div>
+            <!-- Instructor 3 -->
+            <div style="text-align: center;">
+                <img src="https://ui-avatars.com/api/?name=Instructor+Three&background=D4AF37&color=0F172A&size=150" alt="Instructor" style="border-radius: var(--radius-dome); margin-bottom: 1rem; border: 2px solid var(--color-navy);">
+                <h4 style="color: var(--color-navy)">Sh. Instructor Three</h4>
+                <p style="font-size: 0.9rem; color: #64748b;">Quranic Sciences</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

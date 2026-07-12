@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.title }} - Salsabeel Academy{% endblock %}
+
+{% block content %}
+<div class="viewer-layout" style="margin-top: 80px;">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h3 style="color: var(--color-navy); margin-bottom: 1.5rem; font-family: var(--font-heading);">{{ course.title }}</h3>
+        
+        <div style="background: #f1f5f9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--color-gold);">
+            <strong>Module 1</strong>
+            <p style="font-size: 0.9rem; margin-top: 0.25rem;">Introduction to the Course</p>
+        </div>
+        
+        <div style="padding: 1rem; border-radius: 8px; margin-bottom: 1rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
+            <strong>Module 2</strong>
+            <p style="font-size: 0.9rem; margin-top: 0.25rem; color: #64748b;">Core Concepts</p>
+        </div>
+        
+        <div style="padding: 1rem; border-radius: 8px; margin-bottom: 1rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
+            <strong>Module 3</strong>
+            <p style="font-size: 0.9rem; margin-top: 0.25rem; color: #64748b;">Advanced Practice</p>
+        </div>
+    </aside>
+
+    <!-- Main Video/Content Area -->
+    <main class="viewer-content">
+        <div class="video-placeholder">
+            <span>Video Player (Placeholder)</span>
+        </div>
+        
+        <div style="background: white; padding: 2rem; border-radius: var(--radius-card); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            <h2 style="color: var(--color-navy); margin-bottom: 1rem;">Lesson Overview</h2>
+            <div style="color: #475569; white-space: pre-line; line-height: 1.8;">
+                {{ course.content }}
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
