@@ -1,41 +1,49 @@
 {% extends "base.html" %}
 
-{% block title %}{{ course.title }} - Salsabeel Academy{% endblock %}
-
 {% block content %}
-<div class="viewer-layout" style="margin-top: 80px;">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <h3 style="color: var(--color-navy); margin-bottom: 1.5rem; font-family: var(--font-heading);">{{ course.title }}</h3>
-        
-        <div style="background: #f1f5f9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--color-gold);">
-            <strong>Module 1</strong>
-            <p style="font-size: 0.9rem; margin-top: 0.25rem;">Introduction to the Course</p>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
+        <div class="bg-navy p-8 text-center border-b-4 border-gold">
+            <h1 class="text-4xl font-serif font-bold text-white mb-2">{{ course.title }}</h1>
+            <span class="inline-block bg-emerald text-white text-sm font-bold tracking-wider py-1 px-3 rounded-full">{{ course.category }}</span>
         </div>
         
-        <div style="padding: 1rem; border-radius: 8px; margin-bottom: 1rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
-            <strong>Module 2</strong>
-            <p style="font-size: 0.9rem; margin-top: 0.25rem; color: #64748b;">Core Concepts</p>
-        </div>
-        
-        <div style="padding: 1rem; border-radius: 8px; margin-bottom: 1rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
-            <strong>Module 3</strong>
-            <p style="font-size: 0.9rem; margin-top: 0.25rem; color: #64748b;">Advanced Practice</p>
-        </div>
-    </aside>
+        <div class="p-8">
+            {% if course.image_url %}
+            <div class="mb-8 text-center">
+                <div class="inline-block relative group rounded-xl overflow-hidden shadow-lg border-2 border-gold/40">
+                    <img src="{{ course.image_url }}" alt="{{ course.title }} Poster" class="max-h-96 w-auto mx-auto object-contain">
+                    <a href="{{ course.image_url }}" target="_blank" class="absolute inset-0 bg-navy/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-medium text-sm gap-2">
+                        <i class="fas fa-search-plus text-gold text-lg"></i> Open Full Resolution Poster
+                    </a>
+                </div>
+            </div>
+            {% endif %}
 
-    <!-- Main Video/Content Area -->
-    <main class="viewer-content">
-        <div class="video-placeholder">
-            <span>Video Player (Placeholder)</span>
-        </div>
-        
-        <div style="background: white; padding: 2rem; border-radius: var(--radius-card); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-            <h2 style="color: var(--color-navy); margin-bottom: 1rem;">Lesson Overview</h2>
-            <div style="color: #475569; white-space: pre-line; line-height: 1.8;">
-                {{ course.content }}
+            <div class="prose max-w-none text-gray-700 space-y-4">
+                {{ course.content | replace('\n', '<br>') | safe }}
+            </div>
+            
+            <div class="mt-8 flex flex-wrap gap-4">
+                {% if course.status == 'past' %}
+                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="inline-flex items-center justify-center w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-md">
+                    <i class="fab fa-youtube mr-2 text-xl"></i> Watch Recordings on YouTube
+                </a>
+                {% else %}
+                <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22.%20Please%20share%20the%20details." 
+                   target="_blank" 
+                   class="inline-flex items-center justify-center w-full sm:w-auto bg-emerald hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-md">
+                    <i class="fab fa-whatsapp mr-2 text-xl"></i> Enroll via WhatsApp
+                </a>
+                {% endif %}
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-gray-200 text-center">
+                <a href="/courses" class="inline-flex items-center text-emerald hover:text-green-600 font-bold transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Courses
+                </a>
             </div>
         </div>
-    </main>
+    </div>
 </div>
 {% endblock %}

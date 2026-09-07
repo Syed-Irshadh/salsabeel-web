@@ -1,15 +1,51 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="hero">
-    <div class="stars"></div>
-    <div class="hero-content">
-        <h1>Welcome to Salsabeel Academy</h1>
-        <p>A pure, refreshing spring of knowledge. Embark on a journey of enlightened learning with our premium courses designed for the modern seeker.</p>
-        <div class="hero-buttons">
-            <a href="/courses" class="btn-primary">Browse Courses</a>
-            <a href="#" class="btn-gold" onclick="document.getElementById('loginBtn').click()">Sign Up Now</a>
+<!-- Hero Section -->
+<section class="hero-stars bg-gradient-to-b from-navy to-dark text-white pt-24 pb-32 text-center border-b-[6px] border-emerald">
+    <div class="max-w-4xl mx-auto px-4">
+        <h1 class="text-5xl md:text-6xl font-bold font-serif mb-6 leading-tight">Deepen Islamic Sciences with <span class="text-gold">Salsabeel Academy</span></h1>
+        <p class="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">An authentic learning platform dedicated to teaching classical Islamic sciences in the Tamil language for seekers worldwide.</p>
+        <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+            <a href="/courses" class="bg-emerald hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all transform hover:scale-105">Explore Courses</a>
+            <a href="/about" class="border-2 border-gold text-gold hover:bg-gold hover:text-navy font-bold py-3 px-8 rounded-full shadow-[0_0_15px_rgba(255,215,0,0.2)] transition-all">Learn More</a>
         </div>
     </div>
-</div>
+</section>
+
+<!-- Features Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold font-serif text-navy">Why Choose Salsabeel?</h2>
+            <div class="w-24 h-1 bg-gold mx-auto mt-4 rounded"></div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+            <div class="p-6 rounded-xl border border-gray-100 shadow-lg hover:shadow-xl transition-shadow bg-gray-50">
+                <div class="w-16 h-16 bg-navy text-gold rounded-full flex items-center justify-center mx-auto mb-6 text-2xl shadow-md">
+                    <i class="fas fa-book-quran"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-navy mb-4">Mother Tongue Learning</h3>
+                <p class="text-gray-600">Complex concepts of Tafseer and Tajweed explained clearly in Tamil and English.</p>
+            </div>
+            
+            <div class="p-6 rounded-xl border border-gray-100 shadow-lg hover:shadow-xl transition-shadow bg-gray-50">
+                <div class="w-16 h-16 bg-navy text-gold rounded-full flex items-center justify-center mx-auto mb-6 text-2xl shadow-md">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-navy mb-4">Expert Teachers</h3>
+                <p class="text-gray-600">Learn directly from qualified teachers with verified traditional credentials.</p>
+            </div>
+            
+            <div class="p-6 rounded-xl border border-gray-100 shadow-lg hover:shadow-xl transition-shadow bg-gray-50">
+                <div class="w-16 h-16 bg-navy text-gold rounded-full flex items-center justify-center mx-auto mb-6 text-2xl shadow-md">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-navy mb-4">Modern Platform</h3>
+                <p class="text-gray-600">A seamless, beautiful learning experience designed for any device.</p>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

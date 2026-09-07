@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String, Text, Boolean, ForeignKey, DateTime
+from datetime import datetime, timezone
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
-import datetime
 from app.database import Base
 
 class Course(Base):
@@ -12,17 +12,27 @@ class Course(Base):
     category = Column(String(100))
     image_url = Column(String(500))
     content = Column(Text)
-    price = Column(String(50), default="$49.00")
-    
+    start_date = Column(String(100), nullable=True)
+    status = Column(String(50), default="current")  # current, upcoming, past
     enrollments = relationship("Enrollment", back_populates="course")
+    recordings = relationship("CourseRecording", back_populates="course", cascade="all, delete-orphan")
+
+class CourseRecording(Base):
+    __tablename__ = "course_recordings"
+
+    id = Column(Integer, primary_key=True, index=True)
+    course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
+    title = Column(String(200), index=True)
+    youtube_url = Column(String(500), nullable=False)
+    
+    course = relationship("Course", back_populates="recordings")
 
 class Enrollment(Base):
     __tablename__ = "enrollments"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     course_id = Column(Integer, ForeignKey("courses.id"))
-    enrolled_at = Column(DateTime, default=datetime.datetime.utcnow)
-
+    enrolled_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     user = relationship("User", back_populates="enrollments")
     course = relationship("Course", back_populates="enrollments")
 
@@ -30,6 +40,7 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255), nullable=True)
     email = Column(String(255), unique=True, index=True)
     hashed_password = Column(String(255))
     role = Column(String(50), default="student")

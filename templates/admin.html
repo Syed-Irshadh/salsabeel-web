@@ -1,72 +1,285 @@
 {% extends "base.html" %}
 
-{% block title %}Admin Dashboard - Salsabeel Academy{% endblock %}
-
 {% block content %}
-<div class="main-content">
-    <h2 class="mb-2" style="color: var(--color-navy)">Admin Dashboard</h2>
-    
-    <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 2rem;">
-        <h3 class="mb-2">Add New Course</h3>
-        <form id="addCourseForm" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="title">Course Title</label>
-                <input type="text" id="title" name="title" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="category">Category</label>
-                <input type="text" id="category" name="category" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="image">Cover Image File</label>
-                <input type="file" id="image" name="image" accept="image/*" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="price">Price</label>
-                <input type="text" id="price" name="price" placeholder="$49.00" value="$49.00" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="description">Short Description</label>
-                <textarea id="description" name="description" rows="3" required></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="content">Full Course Content</label>
-                <textarea id="content" name="content" rows="6" required></textarea>
-            </div>
-            
-            <button type="submit" class="btn-primary">Create Course</button>
-        </form>
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex justify-between items-center mb-8">
+        <h2 class="text-3xl font-serif font-bold text-navy">Admin Dashboard</h2>
     </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left Column: Forms -->
+        <div class="lg:col-span-1 space-y-8">
+            
+            <!-- AI Poster Upload -->
+            <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-emerald">
+                <h3 class="text-xl font-bold text-navy mb-4"><i class="fas fa-magic text-emerald mr-2"></i> AI Course Parser</h3>
+                <p class="text-sm text-gray-500 mb-4">Upload a WhatsApp poster. Our AI will extract the course details automatically!</p>
+                <form id="aiParseForm">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Poster Image</label>
+                        <input type="file" id="posterImage" accept="image/*" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-emerald file:text-white hover:file:bg-green-600 cursor-pointer border border-gray-300 rounded-md">
+                    </div>
+                    <button type="submit" id="parseBtn" class="w-full bg-navy text-white hover:bg-gray-800 font-bold py-2 px-4 rounded-md transition-colors flex items-center justify-center">
+                        <i class="fas fa-robot mr-2"></i> Extract Details
+                    </button>
+                </form>
+            </div>
 
-    <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-        <h3 class="mb-2">Student Enrollments</h3>
-        <table style="width: 100%; text-align: left; border-collapse: collapse;">
-            <thead>
-                <tr style="border-bottom: 2px solid #eee;">
-                    <th style="padding: 10px;">Student Email</th>
-                    <th style="padding: 10px;">Course Enrolled</th>
-                    <th style="padding: 10px;">Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for enrollment in enrollments %}
-                <tr style="border-bottom: 1px solid #eee;">
-                    <td style="padding: 10px;">{{ enrollment.user.email }}</td>
-                    <td style="padding: 10px;">{{ enrollment.course.title }}</td>
-                    <td style="padding: 10px;">{{ enrollment.enrolled_at.strftime('%Y-%m-%d %H:%M') }}</td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="3" style="padding: 10px; text-align: center; color: #666;">No enrollments yet.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+            <!-- Manual Add Course -->
+            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                <h3 class="text-xl font-bold text-navy mb-4">Add / Edit Course</h3>
+                <form id="addCourseForm" enctype="multipart/form-data" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Course Title</label>
+                        <input type="text" id="title" name="title" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-emerald focus:border-emerald">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                        <input type="text" id="category" name="category" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-emerald focus:border-emerald">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Cover Image</label>
+                        <input type="file" id="image" name="image" accept="image/*" class="w-full border border-gray-300 rounded-md px-3 py-1.5 focus:ring-emerald focus:border-emerald text-sm">
+                        <input type="hidden" id="image_url" name="image_url" value="">
+                        
+                        <!-- Image Preview Box -->
+                        <div id="coverPreviewContainer" class="mt-2.5 hidden">
+                            <div class="relative inline-block border-2 border-emerald/40 rounded-lg overflow-hidden shadow-sm bg-gray-50 p-2">
+                                <img id="coverPreviewImg" src="" alt="Cover Preview" class="h-36 w-auto max-w-xs object-contain rounded border border-gray-200">
+                                <div class="mt-1.5 flex items-center justify-between text-xs text-gray-600 px-1">
+                                    <span class="text-emerald font-semibold flex items-center">
+                                        <i class="fas fa-check-circle mr-1 text-emerald"></i> Ready to publish
+                                    </span>
+                                    <button type="button" id="removeCoverPreview" class="text-red-500 hover:text-red-700 cursor-pointer ml-4 font-medium">
+                                        <i class="fas fa-times mr-1"></i> Clear
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Course Status</label>
+                            <select id="status" name="status" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-emerald focus:border-emerald bg-white text-sm">
+                                <option value="current">Current (Ongoing)</option>
+                                <option value="upcoming">Future (Upcoming)</option>
+                                <option value="past">Past (Completed)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <input type="hidden" id="price" name="price" value="Free">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Start Date / Schedule</label>
+                            <input type="text" id="start_date" name="start_date" placeholder="e.g. 3rd August, 2026" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-emerald focus:border-emerald text-sm">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
+                        <textarea id="description" name="description" rows="2" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-emerald focus:border-emerald"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Full Course Content</label>
+                        <textarea id="content" name="content" rows="4" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-emerald focus:border-emerald"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-emerald text-white hover:bg-green-600 font-bold py-2 px-4 rounded-md transition-colors">
+                        Publish Course
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Data Tables -->
+        <div class="lg:col-span-2 space-y-8">
+            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                <h3 class="text-xl font-bold text-navy mb-4">Student Enrollments</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Email</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course Enrolled</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="enrollmentsTableBody" class="bg-white divide-y divide-gray-200">
+                            <!-- Dynamic Content -->
+                            <tr>
+                                <td colspan="3" class="px-6 py-4 text-center text-gray-500">Loading enrollments...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
     </div>
 </div>
+
+<!-- Admin Specific JS -->
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert("Not authenticated. Please log in.");
+        window.location.href = '/';
+        return;
+    }
+
+    // Fetch Enrollments
+    try {
+        const res = await fetch('/api/admin/enrollments', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+            const enrollments = await res.json();
+            const tbody = document.getElementById('enrollmentsTableBody');
+            tbody.innerHTML = '';
+            if (enrollments.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="px-6 py-4 text-center text-gray-500">No enrollments found.</td></tr>`;
+            } else {
+                enrollments.forEach(e => {
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${e.student_email}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${e.course_title}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${e.date}</td>
+                        </tr>
+                    `;
+                });
+            }
+        } else {
+            alert("Unauthorized access");
+            window.location.href = '/';
+        }
+    } catch (err) {
+        console.error(err);
+    }
+
+    // Cover Image & Auto-Apply elements
+    const posterInput = document.getElementById('posterImage');
+    const coverInput = document.getElementById('image');
+    const coverUrlInput = document.getElementById('image_url');
+    const previewContainer = document.getElementById('coverPreviewContainer');
+    const previewImg = document.getElementById('coverPreviewImg');
+    const removePreviewBtn = document.getElementById('removeCoverPreview');
+
+    function showCoverPreview(source) {
+        if (!source || !previewContainer || !previewImg) return;
+        if (typeof source === 'string') {
+            previewImg.src = source;
+            previewContainer.classList.remove('hidden');
+        } else if (source instanceof File || source instanceof Blob) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+                previewContainer.classList.remove('hidden');
+            };
+            reader.readAsDataURL(source);
+        }
+    }
+
+    function syncPosterFileToCover(file) {
+        if (!file || !coverInput) return;
+        try {
+            const dt = new DataTransfer();
+            dt.items.add(file);
+            coverInput.files = dt.files;
+        } catch (err) {
+            console.warn('DataTransfer fallback active', err);
+        }
+        showCoverPreview(file);
+    }
+
+    // Automatically apply image as soon as selected in AI Parser
+    if (posterInput) {
+        posterInput.addEventListener('change', () => {
+            if (posterInput.files && posterInput.files[0]) {
+                syncPosterFileToCover(posterInput.files[0]);
+            }
+        });
+    }
+
+    // If manual cover file is selected, update preview
+    if (coverInput) {
+        coverInput.addEventListener('change', () => {
+            if (coverInput.files && coverInput.files[0]) {
+                if (coverUrlInput) coverUrlInput.value = '';
+                showCoverPreview(coverInput.files[0]);
+            }
+        });
+    }
+
+    // Clear preview button
+    if (removePreviewBtn) {
+        removePreviewBtn.addEventListener('click', () => {
+            if (coverInput) coverInput.value = '';
+            if (coverUrlInput) coverUrlInput.value = '';
+            if (previewContainer) previewContainer.classList.add('hidden');
+            if (previewImg) previewImg.src = '';
+        });
+    }
+
+    // AI Parser form handler
+    const aiForm = document.getElementById('aiParseForm');
+    if (aiForm) {
+        aiForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('parseBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Parsing...';
+            btn.disabled = true;
+
+            const fileInput = document.getElementById('posterImage');
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            try {
+                const res = await fetch('/api/parse-poster', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('title').value = data.title || '';
+                    document.getElementById('category').value = data.category || '';
+                    document.getElementById('description').value = data.description || '';
+                    document.getElementById('start_date').value = data.start_date || '';
+                    if (data.status) {
+                        const statusVal = data.status.toLowerCase().trim();
+                        const statusSelect = document.getElementById('status');
+                        if (statusSelect) statusSelect.value = statusVal;
+                    }
+                    document.getElementById('content').value = data.content || '';
+                    
+                    // Auto-apply cover image
+                    if (data.image_url) {
+                        if (coverUrlInput) coverUrlInput.value = data.image_url;
+                        showCoverPreview(data.image_url);
+                    } else if (fileInput.files && fileInput.files[0]) {
+                        syncPosterFileToCover(fileInput.files[0]);
+                    }
+
+                    alert("AI extraction complete! Poster image and course details were automatically applied to the dashboard form below. Review and click Publish Course.");
+                } else {
+                    const error = await res.text();
+                    alert("Failed to parse poster: " + error);
+                }
+            } catch (err) {
+                alert("Network error.");
+            } finally {
+                btn.innerHTML = '<i class="fas fa-robot mr-2"></i> Extract Details';
+                btn.disabled = false;
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

@@ -1,32 +1,288 @@
 {% extends "base.html" %}
 
-{% block title %}Courses - Salsabeel Academy{% endblock %}
-
 {% block content %}
-<div class="main-content">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h2 style="color: var(--color-navy); font-size: 2.5rem;">Explore Our Courses</h2>
-        <a href="/admin" id="addCourseBtn" class="btn-gold" style="font-size: 0.9rem; display: none;">+ Add New Course</a>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-8">
+        <h2 class="text-4xl font-serif font-bold text-navy mb-4">Courses</h2>
+        <p class="text-gray-600 max-w-xl mx-auto">Explore our ongoing, upcoming, and past courses. Learn classical Islamic sciences at your own pace.</p>
+        <div class="w-24 h-1 bg-emerald mx-auto mt-4 rounded"></div>
+    </div>
+
+    <!-- Filter Tabs (Past, Current, Future) -->
+    <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12">
+        <button class="filter-tab px-5 py-2 rounded-full font-medium text-sm transition-colors bg-navy text-white shadow-sm cursor-pointer" data-filter="all">
+            All Courses
+        </button>
+        <button class="filter-tab px-5 py-2 rounded-full font-medium text-sm transition-colors bg-white text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer" data-filter="current">
+            <i class="fas fa-play-circle mr-1.5 text-emerald"></i> Current Courses
+        </button>
+        <button class="filter-tab px-5 py-2 rounded-full font-medium text-sm transition-colors bg-white text-gray-700 hover:bg-amber-50 hover:text-amber-700 border border-gray-200 cursor-pointer" data-filter="upcoming">
+            <i class="fas fa-clock mr-1.5 text-amber-500"></i> Future / Upcoming
+        </button>
+        <button class="filter-tab px-5 py-2 rounded-full font-medium text-sm transition-colors bg-white text-gray-700 hover:bg-gray-100 hover:text-gray-900 border border-gray-200 cursor-pointer" data-filter="past">
+            <i class="fas fa-check-circle mr-1.5 text-gray-500"></i> Past / Completed
+        </button>
     </div>
     
-    <div class="course-grid">
+    <!-- Courses Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="coursesContainer">
         {% for course in courses %}
-        <div class="course-card">
-            <img src="{{ course.image_url }}" alt="{{ course.title }}" class="course-img">
-            <div class="course-info">
-                <div class="course-category">
-                    <span>{{ course.category }}</span>
-                    <span style="float: right; color: var(--color-navy); font-weight: bold;">{{ course.price | default('$49.00') }}</span>
+        <div class="course-card bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-gray-100 flex flex-col" data-status="{{ course.status | default('current') }}">
+            <!-- Course Image with Clickable Zoom Overlay -->
+            <div class="relative group cursor-pointer overflow-hidden open-poster-btn"
+                 data-poster="{{ course.image_url }}"
+                 data-title="{{ course.title }}"
+                 data-category="{{ course.category }}"
+                 data-startdate="{{ course.start_date or '' }}"
+                 data-status="{{ course.status | default('current') }}"
+                 title="Click to view full poster">
+                <img src="{{ course.image_url }}" alt="{{ course.title }}" class="w-full h-52 object-cover border-b-[3px] border-gold transition-transform duration-300 group-hover:scale-105">
+                <!-- Hover Overlay with 'View Poster' hint -->
+                <div class="absolute inset-0 bg-navy/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                    <span class="inline-flex items-center text-xs font-bold px-3 py-1.5 rounded-full bg-white/95 text-navy shadow-lg">
+                        <i class="fas fa-search-plus mr-1.5 text-emerald"></i> View Full Poster
+                    </span>
                 </div>
-                <h3 class="course-title">{{ course.title }}</h3>
-                <p class="course-desc">{{ course.description }}</p>
-                <button class="btn-primary enroll-btn" data-id="{{ course.id }}" data-price="{{ course.price | default('$49.00') }}" style="width: 100%">Enroll Now</button>
-                <button class="btn-primary delete-course-btn admin-only" data-id="{{ course.id }}" style="width: 100%; margin-top: 10px; background-color: #dc3545; display: none;">Delete Course</button>
+                <!-- Status Badge Overlay -->
+                <div class="absolute top-3 right-3 pointer-events-none">
+                    {% if course.status == 'past' %}
+                    <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full bg-gray-900/80 text-white backdrop-blur-sm shadow">
+                        <i class="fas fa-check-circle mr-1.5 text-gray-300"></i> Completed
+                    </span>
+                    {% elif course.status == 'upcoming' %}
+                    <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full bg-amber-500 text-white shadow">
+                        <i class="fas fa-clock mr-1.5"></i> Upcoming
+                    </span>
+                    {% else %}
+                    <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full bg-emerald text-white shadow">
+                        <i class="fas fa-play-circle mr-1.5"></i> Ongoing
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="p-6 flex flex-col flex-grow">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="inline-block bg-navy/10 text-navy text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-full">
+                        {{ course.category }}
+                    </span>
+                    <button type="button" 
+                            class="open-poster-btn text-xs font-semibold text-emerald hover:text-green-700 bg-emerald/10 hover:bg-emerald/20 px-2.5 py-1 rounded-full transition-colors flex items-center cursor-pointer"
+                            data-poster="{{ course.image_url }}" 
+                            data-title="{{ course.title }}" 
+                            data-category="{{ course.category }}"
+                            data-startdate="{{ course.start_date or '' }}"
+                            data-status="{{ course.status | default('current') }}"
+                            title="View promotional poster">
+                        <i class="fas fa-image mr-1.5"></i> Poster
+                    </button>
+                </div>
+
+                <h3 class="text-2xl font-serif font-bold text-navy mb-2 cursor-pointer hover:text-emerald transition-colors open-poster-btn"
+                    data-poster="{{ course.image_url }}" 
+                    data-title="{{ course.title }}" 
+                    data-category="{{ course.category }}"
+                    data-startdate="{{ course.start_date or '' }}"
+                    data-status="{{ course.status | default('current') }}"
+                    title="Click to view full poster">
+                    {{ course.title }}
+                </h3>
+                <p class="text-gray-600 mb-4 flex-grow text-sm leading-relaxed">{{ course.description }}</p>
+                
+                {% if course.start_date %}
+                <div class="mb-4">
+                    <span class="text-xs text-gray-600 font-medium bg-gray-100 px-3 py-1.5 rounded-md inline-flex items-center">
+                        <i class="far fa-calendar-alt mr-1.5 text-emerald"></i> {{ course.start_date }}
+                    </span>
+                </div>
+                {% endif %}
+                
+                <!-- Action Buttons based on Status -->
+                {% if course.status == 'past' %}
+                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition-colors shadow-md flex items-center justify-center cursor-pointer">
+                    <i class="fab fa-youtube mr-2 text-xl"></i> Watch on YouTube
+                </a>
+                {% else %}
+                <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22.%20Please%20share%20the%20details." 
+                   target="_blank" 
+                   class="enroll-btn w-full bg-emerald hover:bg-green-600 text-white font-bold py-3 rounded-lg transition-colors shadow-md flex items-center justify-center cursor-pointer" 
+                   data-id="{{ course.id }}" 
+                   data-title="{{ course.title }}">
+                    <i class="fab fa-whatsapp mr-2 text-xl"></i> Enroll Now via WhatsApp
+                </a>
+                {% endif %}
+
+                <button class="delete-course-btn admin-only hidden w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 mt-3 rounded-lg transition-colors shadow-md" data-id="{{ course.id }}">
+                    <i class="fas fa-trash-alt mr-2"></i> Delete Course
+                </button>
             </div>
         </div>
         {% else %}
-        <p>No courses available right now. Be the first to add one!</p>
+        <div class="col-span-full text-center py-20 bg-white rounded-xl border-2 border-dashed border-gray-300">
+            <i class="fas fa-box-open text-4xl text-gray-400 mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-600">No courses available right now.</h3>
+            <p class="text-gray-500 mt-2">Please check back later!</p>
+        </div>
         {% endfor %}
+
+        <!-- Filter Empty State (Hidden by default) -->
+        <div id="noCoursesFiltered" class="hidden col-span-full text-center py-16 bg-white rounded-xl border-2 border-dashed border-gray-200">
+            <i class="fas fa-search text-3xl text-gray-300 mb-3"></i>
+            <h3 class="text-lg font-bold text-gray-600">No courses found in this category.</h3>
+            <p class="text-gray-400 text-sm mt-1">Select "All Courses" to view everything.</p>
+        </div>
     </div>
 </div>
+
+<!-- Full Poster Lightbox Modal -->
+<div id="posterModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="posterModalTitle">
+    <div id="posterModalBackdrop" class="fixed inset-0 cursor-pointer" aria-hidden="true"></div>
+    
+    <div class="relative max-w-2xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-gray-200 z-10">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between px-6 py-4 bg-navy text-white border-b-2 border-gold flex-shrink-0">
+            <div class="flex items-center space-x-3 overflow-hidden">
+                <span id="posterModalCategory" class="inline-block bg-emerald text-white text-xs font-bold uppercase tracking-wider py-0.5 px-2.5 rounded-full flex-shrink-0">Category</span>
+                <h3 id="posterModalTitle" class="text-lg sm:text-xl font-serif font-bold truncate">Course Poster</h3>
+            </div>
+            <button type="button" id="closePosterModal" class="text-gray-300 hover:text-white text-2xl leading-none p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer ml-4" title="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Poster Image Container -->
+        <div class="overflow-auto p-4 sm:p-6 flex items-center justify-center bg-gray-900/5 flex-grow">
+            <img id="posterModalImage" src="" alt="Course Poster" class="max-h-[62vh] w-auto max-w-full rounded-lg shadow-md object-contain border border-gray-200">
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="px-6 py-4 bg-sand border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3 flex-shrink-0">
+            <div class="text-xs sm:text-sm text-gray-600 flex items-center gap-3">
+                <span id="posterModalDate" class="hidden font-medium bg-gray-100 px-2.5 py-1 rounded-md">
+                    <i class="far fa-calendar-alt mr-1 text-emerald"></i> <span id="posterModalDateText"></span>
+                </span>
+                <a id="posterModalFullLink" href="" target="_blank" class="text-navy hover:text-emerald font-semibold hover:underline inline-flex items-center">
+                    <i class="fas fa-external-link-alt mr-1"></i> Full Resolution
+                </a>
+            </div>
+            <div class="w-full sm:w-auto" id="posterModalAction">
+                <!-- Dynamic WhatsApp Enroll or YouTube button -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Tab filtering
+    const tabs = document.querySelectorAll('.filter-tab');
+    const cards = document.querySelectorAll('.course-card');
+    const emptyState = document.getElementById('noCoursesFiltered');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const filter = tab.getAttribute('data-filter');
+
+            // Reset tab styles
+            tabs.forEach(t => {
+                t.className = 'filter-tab px-5 py-2 rounded-full font-medium text-sm transition-colors bg-white text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer';
+            });
+            // Active tab style
+            tab.className = 'filter-tab px-5 py-2 rounded-full font-medium text-sm transition-colors bg-navy text-white shadow-sm cursor-pointer';
+
+            // Filter cards
+            let visible = 0;
+            cards.forEach(card => {
+                const status = card.getAttribute('data-status');
+                if (filter === 'all' || status === filter) {
+                    card.classList.remove('hidden');
+                    visible++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            if (emptyState) {
+                emptyState.classList.toggle('hidden', visible > 0);
+            }
+        });
+    });
+
+    // Poster Lightbox Modal Logic
+    const posterModal = document.getElementById('posterModal');
+    const posterModalBackdrop = document.getElementById('posterModalBackdrop');
+    const closePosterModalBtn = document.getElementById('closePosterModal');
+    const posterModalImage = document.getElementById('posterModalImage');
+    const posterModalTitle = document.getElementById('posterModalTitle');
+    const posterModalCategory = document.getElementById('posterModalCategory');
+    const posterModalDate = document.getElementById('posterModalDate');
+    const posterModalDateText = document.getElementById('posterModalDateText');
+    const posterModalFullLink = document.getElementById('posterModalFullLink');
+    const posterModalAction = document.getElementById('posterModalAction');
+
+    function openPoster(data) {
+        if (!posterModal) return;
+        posterModalImage.src = data.poster || '';
+        posterModalTitle.textContent = data.title || 'Course Poster';
+        posterModalCategory.textContent = data.category || 'Course';
+        posterModalFullLink.href = data.poster || '#';
+
+        if (data.startdate && data.startdate.trim() !== '') {
+            posterModalDateText.textContent = data.startdate;
+            posterModalDate.classList.remove('hidden');
+        } else {
+            posterModalDate.classList.add('hidden');
+        }
+
+        // Action button in footer
+        if (data.status === 'past') {
+            posterModalAction.innerHTML = `
+                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-5 rounded-lg transition-colors text-sm shadow">
+                    <i class="fab fa-youtube mr-2 text-lg"></i> Watch on YouTube
+                </a>
+            `;
+        } else {
+            const encodedTitle = encodeURIComponent(data.title || '');
+            const waUrl = `https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22${encodedTitle}%22.%20Please%20share%20the%20details.`;
+            posterModalAction.innerHTML = `
+                <a href="${waUrl}" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center bg-emerald hover:bg-green-600 text-white font-bold py-2.5 px-5 rounded-lg transition-colors text-sm shadow">
+                    <i class="fab fa-whatsapp mr-2 text-lg"></i> Enroll via WhatsApp
+                </a>
+            `;
+        }
+
+        posterModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closePoster() {
+        if (!posterModal) return;
+        posterModal.classList.add('hidden');
+        posterModalImage.src = '';
+        document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.open-poster-btn').forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openPoster({
+                poster: trigger.getAttribute('data-poster'),
+                title: trigger.getAttribute('data-title'),
+                category: trigger.getAttribute('data-category'),
+                startdate: trigger.getAttribute('data-startdate'),
+                status: trigger.getAttribute('data-status')
+            });
+        });
+    });
+
+    if (closePosterModalBtn) closePosterModalBtn.addEventListener('click', closePoster);
+    if (posterModalBackdrop) posterModalBackdrop.addEventListener('click', closePoster);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && posterModal && !posterModal.classList.contains('hidden')) {
+            closePoster();
+        }
+    });
+});
+</script>
 {% endblock %}

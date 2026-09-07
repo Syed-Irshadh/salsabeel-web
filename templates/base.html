@@ -3,54 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Salsabeel Academy{% endblock %}</title>
+    <title>Salsabeel Academy</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/static/css/style.css">
-    {% block head %}{% endblock %}
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#3d5a52', /* Renamed to 'navy' in classes, but it's now a soothing muted teal/sage */
+                        emerald: '#4a7c59', /* Softer, earthy green */
+                        gold: '#d4af37', /* Muted, elegant gold */
+                        dark: '#2c3e38', /* Softer dark green for footer */
+                        sand: '#fdfbf7' /* Warm, soothing background */
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { background-color: #fdfbf7; color: #2d3748; }
+        .hero-stars {
+            background-color: #3d5a52; /* Fallback */
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(74, 124, 89, 0.15) 0%, transparent 50%);
+        }
+    </style>
 </head>
-<body>
+<body class="text-gray-800 font-sans flex flex-col min-h-screen">
 
     <!-- Navbar -->
-    <nav class="navbar">
-        <a href="/" class="nav-brand">
-            <img src="/static/img/logo.jpeg" alt="Salsabeel Academy Logo">
-            Salsabeel Academy
-        </a>
-        <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/courses">Courses</a>
-            <a href="/about">About Us</a>
-            <a href="#" id="loginBtn" class="btn-gold">Sign Up / Login</a>
-            <a href="#" id="logoutBtn" class="btn-gold" style="display: none;">Logout</a>
+    <nav class="bg-navy shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="/" class="flex items-center text-white hover:text-gold transition-colors font-serif text-2xl font-bold">
+                    <img src="/static/img/logo.jpeg" alt="Salsabeel Academy Logo" class="h-12 w-12 rounded-full mr-3 border-2 border-gold object-cover">
+                    Salsabeel Academy
+                </a>
+                
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="/" class="text-gray-300 hover:text-gold transition-colors font-medium">Home</a>
+                    <a href="/courses" class="text-gray-300 hover:text-gold transition-colors font-medium">Courses</a>
+                    <a href="/about" class="text-gray-300 hover:text-gold transition-colors font-medium">About Us</a>
+                    
+                    <!-- Social Links -->
+                    <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="text-emerald hover:text-green-400 text-xl transition-transform hover:scale-110" title="WhatsApp Channel">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="text-red-500 hover:text-red-400 text-xl transition-transform hover:scale-110" title="YouTube Channel">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+
+                    <!-- Auth Buttons -->
+                    <a href="#" id="loginBtn" class="ml-4 border border-gold text-gold hover:bg-gold hover:text-navy transition-colors px-4 py-2 rounded-md font-semibold shadow-[0_0_10px_rgba(255,215,0,0.3)]">Sign Up / Login</a>
+                    <a href="/admin" id="adminBtn" class="hidden ml-4 bg-emerald text-white hover:bg-green-600 transition-colors px-4 py-2 rounded-md font-semibold">Dashboard</a>
+                    <a href="#" id="logoutBtn" class="hidden ml-4 border border-red-400 text-red-400 hover:bg-red-400 hover:text-white transition-colors px-4 py-2 rounded-md font-semibold">Logout</a>
+                </div>
+            </div>
         </div>
     </nav>
 
     <!-- Auth Modal -->
-    <div class="modal-overlay" id="authModal">
-        <div class="modal-content">
-            <span class="modal-close">&times;</span>
-            <h2 class="text-center mb-2" style="color: var(--color-navy)">Welcome to Salsabeel</h2>
-            <form id="authForm">
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" required>
+    <div id="authModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <!-- Background overlay -->
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity modal-overlay" aria-hidden="true"></div>
+            
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            
+            <!-- Modal Panel -->
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md w-full relative z-10">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="absolute top-0 right-0 pt-4 pr-4">
+                        <button type="button" class="modal-close bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none">
+                            <span class="sr-only">Close</span>
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-2xl leading-6 font-serif font-bold text-navy text-center mb-6" id="modalTitle">Sign In to Salsabeel</h3>
+                            <form id="authForm" class="space-y-4">
+                                <div id="nameGroup" class="hidden">
+                                    <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                                    <input type="text" id="name" placeholder="Your Name" autocomplete="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald focus:border-emerald">
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                                    <input type="email" id="email" required autocomplete="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald focus:border-emerald">
+                                </div>
+                                <div>
+                                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                                    <input type="password" id="password" required minlength="8" autocomplete="current-password" placeholder="At least 8 characters" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald focus:border-emerald">
+                                </div>
+                                <button type="submit" id="authSubmitBtn" class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald transition-colors">
+                                    Sign In
+                                </button>
+                                <p class="text-center text-sm text-gray-500 pt-2">
+                                    <span id="authTogglePrompt">Don't have an account?</span>
+                                    <button type="button" id="authToggleBtn" class="text-emerald hover:underline font-semibold ml-1">Sign Up</button>
+                                </p>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" required>
-                </div>
-                <button type="submit" class="btn-primary" style="width: 100%">Sign In / Register</button>
-            </form>
+            </div>
         </div>
     </div>
 
     <!-- Main Content -->
-    {% block content %}
-    {% endblock %}
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
 
-    <!-- Custom JS -->
-    <script src="/static/js/main.js"></script>
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="font-serif">&copy; 2026 Salsabeel Academy. All rights reserved.</p>
+            <div class="mt-4 space-x-4">
+                <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="text-emerald hover:text-green-400"><i class="fab fa-whatsapp text-2xl"></i></a>
+                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="text-red-500 hover:text-red-400"><i class="fab fa-youtube text-2xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom JS (v3.3 cache bust) -->
+    <script src="/static/js/main.js?v=3.3"></script>
 </body>
 </html>
