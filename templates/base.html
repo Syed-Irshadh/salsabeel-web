@@ -70,6 +70,35 @@
                     <a href="/admin" id="adminBtn" class="hidden ml-4 bg-emerald text-white hover:bg-green-600 transition-colors px-4 py-2 rounded-md font-semibold">Dashboard</a>
                     <a href="#" id="logoutBtn" class="hidden ml-4 border border-red-400 text-red-400 hover:bg-red-400 hover:text-white transition-colors px-4 py-2 rounded-md font-semibold">Logout</a>
                 </div>
+
+                <!-- Mobile Hamburger Button -->
+                <div class="flex md:hidden items-center">
+                    <button type="button" id="mobileMenuBtn" class="text-gray-300 hover:text-gold p-2 rounded-md focus:outline-none cursor-pointer" aria-label="Toggle navigation menu">
+                        <i id="mobileMenuIcon" class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Menu Drawer -->
+        <div id="mobileMenu" class="hidden md:hidden bg-dark border-t border-navy px-4 pt-3 pb-6 space-y-3">
+            <a href="/" class="block text-gray-300 hover:text-gold transition-colors font-medium py-1.5">Home</a>
+            <a href="/courses" class="block text-gray-300 hover:text-gold transition-colors font-medium py-1.5">Courses</a>
+            <a href="/about" class="block text-gray-300 hover:text-gold transition-colors font-medium py-1.5">About Us</a>
+            
+            <div class="flex items-center space-x-6 py-2.5 border-t border-white/10">
+                <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="text-emerald hover:text-green-400 text-sm font-medium flex items-center">
+                    <i class="fab fa-whatsapp text-lg mr-2"></i> WhatsApp Channel
+                </a>
+                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="text-red-500 hover:text-red-400 text-sm font-medium flex items-center">
+                    <i class="fab fa-youtube text-lg mr-2"></i> YouTube
+                </a>
+            </div>
+
+            <div class="pt-2 border-t border-white/10 space-y-2">
+                <a href="#" class="mobile-login-btn block text-center border border-gold text-gold hover:bg-gold hover:text-navy transition-colors px-4 py-2.5 rounded-md font-semibold text-sm">Sign Up / Login</a>
+                <a href="/admin" class="mobile-admin-btn hidden block text-center bg-emerald text-white hover:bg-green-600 transition-colors px-4 py-2.5 rounded-md font-semibold text-sm">Admin Dashboard</a>
+                <a href="#" class="mobile-logout-btn hidden block text-center border border-red-400 text-red-400 hover:bg-red-400 hover:text-white transition-colors px-4 py-2.5 rounded-md font-semibold text-sm">Logout</a>
             </div>
         </div>
     </nav>
@@ -138,7 +167,7 @@
         </div>
     </footer>
 
-    <!-- Custom JS (v3.3 cache bust) -->
-    <script src="/static/js/main.js?v=3.3"></script>
+    <!-- Custom JS (v3.5 cache bust) -->
+    <script src="/static/js/main.js?v=3.5"></script>
 </body>
 </html>

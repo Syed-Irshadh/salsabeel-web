@@ -14,6 +14,7 @@ class Course(Base):
     content = Column(Text)
     start_date = Column(String(100), nullable=True)
     status = Column(String(50), default="current")  # current, upcoming, past
+    price = Column(String(50), default="Free", nullable=True)
     enrollments = relationship("Enrollment", back_populates="course")
     recordings = relationship("CourseRecording", back_populates="course", cascade="all, delete-orphan")
 

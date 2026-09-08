@@ -97,21 +97,150 @@
 
         <!-- Right Column: Data Tables -->
         <div class="lg:col-span-2 space-y-8">
+            <!-- Course Enrollments & Rosters Card -->
             <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
-                <h3 class="text-xl font-bold text-navy mb-4">Student Enrollments</h3>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-navy flex items-center">
+                            <i class="fas fa-user-graduate text-emerald mr-2.5"></i> Course Enrollments & Rosters
+                        </h3>
+                        <p class="text-xs text-gray-500 mt-1">Review students enrolled across each course, filter by specific course, and manage or remove enrollments.</p>
+                    </div>
+                    <div class="flex items-center gap-2 self-start sm:self-auto">
+                        <span id="enrollmentCountBadge" class="bg-emerald/10 text-emerald border border-emerald/20 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
+                            0 Enrollments
+                        </span>
+                        <button type="button" id="refreshEnrollmentsBtn" class="text-gray-500 hover:text-emerald p-1.5 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" title="Refresh Enrollments">
+                            <i class="fas fa-sync-alt text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter & Search Controls Bar -->
+                <div class="bg-sand/60 border border-gold/20 rounded-xl p-4 mb-4 space-y-3">
+                    <!-- Top Row: Course Filter Dropdown & Search Input -->
+                    <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+                        <!-- Course Filter Dropdown -->
+                        <div class="flex items-center gap-2 flex-grow sm:flex-grow-0">
+                            <label for="courseFilterSelect" class="text-xs font-bold text-navy uppercase tracking-wider whitespace-nowrap flex items-center">
+                                <i class="fas fa-book-open text-emerald mr-1.5"></i> Course:
+                            </label>
+                            <select id="courseFilterSelect" class="w-full sm:w-auto bg-white border border-gray-300 text-gray-800 text-xs rounded-lg px-3 py-2 focus:ring-emerald focus:border-emerald font-medium cursor-pointer shadow-xs max-w-xs truncate">
+                                <option value="all">All Courses (Overview)</option>
+                                {% for course in courses %}
+                                <option value="{{ course.id }}">{{ course.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Search Input -->
+                        <div class="relative w-full md:w-72">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+                                <i class="fas fa-search text-xs"></i>
+                            </span>
+                            <input type="text" id="enrollmentSearchInput" placeholder="Search student or course..." class="w-full pl-9 pr-3 py-2 bg-white border border-gray-300 rounded-lg text-xs focus:ring-emerald focus:border-emerald placeholder-gray-400 shadow-xs">
+                        </div>
+                    </div>
+
+                    <!-- Bottom Row: Status Hint & Action Buttons Group (Never Overflows!) -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-2.5 border-t border-gold/20">
+                        <div class="text-xs text-gray-500 flex items-center">
+                            <i class="fas fa-filter text-emerald mr-1.5"></i>
+                            <span>Showing filtered roster records</span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button type="button" id="copyEmailsBtn" class="inline-flex items-center text-xs font-semibold text-navy hover:text-emerald bg-white hover:bg-emerald/10 border border-gray-300 hover:border-emerald/30 px-3 py-1.5 rounded-lg transition-colors cursor-pointer whitespace-nowrap shadow-xs" title="Copy visible student emails to clipboard">
+                                <i class="fas fa-copy mr-1.5 text-emerald"></i> Copy Emails
+                            </button>
+                            <button type="button" id="exportExcelBtn" class="inline-flex items-center text-xs font-bold text-white bg-emerald hover:bg-green-600 px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer whitespace-nowrap shadow-xs" title="Export shown filtered rows to Excel spreadsheet (.xlsx)">
+                                <i class="fas fa-file-excel mr-1.5 text-gold"></i> Export Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Course Summary Pills -->
+                <div id="coursePillsContainer" class="flex flex-wrap gap-1.5 mb-4">
+                    <!-- Dynamic quick pills showing enrollment count per course -->
+                </div>
+
+                <!-- Enrollments Table -->
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Email</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course Enrolled</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
+                                <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course</th>
+                                <th class="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Enrolled</th>
+                                <th class="px-5 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                             </tr>
                         </thead>
                         <tbody id="enrollmentsTableBody" class="bg-white divide-y divide-gray-200">
                             <!-- Dynamic Content -->
                             <tr>
-                                <td colspan="3" class="px-6 py-4 text-center text-gray-500">Loading enrollments...</td>
+                                <td colspan="4" class="px-6 py-6 text-center text-gray-500">Loading enrollments...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Manage Administrators Card -->
+            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-navy flex items-center">
+                            <i class="fas fa-user-shield text-emerald mr-2.5"></i> Platform Administrators
+                        </h3>
+                        <p class="text-xs text-gray-500 mt-1">Team members with administrative access to manage courses and view enrollments.</p>
+                    </div>
+                    <button type="button" id="toggleAddAdminBtn" class="inline-flex items-center self-start sm:self-auto bg-navy hover:bg-dark text-white text-xs font-bold py-2 px-3.5 rounded-lg transition-colors cursor-pointer shadow-sm">
+                        <i class="fas fa-user-plus mr-1.5 text-gold"></i> Add / Promote Admin
+                    </button>
+                </div>
+                
+                <!-- Add Admin Form (Collapsible) -->
+                <div id="addAdminFormContainer" class="hidden mb-6 p-4 bg-sand border border-gold/30 rounded-lg">
+                    <h4 class="text-sm font-bold text-navy mb-1">Add or Promote Administrator</h4>
+                    <p class="text-xs text-gray-500 mb-3">Enter credentials for a new admin, or enter an existing student's email to promote them.</p>
+                    <form id="addAdminForm" class="space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Full Name</label>
+                                <input type="text" id="newAdminName" placeholder="Admin Name" class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-emerald focus:border-emerald bg-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Email Address *</label>
+                                <input type="email" id="newAdminEmail" required placeholder="admin@example.com" class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-emerald focus:border-emerald bg-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Password</label>
+                                <input type="password" id="newAdminPassword" minlength="8" placeholder="Min 8 chars (for new user)" class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-emerald focus:border-emerald bg-white">
+                            </div>
+                        </div>
+                        <div class="flex justify-end space-x-2 pt-2">
+                            <button type="button" id="cancelAddAdminBtn" class="text-xs font-medium text-gray-600 hover:text-gray-800 px-3 py-1.5 cursor-pointer">Cancel</button>
+                            <button type="submit" id="saveAdminBtn" class="bg-emerald hover:bg-green-600 text-white text-xs font-bold px-4 py-1.5 rounded-md shadow-sm transition-colors cursor-pointer flex items-center">
+                                <i class="fas fa-check mr-1.5"></i> Save Administrator
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Administrators Table -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminsTableBody" class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td colspan="4" class="px-6 py-4 text-center text-gray-500">Loading administrators...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -121,6 +250,9 @@
         
     </div>
 </div>
+
+<!-- SheetJS library for genuine client-side Excel (.xlsx) generation -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <!-- Admin Specific JS -->
 <script>
@@ -132,35 +264,432 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // Fetch Enrollments
-    try {
-        const res = await fetch('/api/admin/enrollments', {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (res.ok) {
-            const enrollments = await res.json();
-            const tbody = document.getElementById('enrollmentsTableBody');
-            tbody.innerHTML = '';
-            if (enrollments.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="px-6 py-4 text-center text-gray-500">No enrollments found.</td></tr>`;
-            } else {
-                enrollments.forEach(e => {
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${e.student_email}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${e.course_title}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${e.date}</td>
-                        </tr>
-                    `;
-                });
+    // -------------------------------------------------------------
+    // Student Enrollments & Course Rosters Management
+    // -------------------------------------------------------------
+    let allEnrollments = [];
+    const enrollmentsTableBody = document.getElementById('enrollmentsTableBody');
+    const enrollmentCountBadge = document.getElementById('enrollmentCountBadge');
+    const courseFilterSelect = document.getElementById('courseFilterSelect');
+    const enrollmentSearchInput = document.getElementById('enrollmentSearchInput');
+    const coursePillsContainer = document.getElementById('coursePillsContainer');
+    const refreshEnrollmentsBtn = document.getElementById('refreshEnrollmentsBtn');
+    const copyEmailsBtn = document.getElementById('copyEmailsBtn');
+    const exportExcelBtn = document.getElementById('exportExcelBtn');
+
+    function getInitials(name, email) {
+        if (name && name.trim()) {
+            const parts = name.trim().split(/\s+/);
+            if (parts.length >= 2) {
+                return (parts[0][0] + parts[1][0]).toUpperCase();
             }
-        } else {
-            alert("Unauthorized access");
-            window.location.href = '/';
+            return parts[0].substring(0, 2).toUpperCase();
         }
-    } catch (err) {
-        console.error(err);
+        if (email) {
+            return email.substring(0, 2).toUpperCase();
+        }
+        return 'ST';
     }
+
+    function renderCoursePills(enrollments) {
+        if (!coursePillsContainer) return;
+        const selectedVal = courseFilterSelect ? courseFilterSelect.value : 'all';
+        let pillsHtml = `
+            <button type="button" class="course-pill px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${selectedVal === 'all' ? 'bg-navy text-white shadow-xs' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'}" data-course-id="all">
+                All (${enrollments.length})
+            </button>
+        `;
+
+        const courseMap = new Map();
+        enrollments.forEach(e => {
+            const id = e.course_id ? String(e.course_id) : e.course_title;
+            if (!courseMap.has(id)) {
+                courseMap.set(id, { id: id, title: e.course_title, count: 0 });
+            }
+            courseMap.get(id).count++;
+        });
+
+        courseMap.forEach((c) => {
+            const isSelected = selectedVal === c.id;
+            pillsHtml += `
+                <button type="button" class="course-pill px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${isSelected ? 'bg-emerald text-white shadow-xs' : 'bg-white text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200'}" data-course-id="${c.id}">
+                    ${c.title} <span class="ml-1 opacity-80 font-normal">(${c.count})</span>
+                </button>
+            `;
+        });
+
+        coursePillsContainer.innerHTML = pillsHtml;
+
+        coursePillsContainer.querySelectorAll('.course-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                const cid = pill.getAttribute('data-course-id');
+                if (courseFilterSelect) {
+                    courseFilterSelect.value = cid;
+                }
+                renderEnrollments();
+            });
+        });
+    }
+
+    function renderEnrollments() {
+        if (!enrollmentsTableBody) return;
+        const selectedCourse = courseFilterSelect ? courseFilterSelect.value : 'all';
+        const searchQuery = enrollmentSearchInput ? enrollmentSearchInput.value.toLowerCase().trim() : '';
+
+        const filtered = allEnrollments.filter(e => {
+            const courseMatches = (selectedCourse === 'all') || (String(e.course_id) === selectedCourse) || (e.course_title === selectedCourse);
+            if (!courseMatches) return false;
+
+            if (searchQuery) {
+                const matchName = e.student_name && e.student_name.toLowerCase().includes(searchQuery);
+                const matchEmail = e.student_email && e.student_email.toLowerCase().includes(searchQuery);
+                const matchCourse = e.course_title && e.course_title.toLowerCase().includes(searchQuery);
+                return matchName || matchEmail || matchCourse;
+            }
+            return true;
+        });
+
+        if (enrollmentCountBadge) {
+            if (selectedCourse === 'all') {
+                enrollmentCountBadge.textContent = `${filtered.length} Total Enrollment${filtered.length === 1 ? '' : 's'}`;
+            } else {
+                enrollmentCountBadge.textContent = `${filtered.length} Enrolled in Course`;
+            }
+        }
+
+        if (coursePillsContainer) {
+            coursePillsContainer.querySelectorAll('.course-pill').forEach(pill => {
+                const cid = pill.getAttribute('data-course-id');
+                if (cid === selectedCourse) {
+                    pill.className = `course-pill px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${cid === 'all' ? 'bg-navy text-white shadow-xs' : 'bg-emerald text-white shadow-xs'}`;
+                } else {
+                    pill.className = 'course-pill px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer bg-white text-gray-700 hover:bg-gray-100 border border-gray-200';
+                }
+            });
+        }
+
+        enrollmentsTableBody.innerHTML = '';
+        if (filtered.length === 0) {
+            enrollmentsTableBody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="px-6 py-10 text-center text-gray-500">
+                        <i class="fas fa-users-slash text-2xl text-gray-300 mb-2 block"></i>
+                        <p class="font-medium text-sm text-gray-600">No enrollments found.</p>
+                        <p class="text-xs text-gray-400 mt-1">Try selecting another course or clearing your search filter.</p>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        filtered.forEach(e => {
+            const initials = getInitials(e.student_name, e.student_email);
+            let statusBadge = '';
+            if (e.course_status === 'past') {
+                statusBadge = '<span class="text-[10px] font-semibold bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Completed</span>';
+            } else if (e.course_status === 'upcoming') {
+                statusBadge = '<span class="text-[10px] font-semibold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Upcoming</span>';
+            } else {
+                statusBadge = '<span class="text-[10px] font-semibold bg-emerald/10 text-emerald px-2 py-0.5 rounded-full">Ongoing</span>';
+            }
+
+            enrollmentsTableBody.innerHTML += `
+                <tr class="hover:bg-gray-50/80 transition-colors">
+                    <td class="px-5 py-3.5 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-emerald/15 text-emerald font-bold text-xs flex items-center justify-center mr-3 border border-emerald/30 flex-shrink-0">
+                                ${initials}
+                            </div>
+                            <div>
+                                <div class="text-sm font-semibold text-navy">${e.student_name}</div>
+                                <div class="text-xs text-gray-500">${e.student_email}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-5 py-3.5">
+                        <div class="text-sm font-semibold text-navy">${e.course_title}</div>
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                            <span class="text-[11px] font-medium bg-navy/10 text-navy px-2 py-0.5 rounded-full">${e.course_category}</span>
+                            ${statusBadge}
+                        </div>
+                    </td>
+                    <td class="px-5 py-3.5 whitespace-nowrap text-xs text-gray-600">
+                        <span class="inline-flex items-center">
+                            <i class="far fa-calendar-alt text-emerald mr-1.5"></i> ${e.date}
+                        </span>
+                    </td>
+                    <td class="px-5 py-3.5 whitespace-nowrap text-right text-sm">
+                        <div class="flex items-center justify-end gap-1.5">
+                            <button type="button" 
+                                    class="remove-enrollment-btn inline-flex items-center text-xs font-semibold text-amber-700 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-2.5 py-1 rounded-md transition-colors cursor-pointer shadow-xs" 
+                                    data-id="${e.id}" 
+                                    data-student="${e.student_name}" 
+                                    data-email="${e.student_email}" 
+                                    data-course="${e.course_title}"
+                                    title="Unenroll student from this course only">
+                                <i class="fas fa-user-minus mr-1 text-amber-600"></i> Unenroll
+                            </button>
+                            <button type="button" 
+                                    class="delete-student-btn inline-flex items-center text-xs font-semibold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 px-2.5 py-1 rounded-md transition-colors cursor-pointer shadow-xs" 
+                                    data-user-id="${e.student_id}" 
+                                    data-student="${e.student_name}" 
+                                    data-email="${e.student_email}"
+                                    title="Permanently delete this user account">
+                                <i class="fas fa-user-times mr-1 text-red-600"></i> Delete User
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+
+        // Attach Unenroll Handlers
+        enrollmentsTableBody.querySelectorAll('.remove-enrollment-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const enrollmentId = btn.getAttribute('data-id');
+                const student = btn.getAttribute('data-student');
+                const email = btn.getAttribute('data-email');
+                const course = btn.getAttribute('data-course');
+
+                const confirmMsg = `Are you sure you want to unenroll ${student} (${email}) from the course:\n"${course}"?`;
+                if (!confirm(confirmMsg)) return;
+
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Removing...';
+
+                try {
+                    const delRes = await fetch(`/api/admin/enrollments/${enrollmentId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const delData = await delRes.json();
+                    if (delRes.ok) {
+                        alert(delData.message || 'Enrollment successfully removed.');
+                        loadEnrollments();
+                    } else {
+                        alert(delData.detail || 'Failed to remove enrollment.');
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-user-minus mr-1 text-amber-600"></i> Unenroll';
+                    }
+                } catch (err) {
+                    alert('Network error while removing enrollment.');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-user-minus mr-1 text-amber-600"></i> Unenroll';
+                }
+            });
+        });
+
+        // Attach Delete User Handlers (Available to all admins for non-admin users)
+        enrollmentsTableBody.querySelectorAll('.delete-student-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const userId = btn.getAttribute('data-user-id');
+                const student = btn.getAttribute('data-student');
+                const email = btn.getAttribute('data-email');
+
+                if (!userId || userId === 'null') {
+                    alert('User record not found.');
+                    return;
+                }
+
+                const confirmMsg = `WARNING: Are you sure you want to PERMANENTLY delete the student account for:\n"${student}" (${email})?\n\nThis will remove their account and all course enrollments.`;
+                if (!confirm(confirmMsg)) return;
+
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Deleting...';
+
+                try {
+                    const delRes = await fetch(`/api/admin/users/${userId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const delData = await delRes.json();
+                    if (delRes.ok) {
+                        alert(delData.message || 'User account deleted successfully.');
+                        loadEnrollments();
+                        loadAdmins();
+                    } else {
+                        alert(delData.detail || 'Failed to delete user account.');
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-user-times mr-1 text-red-600"></i> Delete User';
+                    }
+                } catch (err) {
+                    alert('Network error while deleting user account.');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-user-times mr-1 text-red-600"></i> Delete User';
+                }
+            });
+        });
+    }
+
+    async function loadEnrollments() {
+        if (!enrollmentsTableBody) return;
+        try {
+            const res = await fetch('/api/admin/enrollments', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                allEnrollments = await res.json();
+                renderCoursePills(allEnrollments);
+                renderEnrollments();
+            } else {
+                if (res.status === 401 || res.status === 403) {
+                    alert("Unauthorized or session expired. Please log in as an administrator.");
+                    window.location.href = '/';
+                }
+            }
+        } catch (err) {
+            console.error('Failed to load enrollments:', err);
+        }
+    }
+
+    if (courseFilterSelect) {
+        courseFilterSelect.addEventListener('change', renderEnrollments);
+    }
+    if (enrollmentSearchInput) {
+        enrollmentSearchInput.addEventListener('input', renderEnrollments);
+    }
+    if (refreshEnrollmentsBtn) {
+        refreshEnrollmentsBtn.addEventListener('click', () => {
+            const icon = refreshEnrollmentsBtn.querySelector('i');
+            if (icon) icon.classList.add('fa-spin');
+            loadEnrollments().finally(() => {
+                setTimeout(() => { if (icon) icon.classList.remove('fa-spin'); }, 400);
+            });
+        });
+    }
+
+    if (copyEmailsBtn) {
+        copyEmailsBtn.addEventListener('click', () => {
+            const selectedCourse = courseFilterSelect ? courseFilterSelect.value : 'all';
+            const searchQuery = enrollmentSearchInput ? enrollmentSearchInput.value.toLowerCase().trim() : '';
+
+            const filtered = allEnrollments.filter(e => {
+                const courseMatches = (selectedCourse === 'all') || (String(e.course_id) === selectedCourse) || (e.course_title === selectedCourse);
+                if (!courseMatches) return false;
+                if (searchQuery) {
+                    const matchName = e.student_name && e.student_name.toLowerCase().includes(searchQuery);
+                    const matchEmail = e.student_email && e.student_email.toLowerCase().includes(searchQuery);
+                    const matchCourse = e.course_title && e.course_title.toLowerCase().includes(searchQuery);
+                    return matchName || matchEmail || matchCourse;
+                }
+                return true;
+            });
+
+            const emails = [...new Set(filtered.map(e => e.student_email).filter(Boolean))];
+            if (emails.length === 0) {
+                alert('No emails to copy.');
+                return;
+            }
+            navigator.clipboard.writeText(emails.join(', ')).then(() => {
+                alert(`Copied ${emails.length} email(s) to clipboard:\n\n` + emails.join(', '));
+            }).catch(() => {
+                alert('Emails: ' + emails.join(', '));
+            });
+        });
+    }
+
+    // -------------------------------------------------------------
+    // Export Filtered Enrollments to Excel (.xlsx) / CSV
+    // -------------------------------------------------------------
+    function exportToExcel() {
+        const selectedCourse = courseFilterSelect ? courseFilterSelect.value : 'all';
+        const searchQuery = enrollmentSearchInput ? enrollmentSearchInput.value.toLowerCase().trim() : '';
+
+        const filtered = allEnrollments.filter(e => {
+            const courseMatches = (selectedCourse === 'all') || (String(e.course_id) === selectedCourse) || (e.course_title === selectedCourse);
+            if (!courseMatches) return false;
+            if (searchQuery) {
+                const matchName = e.student_name && e.student_name.toLowerCase().includes(searchQuery);
+                const matchEmail = e.student_email && e.student_email.toLowerCase().includes(searchQuery);
+                const matchCourse = e.course_title && e.course_title.toLowerCase().includes(searchQuery);
+                return matchName || matchEmail || matchCourse;
+            }
+            return true;
+        });
+
+        if (filtered.length === 0) {
+            alert('No student enrollment rows to export with the current filter.');
+            return;
+        }
+
+        let courseLabel = 'All_Courses';
+        if (selectedCourse !== 'all') {
+            const match = filtered.find(e => String(e.course_id) === selectedCourse || e.course_title === selectedCourse);
+            if (match && match.course_title) {
+                courseLabel = match.course_title.replace(/[^a-zA-Z0-9_\u0600-\u06FF\u0B80-\u0BFF]/g, '_').substring(0, 35);
+            }
+        }
+        const todayStr = new Date().toISOString().slice(0, 10);
+        const fileName = `Salsabeel_${courseLabel}_Enrollments_${todayStr}.xlsx`;
+
+        const exportRows = filtered.map((e, idx) => ({
+            'S.No': idx + 1,
+            'Student Name': e.student_name || 'N/A',
+            'Student Email': e.student_email || 'N/A',
+            'Course Title': e.course_title || 'N/A',
+            'Category': e.course_category || 'General',
+            'Course Status': (e.course_status || 'Current').toUpperCase(),
+            'Enrolled Date': e.date || 'N/A'
+        }));
+
+        if (typeof XLSX !== 'undefined') {
+            try {
+                const worksheet = XLSX.utils.json_to_sheet(exportRows);
+                worksheet['!cols'] = [
+                    { wch: 6 },
+                    { wch: 24 },
+                    { wch: 30 },
+                    { wch: 36 },
+                    { wch: 16 },
+                    { wch: 14 },
+                    { wch: 22 }
+                ];
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, 'Enrollments');
+                XLSX.writeFile(workbook, fileName);
+                return;
+            } catch (err) {
+                console.warn('SheetJS error, falling back to CSV:', err);
+            }
+        }
+
+        // CSV fallback with UTF-8 BOM
+        const headers = ['S.No', 'Student Name', 'Student Email', 'Course Title', 'Category', 'Course Status', 'Enrolled Date'];
+        const csvLines = [headers.join(',')];
+
+        exportRows.forEach(row => {
+            const rowVals = [
+                row['S.No'],
+                `"${String(row['Student Name']).replace(/"/g, '""')}"`,
+                `"${String(row['Student Email']).replace(/"/g, '""')}"`,
+                `"${String(row['Course Title']).replace(/"/g, '""')}"`,
+                `"${String(row['Category']).replace(/"/g, '""')}"`,
+                `"${String(row['Course Status']).replace(/"/g, '""')}"`,
+                `"${String(row['Enrolled Date']).replace(/"/g, '""')}"`
+            ];
+            csvLines.push(rowVals.join(','));
+        });
+
+        const csvContent = '\uFEFF' + csvLines.join('\r\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute('download', fileName.replace('.xlsx', '.csv'));
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    if (exportExcelBtn) {
+        exportExcelBtn.addEventListener('click', exportToExcel);
+    }
+
+    // Initial load
+    loadEnrollments();
 
     // Cover Image & Auto-Apply elements
     const posterInput = document.getElementById('posterImage');
@@ -267,7 +796,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                         syncPosterFileToCover(fileInput.files[0]);
                     }
 
-                    alert("AI extraction complete! Poster image and course details were automatically applied to the dashboard form below. Review and click Publish Course.");
+                    if (data.error_notice) {
+                        alert(data.error_notice);
+                    } else {
+                        alert("AI extraction complete! Poster image and course details were automatically applied to the dashboard form below. Review and click Publish Course.");
+                    }
                 } else {
                     const error = await res.text();
                     alert("Failed to parse poster: " + error);
@@ -280,6 +813,171 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
+
+    // -------------------------------------------------------------
+    // Administrators Management Logic
+    // -------------------------------------------------------------
+    const currentUserId = localStorage.getItem('userId');
+    const adminsTableBody = document.getElementById('adminsTableBody');
+    const toggleAddAdminBtn = document.getElementById('toggleAddAdminBtn');
+    const cancelAddAdminBtn = document.getElementById('cancelAddAdminBtn');
+    const addAdminFormContainer = document.getElementById('addAdminFormContainer');
+    const addAdminForm = document.getElementById('addAdminForm');
+
+    async function loadAdmins() {
+        if (!adminsTableBody) return;
+        try {
+            const res = await fetch('/api/admin/admins', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                const admins = data.admins || [];
+                const currentIsMain = Boolean(data.current_user_is_main);
+                adminsTableBody.innerHTML = '';
+                if (admins.length === 0) {
+                    adminsTableBody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">No administrators found.</td></tr>`;
+                    return;
+                }
+                admins.forEach(a => {
+                    const isMe = String(a.id) === String(currentUserId);
+                    let roleBadge = '';
+                    if (a.is_main_admin) {
+                        roleBadge = `
+                            <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-900 border border-gold/60 shadow-xs">
+                                <i class="fas fa-crown mr-1.5 text-gold"></i> Main Admin (Owner)
+                            </span>
+                        `;
+                    } else {
+                        roleBadge = `
+                            <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full bg-navy text-white shadow-xs">
+                                <i class="fas fa-shield-alt mr-1.5 text-gold"></i> Admin
+                            </span>
+                        `;
+                    }
+
+                    let actionHtml = '';
+                    if (isMe) {
+                        actionHtml = '<span class="text-xs text-gray-400 italic">Current User</span>';
+                    } else if (a.is_main_admin) {
+                        actionHtml = '<span class="text-xs text-amber-700 font-semibold italic"><i class="fas fa-lock text-gold mr-1"></i> Owner</span>';
+                    } else if (currentIsMain) {
+                        actionHtml = `
+                            <button class="remove-admin-btn text-xs font-semibold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 px-2.5 py-1 rounded transition-colors cursor-pointer" data-id="${a.id}" data-email="${a.email}">
+                                <i class="fas fa-user-minus mr-1"></i> Demote
+                            </button>
+                        `;
+                    } else {
+                        actionHtml = '<span class="text-xs text-gray-400 font-medium"><i class="fas fa-lock text-gray-300 mr-1"></i> Main Admin Only</span>';
+                    }
+
+                    adminsTableBody.innerHTML += `
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                                ${a.name} ${isMe ? '<span class="ml-1.5 text-xs bg-emerald/15 text-emerald font-bold px-2 py-0.5 rounded-full">You</span>' : ''}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${a.email}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                ${roleBadge}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+                                ${actionHtml}
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                // Attach remove handlers
+                document.querySelectorAll('.remove-admin-btn').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const targetId = btn.getAttribute('data-id');
+                        const targetEmail = btn.getAttribute('data-email');
+                        if (!confirm(`Are you sure you want to revoke admin privileges for ${targetEmail}?`)) return;
+
+                        try {
+                            const remRes = await fetch('/api/admin/remove-admin', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${token}`
+                                },
+                                body: JSON.stringify({ user_id: parseInt(targetId) })
+                            });
+                            const remData = await remRes.json();
+                            if (remRes.ok) {
+                                alert(remData.message || 'Admin privileges revoked.');
+                                loadAdmins();
+                            } else {
+                                alert(remData.detail || 'Failed to revoke admin.');
+                            }
+                        } catch (err) {
+                            alert('Network error.');
+                        }
+                    });
+                });
+            }
+        } catch (err) {
+            console.error('Failed to load admins:', err);
+        }
+    }
+
+    if (toggleAddAdminBtn && addAdminFormContainer) {
+        toggleAddAdminBtn.addEventListener('click', () => {
+            addAdminFormContainer.classList.toggle('hidden');
+        });
+    }
+
+    if (cancelAddAdminBtn && addAdminFormContainer) {
+        cancelAddAdminBtn.addEventListener('click', () => {
+            addAdminFormContainer.classList.add('hidden');
+            if (addAdminForm) addAdminForm.reset();
+        });
+    }
+
+    if (addAdminForm) {
+        addAdminForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('newAdminName').value.trim();
+            const email = document.getElementById('newAdminEmail').value.trim();
+            const password = document.getElementById('newAdminPassword').value;
+            const saveBtn = document.getElementById('saveAdminBtn');
+
+            if (saveBtn) {
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i> Saving...';
+            }
+
+            try {
+                const addRes = await fetch('/api/admin/add-admin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ name, email, password: password || null })
+                });
+                const addData = await addRes.json();
+                if (addRes.ok) {
+                    alert(addData.message || 'Administrator saved successfully!');
+                    addAdminForm.reset();
+                    if (addAdminFormContainer) addAdminFormContainer.classList.add('hidden');
+                    loadAdmins();
+                } else {
+                    alert(addData.detail || 'Failed to add administrator.');
+                }
+            } catch (err) {
+                alert('Network error.');
+            } finally {
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i class="fas fa-check mr-1.5"></i> Save Administrator';
+                }
+            }
+        });
+    }
+
+    // Initial load
+    loadAdmins();
 });
 </script>
 {% endblock %}

@@ -4,13 +4,19 @@ import json
 import uuid
 import shutil
 import re
+import warnings
+import tempfile
 from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
+
+# Suppress deprecated library warning spam in server logs
+warnings.filterwarnings("ignore", category=FutureWarning, module="google.generativeai")
 import google.generativeai as genai
 
 from typing import Optional
 from fastapi import FastAPI, Depends, HTTPException, Request, Form, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -18,19 +24,56 @@ from sqlalchemy.orm import Session, joinedload
 from pydantic import BaseModel
 
 # Ensure project root is in sys.path
-BASE_DIR = Path(__file__).resolve().parent.parent
-if str(BASE_DIR) not in sys.path:
-    sys.path.append(str(BASE_DIR))
+BASE_DIR = str(Path(__file__).resolve().parent.parent)
+if BASE_DIR not in sys.path:
+    sys.path.append(BASE_DIR)
 
 from app import models, database, auth
 
 load_dotenv()
 
-models.Base.metadata.create_all(bind=database.engine)
+def get_upload_dir() -> str:
+    """Return upload directory path, ensuring resilience on Vercel serverless filesystem."""
+    if os.getenv("VERCEL"):
+        path = os.path.join(tempfile.gettempdir(), "uploads")
+    else:
+        path = os.path.join(BASE_DIR, "static", "img", "uploads")
+    try:
+        os.makedirs(path, exist_ok=True)
+    except OSError:
+        path = os.path.join(tempfile.gettempdir(), "uploads")
+        os.makedirs(path, exist_ok=True)
+    return path
+
+# Safely initialize database tables on startup
+try:
+    models.Base.metadata.create_all(bind=database.engine)
+except Exception as e:
+    print(f"Notice: Table creation deferred or handled: {e}")
 
 app = FastAPI(title="Salsabeel Academy")
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Enable CORS for 3-Tier Architecture (Vercel Frontend <-> Render/Cloud Backend)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origin_regex=r".*",
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/api/health")
+async def health_check():
+    return {
+        "status": "healthy",
+        "service": "Salsabeel Backend API",
+        "architecture": "3-Tier (Vercel Frontend | Render Backend | Supabase DB)"
+    }
+
+# On Vercel, mount writable /tmp/uploads for uploaded images
+if os.getenv("VERCEL"):
+    tmp_uploads = get_upload_dir()
+    app.mount("/static/img/uploads", StaticFiles(directory=tmp_uploads), name="uploaded_images")
 
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
@@ -46,9 +89,12 @@ def seed_courses(db: Session):
         db.add_all(courses)
         db.commit()
 
-# Call seed on startup
-with database.SessionLocal() as db:
-    seed_courses(db)
+# Safely call seed on startup
+try:
+    with database.SessionLocal() as db:
+        seed_courses(db)
+except Exception as e:
+    print(f"Notice: Course seeding deferred or skipped: {e}")
 
 @app.get("/")
 async def home(request: Request):
@@ -70,21 +116,212 @@ async def admin_page(request: Request, db: Session = Depends(database.get_db)):
 
 @app.get("/api/admin/enrollments")
 async def get_admin_enrollments(
+    course_id: Optional[int] = None,
     current_user: models.User = Depends(auth.get_current_user),
     db: Session = Depends(database.get_db)
 ):
     if current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Not authorized")
-    enrollments = db.query(models.Enrollment).options(joinedload(models.Enrollment.user), joinedload(models.Enrollment.course)).all()
+    query = db.query(models.Enrollment).options(joinedload(models.Enrollment.user), joinedload(models.Enrollment.course))
+    if course_id:
+        query = query.filter(models.Enrollment.course_id == course_id)
+    enrollments = query.order_by(models.Enrollment.enrolled_at.desc()).all()
     
     result = []
     for e in enrollments:
+        student_name = e.user.name if (e.user and e.user.name) else (e.user.email.split("@")[0] if e.user and e.user.email else "Student")
+        student_email = e.user.email if e.user else "Deleted User"
+        course_title = e.course.title if e.course else "Unknown Course"
+        course_category = e.course.category if e.course else "General"
+        course_status = e.course.status if e.course else "current"
+        
         result.append({
-            "student_email": e.user.email,
-            "course_title": e.course.title,
-            "date": e.enrolled_at.strftime("%Y-%m-%d %H:%M")
+            "id": e.id,
+            "student_id": e.user.id if e.user else None,
+            "student_name": student_name,
+            "student_email": student_email,
+            "course_id": e.course.id if e.course else None,
+            "course_title": course_title,
+            "course_category": course_category,
+            "course_status": course_status,
+            "date": e.enrolled_at.strftime("%b %d, %Y %I:%M %p") if e.enrolled_at else "N/A"
         })
     return result
+
+@app.delete("/api/admin/enrollments/{enrollment_id}")
+async def delete_admin_enrollment(
+    enrollment_id: int,
+    current_user: models.User = Depends(auth.get_current_user),
+    db: Session = Depends(database.get_db)
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+        
+    enrollment = db.query(models.Enrollment).filter(models.Enrollment.id == enrollment_id).first()
+    if not enrollment:
+        raise HTTPException(status_code=404, detail="Enrollment record not found")
+        
+    student_label = (enrollment.user.name or enrollment.user.email) if enrollment.user else "Student"
+    course_title = enrollment.course.title if enrollment.course else "Course"
+    
+    db.delete(enrollment)
+    db.commit()
+    return {
+        "status": "success",
+        "message": f"Successfully removed {student_label} from {course_title}"
+    }
+
+def get_main_admin(db: Session) -> Optional[models.User]:
+    """
+    Identifies the Main/Primary Administrator.
+    By default, the first administrator account created (lowest ID among admins),
+    or admin@salsabeel.com.
+    """
+    admin_by_email = db.query(models.User).filter(
+        models.User.email == "admin@salsabeel.com", 
+        models.User.role == "admin"
+    ).first()
+    if admin_by_email:
+        return admin_by_email
+    return db.query(models.User).filter(models.User.role == "admin").order_by(models.User.id.asc()).first()
+
+@app.get("/api/admin/admins")
+async def get_admins(
+    current_user: models.User = Depends(auth.get_current_user),
+    db: Session = Depends(database.get_db)
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+        
+    main_admin = get_main_admin(db)
+    main_admin_id = main_admin.id if main_admin else None
+    current_is_main = bool(main_admin_id and current_user.id == main_admin_id)
+    
+    admins = db.query(models.User).filter(models.User.role == "admin").order_by(models.User.id.asc()).all()
+    admin_list = []
+    for u in admins:
+        is_main = bool(main_admin_id and u.id == main_admin_id)
+        admin_list.append({
+            "id": u.id,
+            "name": u.name or (u.email.split("@")[0] if u.email else "Admin"),
+            "email": u.email,
+            "role": u.role,
+            "is_main_admin": is_main
+        })
+        
+    return {
+        "current_user_is_main": current_is_main,
+        "admins": admin_list
+    }
+
+class AdminCreateRequest(BaseModel):
+    name: Optional[str] = ""
+    email: str
+    password: Optional[str] = None
+
+@app.post("/api/admin/add-admin")
+async def add_admin(
+    data: AdminCreateRequest,
+    current_user: models.User = Depends(auth.get_current_user),
+    db: Session = Depends(database.get_db)
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    clean_email = data.email.strip().lower()
+    if not clean_email:
+        raise HTTPException(status_code=400, detail="Email is required")
+        
+    existing_user = db.query(models.User).filter(models.User.email == clean_email).first()
+    if existing_user:
+        if existing_user.role == "admin":
+            raise HTTPException(status_code=400, detail="This user is already an administrator")
+        # Promote existing student to admin
+        existing_user.role = "admin"
+        if data.name and data.name.strip():
+            existing_user.name = data.name.strip()
+        if data.password and len(data.password.strip()) >= 8:
+            existing_user.hashed_password = auth.get_password_hash(data.password.strip())
+        db.commit()
+        return {"status": "success", "message": f"Successfully promoted {clean_email} to Administrator!"}
+    
+    # New user: password required (min 8 chars)
+    if not data.password or len(data.password.strip()) < 8:
+        raise HTTPException(status_code=400, detail="A password of at least 8 characters is required for a new user.")
+        
+    new_admin = models.User(
+        name=data.name.strip() if data.name else None,
+        email=clean_email,
+        hashed_password=auth.get_password_hash(data.password.strip()),
+        role="admin"
+    )
+    db.add(new_admin)
+    db.commit()
+    db.refresh(new_admin)
+    return {"status": "success", "message": f"Successfully created new Administrator: {clean_email}"}
+
+class AdminRemoveRequest(BaseModel):
+    user_id: int
+
+@app.post("/api/admin/remove-admin")
+async def remove_admin(
+    data: AdminRemoveRequest,
+    current_user: models.User = Depends(auth.get_current_user),
+    db: Session = Depends(database.get_db)
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+        
+    main_admin = get_main_admin(db)
+    if not main_admin or current_user.id != main_admin.id:
+        raise HTTPException(
+            status_code=403, 
+            detail="Permission Denied: Only the Main Administrator (the primary administrator account) can remove or demote other administrators."
+        )
+        
+    if data.user_id == current_user.id:
+        raise HTTPException(status_code=400, detail="You cannot remove your own administrator privileges.")
+        
+    target_user = db.query(models.User).filter(models.User.id == data.user_id).first()
+    if not target_user:
+        raise HTTPException(status_code=404, detail="User not found")
+        
+    if target_user.id == main_admin.id:
+        raise HTTPException(status_code=400, detail="The Main Administrator account cannot be demoted.")
+
+    target_user.role = "student"
+    db.commit()
+    return {"status": "success", "message": f"Revoked administrator privileges for {target_user.email}"}
+
+@app.delete("/api/admin/users/{user_id}")
+async def delete_user(
+    user_id: int,
+    current_user: models.User = Depends(auth.get_current_user),
+    db: Session = Depends(database.get_db)
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+        
+    if user_id == current_user.id:
+        raise HTTPException(status_code=400, detail="You cannot delete your own account.")
+        
+    target_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not target_user:
+        raise HTTPException(status_code=404, detail="User not found")
+        
+    if target_user.role == "admin":
+        main_admin = get_main_admin(db)
+        if not main_admin or current_user.id != main_admin.id:
+            raise HTTPException(
+                status_code=403, 
+                detail="Permission Denied: Only the Main Administrator can remove administrator accounts."
+            )
+            
+    user_email = target_user.email
+    db.query(models.Enrollment).filter(models.Enrollment.user_id == user_id).delete()
+    db.delete(target_user)
+    db.commit()
+    return {"status": "success", "message": f"Successfully deleted user account: {user_email}"}
 
 @app.get("/viewer/{course_id}")
 async def viewer_page(request: Request, course_id: int, db: Session = Depends(database.get_db)):
@@ -113,8 +350,7 @@ async def create_course(
     
     final_image_url = None
     if image and image.filename:
-        upload_dir = os.path.join(BASE_DIR, "static", "img", "uploads")
-        os.makedirs(upload_dir, exist_ok=True)
+        upload_dir = get_upload_dir()
         
         file_ext = os.path.splitext(image.filename)[1] if image.filename else ".jpg"
         unique_filename = f"{uuid.uuid4()}{file_ext}"
@@ -129,14 +365,18 @@ async def create_course(
     else:
         raise HTTPException(status_code=400, detail="Cover image is required.")
     
+    effective_status = (status or "current").strip().lower()
+    if effective_status not in ["current", "upcoming", "past"]:
+        effective_status = determine_course_status(start_date or "", fallback_status="current")
+        
     db_course = models.Course(
-        title=title,
-        description=description,
-        category=category,
-        content=content,
-        price=price,
-        start_date=start_date,
-        status=status,
+        title=title.strip(),
+        description=description.strip(),
+        category=category.strip(),
+        content=content.strip(),
+        price=price.strip() if price else "Free",
+        start_date=start_date.strip() if start_date else None,
+        status=effective_status,
         image_url=final_image_url
     )
     db.add(db_course)
@@ -156,7 +396,18 @@ async def delete_course(
     if not course:
         raise HTTPException(status_code=404, detail="Course not found")
     
+    # Clean up uploaded image file on disk if stored locally
+    if course.image_url and course.image_url.startswith("/static/img/uploads/"):
+        filename = os.path.basename(course.image_url)
+        filepath = os.path.join(get_upload_dir(), filename)
+        if os.path.exists(filepath):
+            try:
+                os.remove(filepath)
+            except Exception as err:
+                print(f"Notice: could not delete local image file {filepath}: {err}")
+    
     db.query(models.Enrollment).filter(models.Enrollment.course_id == course_id).delete()
+    db.query(models.CourseRecording).filter(models.CourseRecording.course_id == course_id).delete()
     db.delete(course)
     db.commit()
     return {"status": "success"}
@@ -171,15 +422,19 @@ async def register(user: UserCreate, db: Session = Depends(database.get_db)):
     if len(user.password) < 8:
         raise HTTPException(status_code=400, detail="Password must be at least 8 characters long")
         
-    db_user = db.query(models.User).filter(models.User.email == user.email).first()
+    clean_email = user.email.strip().lower()
+    if not clean_email:
+        raise HTTPException(status_code=400, detail="Email is required")
+
+    db_user = db.query(models.User).filter(models.User.email == clean_email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     
     hashed_password = auth.get_password_hash(user.password)
-    role = "admin" if user.email == "admin@salsabeel.com" else "student"
+    role = "admin" if clean_email == "admin@salsabeel.com" else "student"
     new_user = models.User(
         name=user.name.strip() if user.name else None,
-        email=user.email.strip(),
+        email=clean_email,
         hashed_password=hashed_password,
         role=role
     )
@@ -190,7 +445,8 @@ async def register(user: UserCreate, db: Session = Depends(database.get_db)):
 
 @app.post("/api/token")
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.get_db)):
-    user = db.query(models.User).filter(models.User.email == form_data.username).first()
+    clean_username = form_data.username.strip().lower()
+    user = db.query(models.User).filter(models.User.email == clean_username).first()
     if not user or not auth.verify_password(form_data.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Incorrect email or password")
     
@@ -207,6 +463,14 @@ async def create_enrollment(
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(auth.get_current_user)
 ):
+    course = db.query(models.Course).filter(models.Course.id == data.course_id).first()
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found")
+        
+    user = db.query(models.User).filter(models.User.id == data.user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
     existing = db.query(models.Enrollment).filter(
         models.Enrollment.user_id == data.user_id,
         models.Enrollment.course_id == data.course_id
@@ -289,8 +553,7 @@ async def parse_poster(
         raise HTTPException(status_code=403, detail="Not authorized")
     
     # Save uploaded poster file to uploads folder
-    upload_dir = os.path.join(BASE_DIR, "static", "img", "uploads")
-    os.makedirs(upload_dir, exist_ok=True)
+    upload_dir = get_upload_dir()
     file_ext = os.path.splitext(image.filename)[1] if image.filename else ".jpg"
     if not file_ext or file_ext.lower() not in [".jpg", ".jpeg", ".png", ".webp", ".gif"]:
         file_ext = ".jpg"
@@ -385,7 +648,17 @@ async def parse_poster(
         }
         
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return {
+            "title": "",
+            "description": "",
+            "category": "General",
+            "start_date": "",
+            "status": "current",
+            "price": "Free",
+            "content": "",
+            "image_url": saved_image_url,
+            "error_notice": f"Uploaded poster saved, but AI automatic text extraction had an issue ({str(e)}). Your poster image is attached below—please fill in the course details manually."
+        }
 
 if __name__ == "__main__":
     import uvicorn

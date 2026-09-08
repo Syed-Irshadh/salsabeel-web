@@ -32,7 +32,9 @@
                 {% else %}
                 <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22.%20Please%20share%20the%20details." 
                    target="_blank" 
-                   class="inline-flex items-center justify-center w-full sm:w-auto bg-emerald hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-md">
+                   class="enroll-btn inline-flex items-center justify-center w-full sm:w-auto bg-emerald hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-md cursor-pointer"
+                   data-id="{{ course.id }}"
+                   data-title="{{ course.title }}">
                     <i class="fab fa-whatsapp mr-2 text-xl"></i> Enroll via WhatsApp
                 </a>
                 {% endif %}
