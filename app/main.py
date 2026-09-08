@@ -566,16 +566,18 @@ async def parse_poster(
         
     saved_image_url = f"/static/img/uploads/{unique_filename}"
     
-    api_key = os.environ.get("GEMINI_API_KEY")
-    if not api_key:
+    api_key = os.environ.get("GEMINI_API_KEY", "").strip()
+    if not api_key or not api_key.startswith("AIzaSy"):
         return {
-            "title": "AI Parsed Course (Mock)",
-            "description": "This is a mock description because GEMINI_API_KEY is not set.",
+            "title": "",
+            "description": "",
             "category": "General",
-            "start_date": "Starts next Monday",
-            "price": "$49.00",
-            "content": "Lesson 1: Intro",
-            "image_url": saved_image_url
+            "start_date": "",
+            "status": "current",
+            "price": "Free",
+            "content": "",
+            "image_url": saved_image_url,
+            "error_notice": "Uploaded poster saved and attached below! Note: Automatic text extraction requires a valid Gemini API Key starting with 'AIzaSy' from Google AI Studio (https://aistudio.google.com/app/apikey). Please enter course details manually below and click Publish Course."
         }
     
     try:
@@ -597,24 +599,31 @@ async def parse_poster(
             - "upcoming": If the course starts on a future date after today (e.g. October 2026 is after September 2026, so it is "upcoming")
             - "current": If the course starts today ({today_str}), is happening now, or is ongoing/recurring
             - "past": If the course has already completed in the past)
-        - "price": string (Price if visible, otherwise "$49.00")
+        - "price": string (Price if visible, otherwise "Free")
         - "content": string (Text outline of syllabus, instructor, contact info, etc.)
         """
         
-        # Use ultra-fast flash-lite model with async non-blocking execution
-        model_name = "gemini-3.5-flash-lite"
-        try:
-            model = genai.GenerativeModel(model_name, generation_config={"response_mime_type": "application/json"})
-            response = await model.generate_content_async([
-                prompt,
-                {"mime_type": image.content_type or "image/jpeg", "data": img_bytes}
-            ])
-        except Exception:
-            model = genai.GenerativeModel("gemini-flash-lite-latest", generation_config={"response_mime_type": "application/json"})
-            response = await model.generate_content_async([
-                prompt,
-                {"mime_type": image.content_type or "image/jpeg", "data": img_bytes}
-            ])
+        # Use standard production vision models: gemini-1.5-flash, gemini-2.0-flash, gemini-1.5-pro
+        candidate_models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]
+        response = None
+        last_error = None
+        
+        for m_name in candidate_models:
+            try:
+                model = genai.GenerativeModel(m_name, generation_config={"response_mime_type": "application/json"})
+                response = await model.generate_content_async([
+                    prompt,
+                    {"mime_type": image.content_type or "image/jpeg", "data": img_bytes}
+                ])
+                if response and response.text:
+                    break
+            except Exception as ex:
+                last_error = ex
+                if "401" in str(ex) or "invalid authentication" in str(ex).lower():
+                    raise ex
+                    
+        if not response or not response.text:
+            raise last_error or Exception("Unable to extract details from poster.")
             
         data = json.loads(response.text.strip())
         
@@ -623,7 +632,7 @@ async def parse_poster(
         desc = data.get("description") or ""
         cat = data.get("category") or "General"
         start = data.get("start_date") or ""
-        price = data.get("price") or "$49.00"
+        price = data.get("price") or "Free"
         
         raw_status = str(data.get("status") or "current").lower().strip()
         status_val = determine_course_status(start, fallback_status=raw_status)
@@ -648,6 +657,12 @@ async def parse_poster(
         }
         
     except Exception as e:
+        err_msg = str(e)
+        if "401" in err_msg or "invalid authentication" in err_msg.lower() or "ACCESS_TOKEN_TYPE_UNSUPPORTED" in err_msg:
+            notice = "Uploaded poster saved and attached below! The configured GEMINI_API_KEY is invalid or expired. To enable automatic AI poster extraction, please create a free API key at Google AI Studio (https://aistudio.google.com/app/apikey). In the meantime, you can fill in the course details manually below."
+        else:
+            notice = f"Uploaded poster saved and attached below! Note: AI text extraction issue ({err_msg}). Please fill in the course details manually below."
+            
         return {
             "title": "",
             "description": "",
@@ -657,7 +672,7 @@ async def parse_poster(
             "price": "Free",
             "content": "",
             "image_url": saved_image_url,
-            "error_notice": f"Uploaded poster saved, but AI automatic text extraction had an issue ({str(e)}). Your poster image is attached below—please fill in the course details manually."
+            "error_notice": notice
         }
 
 if __name__ == "__main__":
