@@ -35,6 +35,7 @@
                  data-title="{{ course.title }}"
                  data-category="{{ course.category }}"
                  data-startdate="{{ course.start_date or '' }}"
+                 data-price="{{ course.price or 'Free' }}"
                  data-status="{{ course.status | default('current') }}"
                  title="Click to view full poster">
                 <img src="{{ course.image_url }}" alt="{{ course.title }}" class="w-full h-52 object-cover border-b-[3px] border-gold transition-transform duration-300 group-hover:scale-105">
@@ -42,6 +43,12 @@
                 <div class="absolute inset-0 bg-navy/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
                     <span class="inline-flex items-center text-xs font-bold px-3 py-1.5 rounded-full bg-white/95 text-navy shadow-lg">
                         <i class="fas fa-search-plus mr-1.5 text-emerald"></i> View Full Poster
+                    </span>
+                </div>
+                <!-- Price Badge Overlay -->
+                <div class="absolute top-3 left-3 pointer-events-none">
+                    <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full {% if course.price and course.price.strip().lower() != 'free' %}bg-amber-500 text-white shadow-md{% else %}bg-navy/80 text-gold backdrop-blur-sm border border-gold/30 shadow{% endif %}">
+                        <i class="fas fa-tag mr-1.5 text-xs"></i> {{ course.price or 'Free' }}
                     </span>
                 </div>
                 <!-- Status Badge Overlay -->
@@ -74,6 +81,7 @@
                             data-title="{{ course.title }}" 
                             data-category="{{ course.category }}"
                             data-startdate="{{ course.start_date or '' }}"
+                            data-price="{{ course.price or 'Free' }}"
                             data-status="{{ course.status | default('current') }}"
                             title="View promotional poster">
                         <i class="fas fa-image mr-1.5"></i> Poster
@@ -86,19 +94,24 @@
                     data-title="{{ course.title }}" 
                     data-category="{{ course.category }}"
                     data-startdate="{{ course.start_date or '' }}"
+                    data-price="{{ course.price or 'Free' }}"
                     data-status="{{ course.status | default('current') }}"
                     title="Click to view full poster">
                     {{ course.title }}
                 </h3>
                 <p class="text-gray-600 mb-4 flex-grow text-sm leading-relaxed">{{ course.description }}</p>
                 
-                {% if course.start_date %}
-                <div class="mb-4">
+                <!-- Schedule & Price Labels -->
+                <div class="flex flex-wrap items-center gap-2 mb-4">
+                    {% if course.start_date %}
                     <span class="text-xs text-gray-600 font-medium bg-gray-100 px-3 py-1.5 rounded-md inline-flex items-center">
                         <i class="far fa-calendar-alt mr-1.5 text-emerald"></i> {{ course.start_date }}
                     </span>
+                    {% endif %}
+                    <span class="text-xs font-bold px-3 py-1.5 rounded-md inline-flex items-center {% if course.price and course.price.strip().lower() != 'free' %}bg-amber-100 text-amber-900 border border-amber-200{% else %}bg-emerald/10 text-emerald border border-emerald/20{% endif %}">
+                        <i class="fas fa-tag mr-1.5"></i> Fee: {{ course.price or 'Free' }}
+                    </span>
                 </div>
-                {% endif %}
                 
                 <!-- Action Buttons based on Status -->
                 {% if course.status == 'past' %}
@@ -106,7 +119,7 @@
                     <i class="fab fa-youtube mr-2 text-xl"></i> Watch on YouTube
                 </a>
                 {% else %}
-                <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22.%20Please%20share%20the%20details." 
+                <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22%20(Fee%3A%20{{ (course.price or 'Free') | urlencode }}).%20Please%20share%20the%20details." 
                    target="_blank" 
                    class="enroll-btn w-full bg-emerald hover:bg-green-600 text-white font-bold py-3 rounded-lg transition-colors shadow-md flex items-center justify-center cursor-pointer" 
                    data-id="{{ course.id }}" 
@@ -160,9 +173,12 @@
 
         <!-- Modal Footer -->
         <div class="px-6 py-4 bg-sand border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3 flex-shrink-0">
-            <div class="text-xs sm:text-sm text-gray-600 flex items-center gap-3">
+            <div class="text-xs sm:text-sm text-gray-600 flex flex-wrap items-center gap-3">
                 <span id="posterModalDate" class="hidden font-medium bg-gray-100 px-2.5 py-1 rounded-md">
                     <i class="far fa-calendar-alt mr-1 text-emerald"></i> <span id="posterModalDateText"></span>
+                </span>
+                <span id="posterModalPrice" class="font-bold bg-emerald/10 text-emerald border border-emerald/20 px-2.5 py-1 rounded-md inline-flex items-center">
+                    <i class="fas fa-tag mr-1 text-emerald"></i> <span id="posterModalPriceText">Free</span>
                 </span>
                 <a id="posterModalFullLink" href="" target="_blank" class="text-navy hover:text-emerald font-semibold hover:underline inline-flex items-center">
                     <i class="fas fa-external-link-alt mr-1"></i> Full Resolution
@@ -220,6 +236,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const posterModalCategory = document.getElementById('posterModalCategory');
     const posterModalDate = document.getElementById('posterModalDate');
     const posterModalDateText = document.getElementById('posterModalDateText');
+    const posterModalPrice = document.getElementById('posterModalPrice');
+    const posterModalPriceText = document.getElementById('posterModalPriceText');
     const posterModalFullLink = document.getElementById('posterModalFullLink');
     const posterModalAction = document.getElementById('posterModalAction');
 
@@ -229,6 +247,10 @@ document.addEventListener('DOMContentLoaded', () => {
         posterModalTitle.textContent = data.title || 'Course Poster';
         posterModalCategory.textContent = data.category || 'Course';
         posterModalFullLink.href = data.poster || '#';
+
+        if (posterModalPriceText) {
+            posterModalPriceText.textContent = data.price || 'Free';
+        }
 
         if (data.startdate && data.startdate.trim() !== '') {
             posterModalDateText.textContent = data.startdate;
@@ -246,7 +268,8 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         } else {
             const encodedTitle = encodeURIComponent(data.title || '');
-            const waUrl = `https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22${encodedTitle}%22.%20Please%20share%20the%20details.`;
+            const encodedFee = encodeURIComponent(data.price || 'Free');
+            const waUrl = `https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22${encodedTitle}%22%20(Fee%3A%20${encodedFee}).%20Please%20share%20the%20details.`;
             posterModalAction.innerHTML = `
                 <a href="${waUrl}" target="_blank" class="enroll-btn w-full sm:w-auto inline-flex items-center justify-center bg-emerald hover:bg-green-600 text-white font-bold py-2.5 px-5 rounded-lg transition-colors text-sm shadow cursor-pointer" data-id="${data.id || ''}" data-title="${data.title || ''}">
                     <i class="fab fa-whatsapp mr-2 text-lg"></i> Enroll via WhatsApp
@@ -274,6 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: trigger.getAttribute('data-title'),
                 category: trigger.getAttribute('data-category'),
                 startdate: trigger.getAttribute('data-startdate'),
+                price: trigger.getAttribute('data-price') || 'Free',
                 status: trigger.getAttribute('data-status')
             });
         });

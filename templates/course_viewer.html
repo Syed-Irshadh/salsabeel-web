@@ -5,7 +5,12 @@
     <div class="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
         <div class="bg-navy p-8 text-center border-b-4 border-gold">
             <h1 class="text-4xl font-serif font-bold text-white mb-2">{{ course.title }}</h1>
-            <span class="inline-block bg-emerald text-white text-sm font-bold tracking-wider py-1 px-3 rounded-full">{{ course.category }}</span>
+            <div class="flex items-center justify-center gap-2 mt-2">
+                <span class="inline-block bg-emerald text-white text-sm font-bold tracking-wider py-1 px-3 rounded-full">{{ course.category }}</span>
+                <span class="inline-flex items-center bg-gold text-navy text-sm font-bold py-1 px-3 rounded-full shadow-sm">
+                    <i class="fas fa-tag mr-1.5"></i> {{ course.price or 'Free' }}
+                </span>
+            </div>
         </div>
         
         <div class="p-8">
@@ -30,7 +35,7 @@
                     <i class="fab fa-youtube mr-2 text-xl"></i> Watch Recordings on YouTube
                 </a>
                 {% else %}
-                <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22.%20Please%20share%20the%20details." 
+                <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22%20(Fee%3A%20{{ (course.price or 'Free') | urlencode }}).%20Please%20share%20the%20details." 
                    target="_blank" 
                    class="enroll-btn inline-flex items-center justify-center w-full sm:w-auto bg-emerald hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-md cursor-pointer"
                    data-id="{{ course.id }}"

@@ -61,7 +61,7 @@
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Course Status</label>
                             <select id="status" name="status" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-emerald focus:border-emerald bg-white text-sm">
@@ -71,7 +71,10 @@
                             </select>
                         </div>
                         <div>
-                            <input type="hidden" id="price" name="price" value="Free">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Course Price / Fee</label>
+                            <input type="text" id="price" name="price" value="Free" placeholder="e.g. Free, $49, ₹999" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-emerald focus:border-emerald text-sm">
+                        </div>
+                        <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Start Date / Schedule</label>
                             <input type="text" id="start_date" name="start_date" placeholder="e.g. 3rd August, 2026" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-emerald focus:border-emerald text-sm">
                         </div>
@@ -785,6 +788,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const statusVal = data.status.toLowerCase().trim();
                         const statusSelect = document.getElementById('status');
                         if (statusSelect) statusSelect.value = statusVal;
+                    }
+                    if (data.price) {
+                        document.getElementById('price').value = data.price;
                     }
                     document.getElementById('content').value = data.content || '';
                     
