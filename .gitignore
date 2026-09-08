@@ -25,5 +25,8 @@ Thumbs.db
 .idea/
 .vscode/
 
-# Vercel Cache
+# Vercel Cache & Temporary
 .vercel/
+.vercel
+pyproject.toml
+uv.lock
