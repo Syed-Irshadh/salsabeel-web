@@ -6,13 +6,12 @@ import shutil
 import re
 import warnings
 import tempfile
+import asyncio
+import base64
+import requests
 from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
-
-# Suppress deprecated library warning spam in server logs
-warnings.filterwarnings("ignore", category=FutureWarning, module="google.generativeai")
-import google.generativeai as genai
 
 from typing import Optional
 from fastapi import FastAPI, Depends, HTTPException, Request, Form, UploadFile, File
@@ -567,7 +566,7 @@ async def parse_poster(
     saved_image_url = f"/static/img/uploads/{unique_filename}"
     
     api_key = os.environ.get("GEMINI_API_KEY", "").strip()
-    if not api_key or not api_key.startswith("AIzaSy"):
+    if not api_key:
         return {
             "title": "",
             "description": "",
@@ -577,12 +576,11 @@ async def parse_poster(
             "price": "Free",
             "content": "",
             "image_url": saved_image_url,
-            "error_notice": "Uploaded poster saved and attached below! Note: Automatic text extraction requires a valid Gemini API Key starting with 'AIzaSy' from Google AI Studio (https://aistudio.google.com/app/apikey). Please enter course details manually below and click Publish Course."
+            "error_notice": "Uploaded poster saved and attached below! GEMINI_API_KEY is not configured. Please fill in the course details manually below."
         }
     
     try:
-        genai.configure(api_key=api_key)
-        
+        img_b64 = base64.b64encode(img_bytes).decode("utf-8")
         today_dt = datetime.now()
         today_str = today_dt.strftime("%d %B %Y")
         
@@ -590,7 +588,7 @@ async def parse_poster(
         Extract course information from this promotional poster image.
         Today's reference date is: {today_str}.
 
-        Return ONLY a JSON object with these keys:
+        Return ONLY a valid JSON object with these keys:
         - "title": string (Full course title)
         - "description": string (Short overview or subtitle)
         - "category": string (One of Theology, History, Art, Language, General)
@@ -603,29 +601,66 @@ async def parse_poster(
         - "content": string (Text outline of syllabus, instructor, contact info, etc.)
         """
         
-        # Use standard production vision models: gemini-1.5-flash, gemini-2.0-flash, gemini-1.5-pro
-        candidate_models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]
-        response = None
-        last_error = None
+        payload = {
+            "contents": [{
+                "parts": [
+                    {"text": prompt},
+                    {
+                        "inline_data": {
+                            "mime_type": image.content_type or "image/jpeg",
+                            "data": img_b64
+                        }
+                    }
+                ]
+            }],
+            "generationConfig": {
+                "response_mime_type": "application/json"
+            }
+        }
+        
+        headers = {
+            "Content-Type": "application/json",
+            "x-goog-api-key": api_key
+        }
+        
+        candidate_models = ["gemini-3.6-flash", "gemini-3.5-flash", "gemini-flash-latest"]
+        res_data = None
+        last_error_text = None
         
         for m_name in candidate_models:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{m_name}:generateContent?key={api_key}"
             try:
-                model = genai.GenerativeModel(m_name, generation_config={"response_mime_type": "application/json"})
-                response = await model.generate_content_async([
-                    prompt,
-                    {"mime_type": image.content_type or "image/jpeg", "data": img_bytes}
-                ])
-                if response and response.text:
-                    break
-            except Exception as ex:
-                last_error = ex
-                if "401" in str(ex) or "invalid authentication" in str(ex).lower():
-                    raise ex
-                    
-        if not response or not response.text:
-            raise last_error or Exception("Unable to extract details from poster.")
+                resp = await asyncio.to_thread(
+                    requests.post,
+                    url,
+                    json=payload,
+                    headers=headers,
+                    timeout=45
+                )
+                if resp.status_code == 200:
+                    json_body = resp.json()
+                    candidates = json_body.get("candidates", [])
+                    if candidates:
+                        raw_text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+                        if raw_text:
+                            clean_text = raw_text.strip()
+                            if clean_text.startswith("```json"):
+                                clean_text = clean_text[7:]
+                            if clean_text.startswith("```"):
+                                clean_text = clean_text[3:]
+                            if clean_text.endswith("```"):
+                                clean_text = clean_text[:-3]
+                            res_data = json.loads(clean_text.strip())
+                            break
+                else:
+                    last_error_text = f"HTTP {resp.status_code}: {resp.text}"
+            except Exception as loop_err:
+                last_error_text = str(loop_err)
+                
+        if not res_data:
+            raise Exception(last_error_text or "Unable to extract details from poster.")
             
-        data = json.loads(response.text.strip())
+        data = res_data
         
         # Normalize fields for frontend
         title = data.get("title") or data.get("course_title") or ""
@@ -658,10 +693,7 @@ async def parse_poster(
         
     except Exception as e:
         err_msg = str(e)
-        if "401" in err_msg or "invalid authentication" in err_msg.lower() or "ACCESS_TOKEN_TYPE_UNSUPPORTED" in err_msg:
-            notice = "Uploaded poster saved and attached below! The configured GEMINI_API_KEY is invalid or expired. To enable automatic AI poster extraction, please create a free API key at Google AI Studio (https://aistudio.google.com/app/apikey). In the meantime, you can fill in the course details manually below."
-        else:
-            notice = f"Uploaded poster saved and attached below! Note: AI text extraction issue ({err_msg}). Please fill in the course details manually below."
+        notice = f"Uploaded poster saved and attached below! Note: AI text extraction issue ({err_msg}). Please fill in the course details manually below."
             
         return {
             "title": "",
