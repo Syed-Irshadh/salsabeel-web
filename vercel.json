@@ -19,6 +19,10 @@
   ],
   "routes": [
     {
+      "src": "/static/img/uploads/(.*)",
+      "dest": "/api/index.py"
+    },
+    {
       "src": "/static/(.*)",
       "dest": "/static/$1"
     },

@@ -1,25 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="text-center mb-8">
-        <h2 class="text-4xl font-serif font-bold text-navy mb-4">Courses</h2>
-        <p class="text-gray-600 max-w-xl mx-auto">Explore our ongoing, upcoming, and past courses. Learn classical Islamic sciences at your own pace.</p>
-        <div class="w-24 h-1 bg-emerald mx-auto mt-4 rounded"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <div class="text-center mb-10">
+        <span class="text-xs font-bold uppercase tracking-widest text-emerald bg-emerald/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Academic Offerings</span>
+        <h2 class="text-4xl font-serif font-bold text-navy mb-3">Courses & Seminars</h2>
+        <p class="text-gray-600 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">Explore our ongoing, upcoming, and archived courses. Deepen your understanding of sacred Islamic sciences at your own pace.</p>
+        <div class="w-20 h-1 bg-gold mx-auto mt-4 rounded-full"></div>
     </div>
 
     <!-- Filter Tabs (Past, Current, Future) -->
     <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12">
-        <button class="filter-tab px-5 py-2 rounded-full font-medium text-sm transition-colors bg-navy text-white shadow-sm cursor-pointer" data-filter="all">
+        <button class="filter-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-navy text-white shadow-sm cursor-pointer" data-filter="all">
             All Courses
         </button>
-        <button class="filter-tab px-5 py-2 rounded-full font-medium text-sm transition-colors bg-white text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer" data-filter="current">
+        <button class="filter-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-white text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer" data-filter="current">
             <i class="fas fa-play-circle mr-1.5 text-emerald"></i> Current Courses
         </button>
-        <button class="filter-tab px-5 py-2 rounded-full font-medium text-sm transition-colors bg-white text-gray-700 hover:bg-amber-50 hover:text-amber-700 border border-gray-200 cursor-pointer" data-filter="upcoming">
+        <button class="filter-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-white text-gray-700 hover:bg-amber-50 hover:text-amber-700 border border-gray-200 cursor-pointer" data-filter="upcoming">
             <i class="fas fa-clock mr-1.5 text-amber-500"></i> Future / Upcoming
         </button>
-        <button class="filter-tab px-5 py-2 rounded-full font-medium text-sm transition-colors bg-white text-gray-700 hover:bg-gray-100 hover:text-gray-900 border border-gray-200 cursor-pointer" data-filter="past">
+        <button class="filter-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-white text-gray-700 hover:bg-gray-100 hover:text-gray-900 border border-gray-200 cursor-pointer" data-filter="past">
             <i class="fas fa-check-circle mr-1.5 text-gray-500"></i> Past / Completed
         </button>
     </div>
@@ -27,7 +28,7 @@
     <!-- Courses Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="coursesContainer">
         {% for course in courses %}
-        <div class="course-card bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 border border-gray-100 flex flex-col" data-status="{{ course.status | default('current') }}">
+        <div class="course-card luxury-card bg-white rounded-2xl overflow-hidden shadow-md border border-gray-200/80 flex flex-col" data-status="{{ course.status | default('current') }}">
             <!-- Course Image with Clickable Zoom Overlay -->
             <div class="relative group cursor-pointer overflow-hidden open-poster-btn"
                  data-id="{{ course.id }}"
@@ -38,31 +39,35 @@
                  data-price="{{ course.price or 'Free' }}"
                  data-status="{{ course.status | default('current') }}"
                  title="Click to view full poster">
-                <img src="{{ course.image_url }}" alt="{{ course.title }}" class="w-full h-52 object-cover border-b-[3px] border-gold transition-transform duration-300 group-hover:scale-105">
+                <img src="{{ course.image_url }}" 
+                     alt="{{ course.title }}" 
+                     class="w-full h-56 object-cover border-b-2 border-gold transition-transform duration-500 group-hover:scale-105"
+                     onerror="this.onerror=null; this.src='/static/img/logo.jpeg';"
+                     loading="lazy">
                 <!-- Hover Overlay with 'View Poster' hint -->
-                <div class="absolute inset-0 bg-navy/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                    <span class="inline-flex items-center text-xs font-bold px-3 py-1.5 rounded-full bg-white/95 text-navy shadow-lg">
+                <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center backdrop-blur-xs">
+                    <span class="inline-flex items-center text-xs font-bold px-3.5 py-2 rounded-xl bg-white/95 text-navy shadow-lg">
                         <i class="fas fa-search-plus mr-1.5 text-emerald"></i> View Full Poster
                     </span>
                 </div>
                 <!-- Price Badge Overlay -->
                 <div class="absolute top-3 left-3 pointer-events-none">
-                    <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full {% if course.price and course.price.strip().lower() != 'free' %}bg-amber-500 text-white shadow-md{% else %}bg-navy/80 text-gold backdrop-blur-sm border border-gold/30 shadow{% endif %}">
+                    <span class="inline-flex items-center text-xs font-bold px-3 py-1 rounded-lg {% if course.price and course.price.strip().lower() != 'free' %}bg-gold text-dark shadow-md font-semibold{% else %}bg-dark/80 text-white backdrop-blur-sm border border-gold/30 shadow{% endif %}">
                         <i class="fas fa-tag mr-1.5 text-xs"></i> {{ course.price or 'Free' }}
                     </span>
                 </div>
                 <!-- Status Badge Overlay -->
                 <div class="absolute top-3 right-3 pointer-events-none">
                     {% if course.status == 'past' %}
-                    <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full bg-gray-900/80 text-white backdrop-blur-sm shadow">
-                        <i class="fas fa-check-circle mr-1.5 text-gray-300"></i> Completed
+                    <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-lg bg-dark/85 text-gray-200 backdrop-blur-sm shadow border border-white/10">
+                        <i class="fas fa-check-circle mr-1.5 text-gray-400"></i> Completed
                     </span>
                     {% elif course.status == 'upcoming' %}
-                    <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full bg-amber-500 text-white shadow">
+                    <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-lg bg-amber-500 text-white shadow">
                         <i class="fas fa-clock mr-1.5"></i> Upcoming
                     </span>
                     {% else %}
-                    <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full bg-emerald text-white shadow">
+                    <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald text-white shadow">
                         <i class="fas fa-play-circle mr-1.5"></i> Ongoing
                     </span>
                     {% endif %}
@@ -71,11 +76,11 @@
 
             <div class="p-6 flex flex-col flex-grow">
                 <div class="flex items-center justify-between mb-3">
-                    <span class="inline-block bg-navy/10 text-navy text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-full">
+                    <span class="inline-block bg-navy/10 text-navy text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-md">
                         {{ course.category }}
                     </span>
                     <button type="button" 
-                            class="open-poster-btn text-xs font-semibold text-emerald hover:text-green-700 bg-emerald/10 hover:bg-emerald/20 px-2.5 py-1 rounded-full transition-colors flex items-center cursor-pointer"
+                            class="open-poster-btn text-xs font-semibold text-emerald hover:text-teal-800 bg-emerald/10 hover:bg-emerald/20 px-2.5 py-1 rounded-md transition-colors flex items-center cursor-pointer"
                             data-id="{{ course.id }}"
                             data-poster="{{ course.image_url }}" 
                             data-title="{{ course.title }}" 
@@ -88,7 +93,7 @@
                     </button>
                 </div>
 
-                <h3 class="text-2xl font-serif font-bold text-navy mb-2 cursor-pointer hover:text-emerald transition-colors open-poster-btn"
+                <h3 class="text-2xl font-serif font-bold text-navy mb-2 cursor-pointer hover:text-emerald transition-colors open-poster-btn leading-snug"
                     data-id="{{ course.id }}"
                     data-poster="{{ course.image_url }}" 
                     data-title="{{ course.title }}" 
@@ -99,36 +104,36 @@
                     title="Click to view full poster">
                     {{ course.title }}
                 </h3>
-                <p class="text-gray-600 mb-4 flex-grow text-sm leading-relaxed">{{ course.description }}</p>
+                <p class="text-gray-600 mb-5 flex-grow text-sm leading-relaxed">{{ course.description }}</p>
                 
                 <!-- Schedule & Price Labels -->
-                <div class="flex flex-wrap items-center gap-2 mb-4">
+                <div class="flex flex-wrap items-center gap-2 mb-5">
                     {% if course.start_date %}
-                    <span class="text-xs text-gray-600 font-medium bg-gray-100 px-3 py-1.5 rounded-md inline-flex items-center">
+                    <span class="text-xs text-gray-600 font-medium bg-gray-100 px-3 py-1.5 rounded-lg inline-flex items-center">
                         <i class="far fa-calendar-alt mr-1.5 text-emerald"></i> {{ course.start_date }}
                     </span>
                     {% endif %}
-                    <span class="text-xs font-bold px-3 py-1.5 rounded-md inline-flex items-center {% if course.price and course.price.strip().lower() != 'free' %}bg-amber-100 text-amber-900 border border-amber-200{% else %}bg-emerald/10 text-emerald border border-emerald/20{% endif %}">
+                    <span class="text-xs font-bold px-3 py-1.5 rounded-lg inline-flex items-center {% if course.price and course.price.strip().lower() != 'free' %}bg-amber-100 text-amber-900 border border-amber-200{% else %}bg-emerald/10 text-emerald border border-emerald/20{% endif %}">
                         <i class="fas fa-tag mr-1.5"></i> Fee: {{ course.price or 'Free' }}
                     </span>
                 </div>
                 
                 <!-- Action Buttons based on Status -->
                 {% if course.status == 'past' %}
-                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition-colors shadow-md flex items-center justify-center cursor-pointer">
-                    <i class="fab fa-youtube mr-2 text-xl"></i> Watch on YouTube
+                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-colors shadow-sm flex items-center justify-center cursor-pointer text-sm">
+                    <i class="fab fa-youtube mr-2 text-lg"></i> Watch on YouTube
                 </a>
                 {% else %}
                 <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22%20(Fee%3A%20{{ (course.price or 'Free') | urlencode }}).%20Please%20share%20the%20details." 
                    target="_blank" 
-                   class="enroll-btn w-full bg-emerald hover:bg-green-600 text-white font-bold py-3 rounded-lg transition-colors shadow-md flex items-center justify-center cursor-pointer" 
+                   class="enroll-btn w-full bg-emerald hover:bg-teal-700 text-white font-bold py-3 rounded-xl transition-colors shadow-sm flex items-center justify-center cursor-pointer text-sm" 
                    data-id="{{ course.id }}" 
                    data-title="{{ course.title }}">
-                    <i class="fab fa-whatsapp mr-2 text-xl"></i> Enroll Now via WhatsApp
+                    <i class="fab fa-whatsapp mr-2 text-lg"></i> Enroll Now via WhatsApp
                 </a>
                 {% endif %}
 
-                <button class="delete-course-btn admin-only hidden w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 mt-3 rounded-lg transition-colors shadow-md" data-id="{{ course.id }}">
+                <button class="delete-course-btn admin-only hidden w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 mt-3 rounded-xl transition-colors shadow-sm text-sm" data-id="{{ course.id }}">
                     <i class="fas fa-trash-alt mr-2"></i> Delete Course
                 </button>
             </div>
@@ -204,10 +209,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Reset tab styles
             tabs.forEach(t => {
-                t.className = 'filter-tab px-5 py-2 rounded-full font-medium text-sm transition-colors bg-white text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer';
+                t.className = 'filter-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-white text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer';
             });
             // Active tab style
-            tab.className = 'filter-tab px-5 py-2 rounded-full font-medium text-sm transition-colors bg-navy text-white shadow-sm cursor-pointer';
+            tab.className = 'filter-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-navy text-white shadow-sm cursor-pointer';
 
             // Filter cards
             let visible = 0;
@@ -226,6 +231,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Motion One Card Entrance
+    if (window.Motion) {
+        const { animate, inView } = window.Motion;
+        cards.forEach((card, idx) => {
+            inView(card, () => {
+                animate(card, 
+                    { opacity: [0, 1], y: [24, 0] }, 
+                    { delay: (idx % 3) * 0.08, duration: 0.55, easing: [0.22, 1, 0.36, 1] }
+                );
+            });
+        });
+    }
 
     // Poster Lightbox Modal Logic
     const posterModal = document.getElementById('posterModal');

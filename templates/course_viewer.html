@@ -1,52 +1,55 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
-        <div class="bg-navy p-8 text-center border-b-4 border-gold">
-            <h1 class="text-4xl font-serif font-bold text-white mb-2">{{ course.title }}</h1>
-            <div class="flex items-center justify-center gap-2 mt-2">
-                <span class="inline-block bg-emerald text-white text-sm font-bold tracking-wider py-1 px-3 rounded-full">{{ course.category }}</span>
-                <span class="inline-flex items-center bg-gold text-navy text-sm font-bold py-1 px-3 rounded-full shadow-sm">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200/80">
+        <div class="bg-navy p-8 sm:p-10 text-center border-b-4 border-gold">
+            <h1 class="text-3xl sm:text-4xl font-serif font-bold text-white mb-3">{{ course.title }}</h1>
+            <div class="flex flex-wrap items-center justify-center gap-2 mt-3">
+                <span class="inline-block bg-white/10 text-white border border-white/20 text-xs font-bold uppercase tracking-wider py-1 px-3.5 rounded-lg">{{ course.category }}</span>
+                <span class="inline-flex items-center bg-gold text-dark text-xs font-bold py-1 px-3.5 rounded-lg shadow-sm">
                     <i class="fas fa-tag mr-1.5"></i> {{ course.price or 'Free' }}
                 </span>
             </div>
         </div>
         
-        <div class="p-8">
+        <div class="p-6 sm:p-10">
             {% if course.image_url %}
             <div class="mb-8 text-center">
-                <div class="inline-block relative group rounded-xl overflow-hidden shadow-lg border-2 border-gold/40">
-                    <img src="{{ course.image_url }}" alt="{{ course.title }} Poster" class="max-h-96 w-auto mx-auto object-contain">
-                    <a href="{{ course.image_url }}" target="_blank" class="absolute inset-0 bg-navy/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-medium text-sm gap-2">
+                <div class="inline-block relative group rounded-2xl overflow-hidden shadow-lg border-2 border-gold/40">
+                    <img src="{{ course.image_url }}" 
+                         alt="{{ course.title }} Poster" 
+                         class="max-h-[500px] w-auto mx-auto object-contain"
+                         onerror="this.onerror=null; this.src='/static/img/logo.jpeg';">
+                    <a href="{{ course.image_url }}" target="_blank" class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-medium text-sm gap-2 backdrop-blur-xs">
                         <i class="fas fa-search-plus text-gold text-lg"></i> Open Full Resolution Poster
                     </a>
                 </div>
             </div>
             {% endif %}
 
-            <div class="prose max-w-none text-gray-700 space-y-4">
+            <div class="prose max-w-none text-gray-700 space-y-4 leading-relaxed">
                 {{ course.content | replace('\n', '<br>') | safe }}
             </div>
             
-            <div class="mt-8 flex flex-wrap gap-4">
+            <div class="mt-10 pt-6 border-t border-gray-100 flex flex-wrap gap-4">
                 {% if course.status == 'past' %}
-                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="inline-flex items-center justify-center w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-md">
-                    <i class="fab fa-youtube mr-2 text-xl"></i> Watch Recordings on YouTube
+                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="inline-flex items-center justify-center w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-7 rounded-xl transition-colors shadow-sm text-sm">
+                    <i class="fab fa-youtube mr-2 text-lg"></i> Watch Recordings on YouTube
                 </a>
                 {% else %}
                 <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22%20(Fee%3A%20{{ (course.price or 'Free') | urlencode }}).%20Please%20share%20the%20details." 
                    target="_blank" 
-                   class="enroll-btn inline-flex items-center justify-center w-full sm:w-auto bg-emerald hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-md cursor-pointer"
+                   class="enroll-btn inline-flex items-center justify-center w-full sm:w-auto bg-emerald hover:bg-teal-700 text-white font-bold py-3.5 px-7 rounded-xl transition-colors shadow-sm cursor-pointer text-sm"
                    data-id="{{ course.id }}"
                    data-title="{{ course.title }}">
-                    <i class="fab fa-whatsapp mr-2 text-xl"></i> Enroll via WhatsApp
+                    <i class="fab fa-whatsapp mr-2 text-lg"></i> Enroll via WhatsApp
                 </a>
                 {% endif %}
             </div>
             
-            <div class="mt-8 pt-6 border-t border-gray-200 text-center">
-                <a href="/courses" class="inline-flex items-center text-emerald hover:text-green-600 font-bold transition-colors">
+            <div class="mt-8 pt-6 border-t border-gray-100 text-center">
+                <a href="/courses" class="inline-flex items-center text-emerald hover:text-teal-800 font-bold transition-colors text-sm">
                     <i class="fas fa-arrow-left mr-2"></i> Back to Courses
                 </a>
             </div>

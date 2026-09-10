@@ -30,18 +30,23 @@ if raw_db_url:
 
     try:
         connect_args = {}
+        engine_kwargs = {
+            "pool_pre_ping": True,
+            "pool_recycle": 300,
+        }
         if "sqlite" in db_url:
-            connect_args = {"check_same_thread": False}
+            connect_args["check_same_thread"] = False
+        else:
+            engine_kwargs["pool_size"] = 5
+            engine_kwargs["max_overflow"] = 5
+            
         engine = create_engine(
             db_url,
-            pool_pre_ping=True,
-            pool_recycle=300,
-            connect_args=connect_args
+            connect_args=connect_args,
+            **engine_kwargs
         )
-        with engine.connect() as conn:
-            print("Successfully connected using DATABASE_URL.")
     except Exception as e:
-        print(f"Warning: Failed to connect with DATABASE_URL: {e}")
+        print(f"Warning: Failed to create engine with DATABASE_URL: {e}")
         engine = None
 
 # 2. If no DATABASE_URL, attempt local MySQL only when NOT on Vercel

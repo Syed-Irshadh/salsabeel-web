@@ -3,32 +3,32 @@
 {% block title %}About Us - Salsabeel Academy{% endblock %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 about-container">
     <!-- Hero Intro -->
     <div class="text-center mb-16">
         <div class="flex justify-center mb-6">
-            <div class="p-1 rounded-2xl bg-gradient-to-tr from-gold via-yellow-200 to-gold shadow-lg">
-                <img src="/static/img/logo.jpeg" alt="Salsabeel Academy Emblem" class="h-24 w-24 sm:h-28 sm:w-28 rounded-2xl object-cover">
+            <div class="p-1 rounded-full bg-gradient-to-tr from-gold via-yellow-100 to-gold shadow-glow-gold emblem-halo">
+                <img src="/static/img/logo.jpeg" alt="Salsabeel Academy Emblem" class="h-28 w-28 sm:h-32 sm:w-32 rounded-full object-cover">
             </div>
         </div>
-        <span class="inline-block bg-emerald/10 text-emerald text-sm font-semibold tracking-wider uppercase px-4 py-1.5 rounded-full mb-4">
+        <span class="inline-block bg-emerald/10 text-emerald text-xs sm:text-sm font-semibold tracking-wider uppercase px-4 py-1.5 rounded-full mb-4 border border-emerald/20">
             தமிழ் பேசும் சமூகத்திற்கான நல்வழிகாட்டல்
         </span>
         <h1 class="text-4xl sm:text-5xl font-serif font-bold text-navy mb-6">The Story of Salsabeel</h1>
-        <p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        <p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light">
             "Salsabeel" is a pristine spring in Paradise, symbolizing purity, refreshment, and flowing abundance. 
             At Salsabeel Academy, our heart's mission is to bring that freely flowing stream of authentic Islamic knowledge 
-            directly to the <strong>Tamil-speaking community worldwide</strong>.
+            directly to the <strong class="text-navy font-semibold">Tamil-speaking community worldwide</strong>.
         </p>
-        <div class="w-24 h-1 bg-gold mx-auto mt-6 rounded"></div>
+        <div class="w-20 h-1 bg-gold mx-auto mt-6 rounded-full"></div>
     </div>
 
     <!-- Special Highlight: Empowering the Tamil Community -->
     <div class="bg-gradient-to-br from-navy to-dark text-white rounded-2xl p-8 sm:p-12 mb-16 shadow-xl border-b-4 border-gold">
         <div class="max-w-3xl mx-auto text-center">
-            <span class="text-gold text-sm font-bold uppercase tracking-widest">Our Focus & Heritage</span>
-            <h2 class="text-3xl sm:text-4xl font-serif font-bold text-sand mt-2 mb-6">Empowering Tamil-Speaking Seekers</h2>
-            <p class="text-gray-200 leading-relaxed mb-8 text-base sm:text-lg">
+            <span class="text-gold text-xs font-bold uppercase tracking-widest bg-white/10 px-3 py-1 rounded-full border border-gold/30">Our Focus & Heritage</span>
+            <h2 class="text-3xl sm:text-4xl font-serif font-bold text-sand mt-4 mb-6">Empowering Tamil-Speaking Seekers</h2>
+            <p class="text-gray-200 leading-relaxed mb-8 text-base sm:text-lg font-light">
                 While Islamic literature is vast in Arabic and Urdu, authentic, structured learning in the Tamil language 
                 remains deeply sought after. Salsabeel Academy was established specifically to fill this gap — offering 
                 deep, nuanced understanding of the Qur'an and Sunnah in the language closest to your heart.
@@ -70,22 +70,22 @@
 
     <!-- Mission & Vision Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
-        <div class="bg-white p-8 rounded-xl shadow-md border-t-4 border-emerald">
-            <div class="w-12 h-12 bg-emerald/10 text-emerald rounded-full flex items-center justify-center mb-4 text-xl">
+        <div class="bg-white p-8 rounded-2xl shadow-md border-t-4 border-emerald luxury-card">
+            <div class="w-12 h-12 bg-emerald/10 text-emerald rounded-xl flex items-center justify-center mb-4 text-xl">
                 <i class="fas fa-compass"></i>
             </div>
             <h3 class="text-2xl font-serif font-bold text-navy mb-3">Our Mission</h3>
-            <p class="text-gray-600 leading-relaxed">
+            <p class="text-gray-600 leading-relaxed text-sm">
                 To deliver accessible, high-caliber Islamic education grounded in classical scholarship, presented in 
                 the Tamil language, to nurture confident, knowledgeable, and spiritually grounded individuals.
             </p>
         </div>
-        <div class="bg-white p-8 rounded-xl shadow-md border-t-4 border-gold">
-            <div class="w-12 h-12 bg-gold/10 text-gold rounded-full flex items-center justify-center mb-4 text-xl">
+        <div class="bg-white p-8 rounded-2xl shadow-md border-t-4 border-gold luxury-card">
+            <div class="w-12 h-12 bg-gold/10 text-gold rounded-xl flex items-center justify-center mb-4 text-xl">
                 <i class="fas fa-eye"></i>
             </div>
             <h3 class="text-2xl font-serif font-bold text-navy mb-3">Our Vision</h3>
-            <p class="text-gray-600 leading-relaxed">
+            <p class="text-gray-600 leading-relaxed text-sm">
                 An enlightened, united Tamil Muslim community empowered with timeless Islamic wisdom, excelling in character, 
                 faith, and positive societal contribution wherever they reside.
             </p>
@@ -94,18 +94,27 @@
 
     <!-- Leadership / Instructors Section -->
     <div class="text-center mb-12">
-        <h2 class="text-3xl font-serif font-bold text-navy mb-4">Leadership & Faculty</h2>
+        <h2 class="text-3xl font-serif font-bold text-navy mb-3">Leadership & Faculty</h2>
         <p class="text-gray-600 max-w-md mx-auto text-sm">Qualified educators passionate about teaching in the mother tongue.</p>
-        <div class="w-16 h-1 bg-emerald mx-auto mt-4 rounded"></div>
+        <div class="w-16 h-1 bg-gold mx-auto mt-4 rounded-full"></div>
     </div>
     
     <div class="max-w-md mx-auto text-center">
-        <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
-            <img src="https://ui-avatars.com/api/?name=Hazira+Umma&background=3d5a52&color=d4af37&size=180" alt="Hazira Umma" class="w-28 h-28 rounded-full mx-auto mb-5 border-4 border-gold object-cover shadow-sm">
+        <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100 luxury-card">
+            <img src="https://ui-avatars.com/api/?name=Hazira+Umma&background=08535c&color=c49851&size=180" alt="Hazira Umma" class="w-28 h-28 rounded-full mx-auto mb-5 border-4 border-gold object-cover shadow-sm">
             <h4 class="text-2xl font-serif font-bold text-navy">Hazira Umma</h4>
             <p class="text-xs text-emerald font-bold uppercase tracking-wider mt-1">BE, BAIS</p>
             <p class="text-sm font-medium text-gray-600 mt-2">Founder & Lead Instructor</p>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.Motion) {
+        const { animate } = window.Motion;
+        animate(".about-container", { opacity: [0, 1], y: [16, 0] }, { duration: 0.6, easing: [0.22, 1, 0.36, 1] });
+    }
+});
+</script>
 {% endblock %}

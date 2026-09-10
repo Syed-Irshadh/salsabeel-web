@@ -1,7 +1,16 @@
 from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, LargeBinary
 from sqlalchemy.orm import relationship
 from app.database import Base
+
+class UploadedFile(Base):
+    __tablename__ = "uploaded_files"
+
+    id = Column(Integer, primary_key=True, index=True)
+    filename = Column(String(255), unique=True, index=True)
+    content_type = Column(String(100), default="image/jpeg")
+    data = Column(LargeBinary)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
 class Course(Base):
     __tablename__ = "courses"

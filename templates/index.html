@@ -2,56 +2,106 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero-stars bg-gradient-to-b from-navy to-dark text-white pt-16 pb-28 text-center border-b-[6px] border-emerald">
-    <div class="max-w-4xl mx-auto px-4">
-        <!-- Logo Emblem -->
-        <div class="flex justify-center mb-6">
-            <div class="p-1 rounded-2xl bg-gradient-to-tr from-gold via-yellow-200 to-gold shadow-[0_0_35px_rgba(212,175,55,0.4)]">
-                <img src="/static/img/logo.jpeg" alt="Salsabeel Academy Emblem" class="h-28 w-28 sm:h-36 sm:w-36 rounded-2xl object-cover">
+<section class="hero-pattern text-white pt-20 pb-32 text-center border-b-[4px] border-gold relative overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4 relative z-10 hero-content">
+        <!-- Logo Emblem with Ambient Breathing Halo -->
+        <div class="flex justify-center mb-8">
+            <div class="p-1 rounded-full bg-gradient-to-tr from-gold via-yellow-100 to-gold shadow-glow-gold emblem-halo">
+                <img src="/static/img/logo.jpeg" alt="Salsabeel Academy Emblem" class="h-32 w-32 sm:h-40 sm:w-40 rounded-full object-cover">
             </div>
         </div>
-        <h1 class="text-5xl md:text-6xl font-bold font-serif mb-6 leading-tight">Deepen Islamic Sciences with <span class="text-gold">Salsabeel Academy</span></h1>
-        <p class="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">An authentic learning platform dedicated to teaching classical Islamic sciences in the Tamil language for seekers worldwide.</p>
-        <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
-            <a href="/courses" class="bg-emerald hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all transform hover:scale-105">Explore Courses</a>
-            <a href="/about" class="border-2 border-gold text-gold hover:bg-gold hover:text-navy font-bold py-3 px-8 rounded-full shadow-[0_0_15px_rgba(255,215,0,0.2)] transition-all">Learn More</a>
+
+        <!-- Tamil & English Badge -->
+        <div class="mb-5">
+            <span class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-gold/40 text-gold-light text-xs sm:text-sm font-semibold tracking-wider uppercase px-4 py-1.5 rounded-full shadow-sm">
+                <i class="fas fa-star text-gold text-xs"></i>
+                Classical Islamic Sciences · தமிழ் சமூகத்திற்கான நல்வழிகாட்டல்
+                <i class="fas fa-star text-gold text-xs"></i>
+            </span>
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold font-serif mb-6 leading-tight tracking-tight">
+            Deepen Islamic Sciences with <br class="hidden sm:inline"><span class="text-gold font-serif">Salsabeel Academy</span>
+        </h1>
+
+        <p class="text-lg sm:text-xl text-gray-200 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+            An authentic, scholarly learning sanctuary dedicated to teaching classical Islamic sciences in the Tamil language for seekers of sacred knowledge worldwide.
+        </p>
+
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6">
+            <a href="/courses" class="w-full sm:w-auto bg-gold hover:bg-gold-light text-dark font-bold py-3.5 px-8 rounded-xl shadow-glow-gold transition-all transform hover:-translate-y-0.5 inline-flex items-center justify-center cursor-pointer text-base">
+                <i class="fas fa-book-open mr-2.5 text-navy"></i> Explore Courses
+            </a>
+            <a href="/about" class="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-gold font-bold py-3.5 px-8 rounded-xl transition-all transform hover:-translate-y-0.5 inline-flex items-center justify-center text-base backdrop-blur-xs">
+                <i class="fas fa-info-circle mr-2.5 text-gold"></i> About Us
+            </a>
         </div>
     </div>
 </section>
 
 <!-- Features Section -->
-<section class="py-20 bg-white">
+<section class="py-24 bg-sand">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <h2 class="text-4xl font-bold font-serif text-navy">Why Choose Salsabeel?</h2>
-            <div class="w-24 h-1 bg-gold mx-auto mt-4 rounded"></div>
+            <span class="text-xs font-bold uppercase tracking-widest text-emerald bg-emerald/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Our Core Pillars</span>
+            <h2 class="text-3xl sm:text-4xl font-bold font-serif text-navy">Why Choose Salsabeel?</h2>
+            <div class="w-20 h-1 bg-gold mx-auto mt-4 rounded-full"></div>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-            <div class="p-6 rounded-xl border border-gray-100 shadow-lg hover:shadow-xl transition-shadow bg-gray-50">
-                <div class="w-16 h-16 bg-navy text-gold rounded-full flex items-center justify-center mx-auto mb-6 text-2xl shadow-md">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="feature-card luxury-card p-8 rounded-2xl border border-gray-200/80 bg-white text-center flex flex-col items-center">
+                <div class="w-16 h-16 bg-navy text-gold rounded-2xl flex items-center justify-center mb-6 text-2xl shadow-md border border-gold/20">
                     <i class="fas fa-book-quran"></i>
                 </div>
-                <h3 class="text-2xl font-serif font-bold text-navy mb-4">Mother Tongue Learning</h3>
-                <p class="text-gray-600">Complex concepts of Tafseer and Tajweed explained clearly in Tamil and English.</p>
+                <h3 class="text-2xl font-serif font-bold text-navy mb-3">Mother Tongue Learning</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">Complex classical sciences of Tafseer, Tajweed, and Fiqh explained clearly and eloquently in Tamil and English.</p>
             </div>
             
-            <div class="p-6 rounded-xl border border-gray-100 shadow-lg hover:shadow-xl transition-shadow bg-gray-50">
-                <div class="w-16 h-16 bg-navy text-gold rounded-full flex items-center justify-center mx-auto mb-6 text-2xl shadow-md">
+            <div class="feature-card luxury-card p-8 rounded-2xl border border-gray-200/80 bg-white text-center flex flex-col items-center">
+                <div class="w-16 h-16 bg-navy text-gold rounded-2xl flex items-center justify-center mb-6 text-2xl shadow-md border border-gold/20">
                     <i class="fas fa-graduation-cap"></i>
                 </div>
-                <h3 class="text-2xl font-serif font-bold text-navy mb-4">Expert Teachers</h3>
-                <p class="text-gray-600">Learn directly from qualified teachers with verified traditional credentials.</p>
+                <h3 class="text-2xl font-serif font-bold text-navy mb-3">Authentic Scholarship</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">Learn directly under qualified instructors grounded in traditional credentials, unbroken chains of transmission, and upright character.</p>
             </div>
             
-            <div class="p-6 rounded-xl border border-gray-100 shadow-lg hover:shadow-xl transition-shadow bg-gray-50">
-                <div class="w-16 h-16 bg-navy text-gold rounded-full flex items-center justify-center mx-auto mb-6 text-2xl shadow-md">
+            <div class="feature-card luxury-card p-8 rounded-2xl border border-gray-200/80 bg-white text-center flex flex-col items-center">
+                <div class="w-16 h-16 bg-navy text-gold rounded-2xl flex items-center justify-center mb-6 text-2xl shadow-md border border-gold/20">
                     <i class="fas fa-laptop-code"></i>
                 </div>
-                <h3 class="text-2xl font-serif font-bold text-navy mb-4">Modern Platform</h3>
-                <p class="text-gray-600">A seamless, beautiful learning experience designed for any device.</p>
+                <h3 class="text-2xl font-serif font-bold text-navy mb-3">Accessible & Modern</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">A pristine, distraction-free digital campus crafted for seamless learning across mobile, tablet, and desktop devices.</p>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Motion One Scroll & Entry Animations -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.Motion) {
+        const { animate, stagger, inView } = window.Motion;
+
+        // Hero staggered entrance
+        const heroItems = document.querySelectorAll('.hero-content > *');
+        if (heroItems.length > 0) {
+            animate(heroItems, 
+                { opacity: [0, 1], y: [24, 0] }, 
+                { delay: stagger(0.12), duration: 0.8, easing: [0.22, 1, 0.36, 1] }
+            );
+        }
+
+        // Feature cards inView reveal
+        const featureCards = document.querySelectorAll('.feature-card');
+        featureCards.forEach((card, idx) => {
+            inView(card, () => {
+                animate(card, 
+                    { opacity: [0, 1], y: [30, 0] }, 
+                    { delay: idx * 0.12, duration: 0.65, easing: [0.22, 1, 0.36, 1] }
+                );
+            });
+        });
+    }
+});
+</script>
 {% endblock %}

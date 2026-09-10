@@ -2,8 +2,16 @@
 
 {% block content %}
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="flex justify-between items-center mb-8">
-        <h2 class="text-3xl font-serif font-bold text-navy">Admin Dashboard</h2>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-6 border-b border-gray-200">
+        <div>
+            <h2 class="text-3xl font-serif font-bold text-navy">Admin Dashboard</h2>
+            <p class="text-xs sm:text-sm text-gray-500 mt-1">Manage courses, student enrollments, and configure security credentials.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <button type="button" id="openChangePasswordModalBtn" class="inline-flex items-center text-xs sm:text-sm font-semibold text-navy hover:text-white bg-white hover:bg-navy border border-gray-300 hover:border-navy px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer">
+                <i class="fas fa-key text-gold mr-2"></i> Change Password
+            </button>
+        </div>
     </div>
     
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -12,43 +20,43 @@
         <div class="lg:col-span-1 space-y-8">
             
             <!-- AI Poster Upload -->
-            <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-emerald">
-                <h3 class="text-xl font-bold text-navy mb-4"><i class="fas fa-magic text-emerald mr-2"></i> AI Course Parser</h3>
-                <p class="text-sm text-gray-500 mb-4">Upload a WhatsApp poster. Our AI will extract the course details automatically!</p>
+            <div class="bg-white p-6 sm:p-7 rounded-2xl shadow-md border-t-4 border-gold">
+                <h3 class="text-xl font-bold text-navy mb-3"><i class="fas fa-magic text-emerald mr-2"></i> AI Course Parser</h3>
+                <p class="text-xs sm:text-sm text-gray-500 mb-4">Upload a promotional poster. Our AI will automatically extract course details!</p>
                 <form id="aiParseForm">
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Poster Image</label>
-                        <input type="file" id="posterImage" accept="image/*" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-emerald file:text-white hover:file:bg-green-600 cursor-pointer border border-gray-300 rounded-md">
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Poster Image</label>
+                        <input type="file" id="posterImage" accept="image/*" required class="block w-full text-xs sm:text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald file:text-white hover:file:bg-teal-700 cursor-pointer border border-gray-300 rounded-xl">
                     </div>
-                    <button type="submit" id="parseBtn" class="w-full bg-navy text-white hover:bg-gray-800 font-bold py-2 px-4 rounded-md transition-colors flex items-center justify-center">
-                        <i class="fas fa-robot mr-2"></i> Extract Details
+                    <button type="submit" id="parseBtn" class="w-full bg-navy text-white hover:bg-teal-800 font-bold py-2.5 px-4 rounded-xl transition-colors flex items-center justify-center text-sm shadow-sm cursor-pointer">
+                        <i class="fas fa-robot mr-2 text-gold"></i> Extract Details
                     </button>
                 </form>
             </div>
 
             <!-- Manual Add Course -->
-            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+            <div class="bg-white p-6 sm:p-7 rounded-2xl shadow-md border border-gray-100">
                 <h3 class="text-xl font-bold text-navy mb-4">Add / Edit Course</h3>
                 <form id="addCourseForm" enctype="multipart/form-data" class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Course Title</label>
-                        <input type="text" id="title" name="title" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-emerald focus:border-emerald">
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Course Title</label>
+                        <input type="text" id="title" name="title" required class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald">
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                        <input type="text" id="category" name="category" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-emerald focus:border-emerald">
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Category</label>
+                        <input type="text" id="category" name="category" required class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald">
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Cover Image</label>
-                        <input type="file" id="image" name="image" accept="image/*" class="w-full border border-gray-300 rounded-md px-3 py-1.5 focus:ring-emerald focus:border-emerald text-sm">
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Cover Image</label>
+                        <input type="file" id="image" name="image" accept="image/*" class="w-full border border-gray-300 rounded-xl px-3 py-1.5 focus:ring-2 focus:ring-emerald focus:border-emerald text-sm">
                         <input type="hidden" id="image_url" name="image_url" value="">
                         
                         <!-- Image Preview Box -->
                         <div id="coverPreviewContainer" class="mt-2.5 hidden">
-                            <div class="relative inline-block border-2 border-emerald/40 rounded-lg overflow-hidden shadow-sm bg-gray-50 p-2">
-                                <img id="coverPreviewImg" src="" alt="Cover Preview" class="h-36 w-auto max-w-xs object-contain rounded border border-gray-200">
+                            <div class="relative inline-block border-2 border-emerald/40 rounded-xl overflow-hidden shadow-sm bg-gray-50 p-2">
+                                <img id="coverPreviewImg" src="" alt="Cover Preview" class="h-36 w-auto max-w-xs object-contain rounded-lg border border-gray-200">
                                 <div class="mt-1.5 flex items-center justify-between text-xs text-gray-600 px-1">
                                     <span class="text-emerald font-semibold flex items-center">
                                         <i class="fas fa-check-circle mr-1 text-emerald"></i> Ready to publish
@@ -63,35 +71,35 @@
                     
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Course Status</label>
-                            <select id="status" name="status" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-emerald focus:border-emerald bg-white text-sm">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Course Status</label>
+                            <select id="status" name="status" class="w-full border border-gray-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-emerald focus:border-emerald bg-white text-sm">
                                 <option value="current">Current (Ongoing)</option>
                                 <option value="upcoming">Future (Upcoming)</option>
                                 <option value="past">Past (Completed)</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Course Price / Fee</label>
-                            <input type="text" id="price" name="price" value="Free" placeholder="e.g. Free, $49, ₹999" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-emerald focus:border-emerald text-sm">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Course Price / Fee</label>
+                            <input type="text" id="price" name="price" value="Free" placeholder="e.g. Free, $49, ₹999" class="w-full border border-gray-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-emerald focus:border-emerald text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Start Date / Schedule</label>
-                            <input type="text" id="start_date" name="start_date" placeholder="e.g. 3rd August, 2026" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-emerald focus:border-emerald text-sm">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Start Date / Schedule</label>
+                            <input type="text" id="start_date" name="start_date" placeholder="e.g. 3rd August, 2026" class="w-full border border-gray-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-emerald focus:border-emerald text-sm">
                         </div>
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
-                        <textarea id="description" name="description" rows="2" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-emerald focus:border-emerald"></textarea>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Short Description</label>
+                        <textarea id="description" name="description" rows="2" required class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald"></textarea>
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Full Course Content</label>
-                        <textarea id="content" name="content" rows="4" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-emerald focus:border-emerald"></textarea>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Full Course Content</label>
+                        <textarea id="content" name="content" rows="4" required class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald"></textarea>
                     </div>
                     
-                    <button type="submit" class="w-full bg-emerald text-white hover:bg-green-600 font-bold py-2 px-4 rounded-md transition-colors">
-                        Publish Course
+                    <button type="submit" class="w-full bg-emerald text-white hover:bg-teal-700 font-bold py-2.5 px-4 rounded-xl transition-colors text-sm shadow-sm cursor-pointer">
+                        <i class="fas fa-paper-plane mr-2"></i> Publish Course
                     </button>
                 </form>
             </div>
@@ -251,6 +259,75 @@
             </div>
         </div>
         
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div id="changePasswordModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-dark/70 backdrop-blur-xs flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="changePasswordTitle">
+    <div id="changePasswordBackdrop" class="fixed inset-0 cursor-pointer"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 z-10 border border-gray-100">
+        <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-navy/10 flex items-center justify-center text-navy">
+                    <i class="fas fa-lock text-gold text-lg"></i>
+                </div>
+                <div>
+                    <h3 id="changePasswordTitle" class="text-xl font-serif font-bold text-navy">Change Password</h3>
+                    <p class="text-xs text-gray-500">Update your administrator login credentials</p>
+                </div>
+            </div>
+            <button type="button" id="closeChangePasswordBtn" class="text-gray-400 hover:text-gray-600 text-xl p-1 rounded-lg transition-colors cursor-pointer">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <form id="changePasswordForm" class="space-y-4">
+            <div>
+                <label for="currentPassword" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Current Password</label>
+                <div class="relative">
+                    <input type="password" id="currentPassword" required autocomplete="current-password" placeholder="Enter your current password" class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald pr-10">
+                    <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer" data-target="currentPassword">
+                        <i class="far fa-eye text-sm"></i>
+                    </button>
+                </div>
+            </div>
+            <div>
+                <label for="newPassword" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">New Password (Min. 8 characters)</label>
+                <div class="relative">
+                    <input type="password" id="newPassword" required minlength="8" autocomplete="new-password" placeholder="Create a strong password" class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald pr-10">
+                    <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer" data-target="newPassword">
+                        <i class="far fa-eye text-sm"></i>
+                    </button>
+                </div>
+            </div>
+            <div>
+                <label for="confirmPassword" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Confirm New Password</label>
+                <div class="relative">
+                    <input type="password" id="confirmPassword" required minlength="8" autocomplete="new-password" placeholder="Confirm your new password" class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald pr-10">
+                    <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer" data-target="confirmPassword">
+                        <i class="far fa-eye text-sm"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="passwordErrorAlert" class="hidden p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-center">
+                <i class="fas fa-exclamation-circle mr-2 text-sm flex-shrink-0 text-red-500"></i>
+                <span id="passwordErrorText"></span>
+            </div>
+            <div id="passwordSuccessAlert" class="hidden p-3 rounded-xl bg-green-50 border border-green-200 text-xs text-green-700 flex items-center">
+                <i class="fas fa-check-circle mr-2 text-sm flex-shrink-0 text-emerald"></i>
+                <span id="passwordSuccessText"></span>
+            </div>
+            
+            <div class="pt-3 flex items-center justify-end gap-3">
+                <button type="button" id="cancelChangePasswordBtn" class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer">
+                    Cancel
+                </button>
+                <button type="submit" id="submitChangePasswordBtn" class="inline-flex items-center px-5 py-2.5 text-sm font-bold text-white bg-navy hover:bg-teal-700 rounded-xl shadow-sm transition-colors cursor-pointer">
+                    <i class="fas fa-check mr-2"></i> Update Password
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -977,6 +1054,136 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (saveBtn) {
                     saveBtn.disabled = false;
                     saveBtn.innerHTML = '<i class="fas fa-check mr-1.5"></i> Save Administrator';
+                }
+            }
+        });
+    }
+
+    // -------------------------------------------------------------
+    // Change Password Modal & Handler
+    // -------------------------------------------------------------
+    const changePasswordModal = document.getElementById('changePasswordModal');
+    const openChangePasswordModalBtn = document.getElementById('openChangePasswordModalBtn');
+    const closeChangePasswordBtn = document.getElementById('closeChangePasswordBtn');
+    const cancelChangePasswordBtn = document.getElementById('cancelChangePasswordBtn');
+    const changePasswordBackdrop = document.getElementById('changePasswordBackdrop');
+    const changePasswordForm = document.getElementById('changePasswordForm');
+    const submitChangePasswordBtn = document.getElementById('submitChangePasswordBtn');
+    const passwordErrorAlert = document.getElementById('passwordErrorAlert');
+    const passwordErrorText = document.getElementById('passwordErrorText');
+    const passwordSuccessAlert = document.getElementById('passwordSuccessAlert');
+    const passwordSuccessText = document.getElementById('passwordSuccessText');
+
+    function openChangePassword() {
+        if (!changePasswordModal) return;
+        if (changePasswordForm) changePasswordForm.reset();
+        if (passwordErrorAlert) passwordErrorAlert.classList.add('hidden');
+        if (passwordSuccessAlert) passwordSuccessAlert.classList.add('hidden');
+        changePasswordModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeChangePassword() {
+        if (!changePasswordModal) return;
+        changePasswordModal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    if (openChangePasswordModalBtn) openChangePasswordModalBtn.addEventListener('click', openChangePassword);
+    if (closeChangePasswordBtn) closeChangePasswordBtn.addEventListener('click', closeChangePassword);
+    if (cancelChangePasswordBtn) cancelChangePasswordBtn.addEventListener('click', closeChangePassword);
+    if (changePasswordBackdrop) changePasswordBackdrop.addEventListener('click', closeChangePassword);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && changePasswordModal && !changePasswordModal.classList.contains('hidden')) {
+            closeChangePassword();
+        }
+    });
+
+    // Password visibility toggles
+    document.querySelectorAll('.toggle-pwd-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+            const icon = btn.querySelector('i');
+            if (input && icon) {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.replace('fa-eye', 'fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.replace('fa-eye-slash', 'fa-eye');
+                }
+            }
+        });
+    });
+
+    if (changePasswordForm) {
+        changePasswordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const current_password = document.getElementById('currentPassword').value;
+            const new_password = document.getElementById('newPassword').value;
+            const confirm_password = document.getElementById('confirmPassword').value;
+
+            if (passwordErrorAlert) passwordErrorAlert.classList.add('hidden');
+            if (passwordSuccessAlert) passwordSuccessAlert.classList.add('hidden');
+
+            if (new_password.length < 8) {
+                if (passwordErrorAlert && passwordErrorText) {
+                    passwordErrorText.textContent = 'New password must be at least 8 characters long.';
+                    passwordErrorAlert.classList.remove('hidden');
+                }
+                return;
+            }
+
+            if (new_password !== confirm_password) {
+                if (passwordErrorAlert && passwordErrorText) {
+                    passwordErrorText.textContent = 'New password and confirmation do not match.';
+                    passwordErrorAlert.classList.remove('hidden');
+                }
+                return;
+            }
+
+            if (submitChangePasswordBtn) {
+                submitChangePasswordBtn.disabled = true;
+                submitChangePasswordBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Updating...';
+            }
+
+            try {
+                const res = await fetch('/api/admin/change-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ current_password, new_password, confirm_password })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    if (passwordSuccessAlert && passwordSuccessText) {
+                        passwordSuccessText.textContent = data.message || 'Password updated successfully!';
+                        passwordSuccessAlert.classList.remove('hidden');
+                    }
+                    changePasswordForm.reset();
+                    setTimeout(() => {
+                        closeChangePassword();
+                    }, 1400);
+                } else {
+                    if (passwordErrorAlert && passwordErrorText) {
+                        passwordErrorText.textContent = data.detail || 'Failed to change password.';
+                        passwordErrorAlert.classList.remove('hidden');
+                    }
+                }
+            } catch (err) {
+                if (passwordErrorAlert && passwordErrorText) {
+                    passwordErrorText.textContent = 'Network error. Please try again.';
+                    passwordErrorAlert.classList.remove('hidden');
+                }
+            } finally {
+                if (submitChangePasswordBtn) {
+                    submitChangePasswordBtn.disabled = false;
+                    submitChangePasswordBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Update Password';
                 }
             }
         });

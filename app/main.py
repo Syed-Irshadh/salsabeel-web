@@ -13,8 +13,10 @@ from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
 
+import io
 from typing import Optional
-from fastapi import FastAPI, Depends, HTTPException, Request, Form, UploadFile, File
+from PIL import Image
+from fastapi import FastAPI, Depends, HTTPException, Request, Form, UploadFile, File, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
@@ -44,6 +46,70 @@ def get_upload_dir() -> str:
         os.makedirs(path, exist_ok=True)
     return path
 
+def process_and_store_image(file_bytes: bytes, filename: str, db: Session) -> str:
+    """
+    Compresses image for rapid delivery, caches locally, and persists permanently in Supabase.
+    Returns persistent URL path (/api/images/{unique_filename}).
+    """
+    file_ext = os.path.splitext(filename)[1].lower() if filename else ".jpg"
+    if file_ext not in [".jpg", ".jpeg", ".png", ".webp"]:
+        file_ext = ".jpg"
+    
+    unique_filename = f"{uuid.uuid4()}{file_ext}"
+    content_type = "image/webp" if file_ext == ".webp" else ("image/png" if file_ext == ".png" else "image/jpeg")
+    
+    # Compress/resize image with Pillow
+    try:
+        img = Image.open(io.BytesIO(file_bytes))
+        if img.mode in ("RGBA", "P") and file_ext in [".jpg", ".jpeg"]:
+            img = img.convert("RGB")
+            
+        # Limit max dimension to 1400px to maintain pristine quality while saving storage
+        img.thumbnail((1400, 1400), Image.Resampling.LANCZOS)
+        
+        out_buf = io.BytesIO()
+        if file_ext in [".jpg", ".jpeg"]:
+            img.save(out_buf, format="JPEG", quality=85, optimize=True)
+            content_type = "image/jpeg"
+        elif file_ext == ".png":
+            img.save(out_buf, format="PNG", optimize=True)
+            content_type = "image/png"
+        elif file_ext == ".webp":
+            img.save(out_buf, format="WEBP", quality=85)
+            content_type = "image/webp"
+        else:
+            img.save(out_buf, format="JPEG", quality=85)
+            content_type = "image/jpeg"
+            
+        final_bytes = out_buf.getvalue()
+    except Exception as e:
+        print(f"Notice: Pillow processing skipped ({e}), storing raw bytes.")
+        final_bytes = file_bytes
+
+    # Cache locally on disk for ultra-fast serving in this instance
+    upload_dir = get_upload_dir()
+    disk_path = os.path.join(upload_dir, unique_filename)
+    try:
+        with open(disk_path, "wb") as f:
+            f.write(final_bytes)
+    except Exception as e:
+        print(f"Notice: local disk cache write skipped: {e}")
+
+    # Persist in Supabase DB so serverless never loses the image
+    try:
+        db_file = models.UploadedFile(
+            filename=unique_filename,
+            content_type=content_type,
+            data=final_bytes
+        )
+        db.add(db_file)
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"Warning: Could not save to uploaded_files table: {e}")
+
+    return f"/api/images/{unique_filename}"
+
 # Safely initialize database tables on startup
 try:
     models.Base.metadata.create_all(bind=database.engine)
@@ -69,10 +135,43 @@ async def health_check():
         "architecture": "3-Tier (Vercel Frontend | Render Backend | Supabase DB)"
     }
 
-# On Vercel, mount writable /tmp/uploads for uploaded images
-if os.getenv("VERCEL"):
-    tmp_uploads = get_upload_dir()
-    app.mount("/static/img/uploads", StaticFiles(directory=tmp_uploads), name="uploaded_images")
+@app.get("/api/images/{filename}")
+@app.get("/static/img/uploads/{filename}")
+async def serve_uploaded_image(filename: str, db: Session = Depends(database.get_db)):
+    """
+    Serves uploaded images reliably on Vercel and local environments.
+    Checks fast local disk cache first, falls back to persistent Supabase PostgreSQL database.
+    """
+    upload_dir = get_upload_dir()
+    disk_path = os.path.join(upload_dir, filename)
+    
+    # 1. Check local disk cache
+    if os.path.exists(disk_path):
+        ext = os.path.splitext(filename)[1].lower()
+        media_type = "image/webp" if ext == ".webp" else ("image/png" if ext == ".png" else "image/jpeg")
+        try:
+            with open(disk_path, "rb") as f:
+                content = f.read()
+            return Response(content=content, media_type=media_type, headers={"Cache-Control": "public, max-age=86400, immutable"})
+        except Exception:
+            pass
+
+    # 2. Query persistent Supabase DB
+    db_file = db.query(models.UploadedFile).filter(models.UploadedFile.filename == filename).first()
+    if db_file and db_file.data:
+        # Cache to disk for instant next access in this container
+        try:
+            with open(disk_path, "wb") as f:
+                f.write(db_file.data)
+        except Exception:
+            pass
+        return Response(
+            content=db_file.data,
+            media_type=db_file.content_type or "image/jpeg",
+            headers={"Cache-Control": "public, max-age=86400, immutable"}
+        )
+        
+    raise HTTPException(status_code=404, detail="Image not found")
 
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
@@ -322,6 +421,30 @@ async def delete_user(
     db.commit()
     return {"status": "success", "message": f"Successfully deleted user account: {user_email}"}
 
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
+    confirm_password: str
+
+@app.post("/api/admin/change-password")
+async def change_admin_password(
+    data: ChangePasswordRequest,
+    current_user: models.User = Depends(auth.get_current_user),
+    db: Session = Depends(database.get_db)
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    if not auth.verify_password(data.current_password, current_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+    if len(data.new_password) < 8:
+        raise HTTPException(status_code=400, detail="New password must be at least 8 characters long")
+    if data.new_password != data.confirm_password:
+        raise HTTPException(status_code=400, detail="New password and confirmation do not match")
+        
+    current_user.hashed_password = auth.get_password_hash(data.new_password)
+    db.commit()
+    return {"status": "success", "message": "Password changed successfully"}
+
 @app.get("/viewer/{course_id}")
 async def viewer_page(request: Request, course_id: int, db: Session = Depends(database.get_db)):
     course = db.query(models.Course).filter(models.Course.id == course_id).first()
@@ -349,16 +472,8 @@ async def create_course(
     
     final_image_url = None
     if image and image.filename:
-        upload_dir = get_upload_dir()
-        
-        file_ext = os.path.splitext(image.filename)[1] if image.filename else ".jpg"
-        unique_filename = f"{uuid.uuid4()}{file_ext}"
-        file_path = os.path.join(upload_dir, unique_filename)
-        
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(image.file, buffer)
-            
-        final_image_url = f"/static/img/uploads/{unique_filename}"
+        file_bytes = await image.read()
+        final_image_url = process_and_store_image(file_bytes, image.filename, db)
     elif image_url and image_url.strip():
         final_image_url = image_url.strip()
     else:
@@ -546,24 +661,14 @@ def determine_course_status(text: str, fallback_status: str = "current") -> str:
 @app.post("/api/parse-poster")
 async def parse_poster(
     image: UploadFile = File(...),
-    current_user: models.User = Depends(auth.get_current_user)
+    current_user: models.User = Depends(auth.get_current_user),
+    db: Session = Depends(database.get_db)
 ):
     if current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Not authorized")
     
-    # Save uploaded poster file to uploads folder
-    upload_dir = get_upload_dir()
-    file_ext = os.path.splitext(image.filename)[1] if image.filename else ".jpg"
-    if not file_ext or file_ext.lower() not in [".jpg", ".jpeg", ".png", ".webp", ".gif"]:
-        file_ext = ".jpg"
-    unique_filename = f"{uuid.uuid4()}{file_ext}"
-    file_path = os.path.join(upload_dir, unique_filename)
-    
     img_bytes = await image.read()
-    with open(file_path, "wb") as buffer:
-        buffer.write(img_bytes)
-        
-    saved_image_url = f"/static/img/uploads/{unique_filename}"
+    saved_image_url = process_and_store_image(img_bytes, image.filename or "poster.jpg", db)
     
     api_key = os.environ.get("GEMINI_API_KEY", "").strip()
     if not api_key:
