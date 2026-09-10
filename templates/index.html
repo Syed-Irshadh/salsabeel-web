@@ -1,84 +1,417 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-pattern text-white pt-20 pb-32 text-center border-b-[4px] border-gold relative overflow-hidden">
-    <div class="max-w-4xl mx-auto px-4 relative z-10 hero-content">
-        <!-- Logo Emblem with Ambient Breathing Halo -->
-        <div class="flex justify-center mb-8">
+<!-- 1. Hero Section -->
+<section class="hero-pattern text-white pt-16 pb-24 text-center border-b-[4px] border-gold relative overflow-hidden">
+    <!-- Ambient subtle arabesque background elements -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none islamic-subtle-pattern"></div>
+    
+    <div class="max-w-5xl mx-auto px-4 relative z-10 hero-content">
+        <!-- Academy Emblem with Ambient Breathing Halo -->
+        <div class="flex justify-center mb-6">
             <div class="p-1 rounded-full bg-gradient-to-tr from-gold via-yellow-100 to-gold shadow-glow-gold emblem-halo">
-                <img src="/static/img/logo.jpeg" alt="Salsabeel Academy Emblem" class="h-32 w-32 sm:h-40 sm:w-40 rounded-full object-cover">
+                <img src="/static/img/logo.jpeg" alt="Salsabeel Academy Emblem" class="h-28 w-28 sm:h-36 sm:w-36 rounded-full object-cover">
             </div>
         </div>
 
-        <!-- Tamil & English Badge -->
+        <!-- Sacred Bilingual Academic Crest -->
         <div class="mb-5">
             <span class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-gold/40 text-gold-light text-xs sm:text-sm font-semibold tracking-wider uppercase px-4 py-1.5 rounded-full shadow-sm">
                 <i class="fas fa-star text-gold text-xs"></i>
-                Classical Islamic Sciences · தமிழ் சமூகத்திற்கான நல்வழிகாட்டல்
+                பாரம்பரிய இஸ்லாமியக் கல்விக்கூடம் · Classical Islamic Sciences
                 <i class="fas fa-star text-gold text-xs"></i>
             </span>
         </div>
 
-        <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold font-serif mb-6 leading-tight tracking-tight">
-            Deepen Islamic Sciences with <br class="hidden sm:inline"><span class="text-gold font-serif">Salsabeel Academy</span>
+        <h1 class="text-3xl sm:text-5xl md:text-6xl font-bold font-serif mb-5 leading-tight tracking-tight text-sand">
+            Deepen Sacred Islamic Sciences in <br class="hidden sm:inline">
+            <span class="gold-shimmer font-serif">Your Mother Tongue</span>
         </h1>
 
-        <p class="text-lg sm:text-xl text-gray-200 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
-            An authentic, scholarly learning sanctuary dedicated to teaching classical Islamic sciences in the Tamil language for seekers of sacred knowledge worldwide.
+        <p class="text-base sm:text-lg md:text-xl text-gray-200 mb-8 max-w-3xl mx-auto font-light leading-relaxed">
+            An authentic, scholarly learning sanctuary bringing traditional Qur'anic, Hadith, and Fiqh sciences to the 
+            <strong class="text-gold-light font-medium">Tamil-speaking community worldwide</strong> under qualified, credentialed scholarship.
         </p>
 
-        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6">
-            <a href="/courses" class="w-full sm:w-auto bg-gold hover:bg-gold-light text-dark font-bold py-3.5 px-8 rounded-xl shadow-glow-gold transition-all transform hover:-translate-y-0.5 inline-flex items-center justify-center cursor-pointer text-base">
-                <i class="fas fa-book-open mr-2.5 text-navy"></i> Explore Courses
+        <!-- Hero CTAs -->
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-3.5 sm:gap-5 max-w-xl mx-auto">
+            <a href="#featuredCourses" class="w-full sm:w-auto bg-gold hover:bg-gold-light text-dark font-bold py-3.5 px-7 rounded-xl shadow-glow-gold transition-all transform hover:-translate-y-0.5 inline-flex items-center justify-center cursor-pointer text-sm sm:text-base">
+                <i class="fas fa-book-open mr-2.5 text-navy"></i> Explore Programs
             </a>
-            <a href="/about" class="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-gold font-bold py-3.5 px-8 rounded-xl transition-all transform hover:-translate-y-0.5 inline-flex items-center justify-center text-base backdrop-blur-xs">
-                <i class="fas fa-info-circle mr-2.5 text-gold"></i> About Us
+            <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20inquire%20about%20upcoming%20courses." target="_blank" class="w-full sm:w-auto bg-emerald hover:bg-teal-700 text-white font-bold py-3.5 px-7 rounded-xl shadow-glow-teal transition-all transform hover:-translate-y-0.5 inline-flex items-center justify-center text-sm sm:text-base">
+                <i class="fab fa-whatsapp mr-2 text-lg"></i> Admissions Desk
+            </a>
+            <a href="/about" class="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-gray-200 border border-white/20 hover:border-gold font-medium py-3.5 px-6 rounded-xl transition-all transform hover:-translate-y-0.5 inline-flex items-center justify-center text-sm sm:text-base backdrop-blur-xs">
+                <i class="fas fa-landmark mr-2 text-gold"></i> Heritage
             </a>
         </div>
     </div>
 </section>
 
-<!-- Features Section -->
-<section class="py-24 bg-sand">
+<!-- 2. Sacred Knowledge Hadith Ribbon -->
+<section class="bg-navy text-white py-6 border-b border-gold/40 relative overflow-hidden">
+    <div class="max-w-5xl mx-auto px-4 text-center">
+        <div class="flex items-center justify-center gap-3 mb-2 text-gold text-lg">
+            <span>۞</span>
+            <span class="text-xs uppercase tracking-widest font-semibold text-gray-300">Prophetic Guidance · நபிகளாரின் பொன்மொழி</span>
+            <span>۞</span>
+        </div>
+        <p class="font-serif text-lg sm:text-xl md:text-2xl text-sand tracking-wide mb-2 italic">
+            «مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ»
+        </p>
+        <p class="text-xs sm:text-sm text-gray-300 max-w-2xl mx-auto font-light leading-relaxed">
+            "யார் ஒருவர் மார்க்கக் கல்வியைத் தேடி ஒரு பாதையில் செல்கிறாரோ, அவருக்கு அல்லாஹ் அதன் மூலம் சொர்க்கத்தின் பாதையை எளிதாக்குகிறான்."
+            <span class="text-gold-light font-medium ml-1">(ஸஹீஹ் முஸ்லிம்)</span>
+        </p>
+    </div>
+</section>
+
+<!-- 3. Institutional Credentials & Trust Ticker -->
+<section class="py-10 bg-white border-b border-gray-200 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <span class="text-xs font-bold uppercase tracking-widest text-emerald bg-emerald/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Our Core Pillars</span>
-            <h2 class="text-3xl sm:text-4xl font-bold font-serif text-navy">Why Choose Salsabeel?</h2>
-            <div class="w-20 h-1 bg-gold mx-auto mt-4 rounded-full"></div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-y md:divide-y-0 md:divide-x divide-gray-100">
+            <div class="pt-3 md:pt-0 px-3">
+                <div class="w-12 h-12 rounded-xl bg-navy/10 text-navy mx-auto flex items-center justify-center text-xl mb-3 border border-gold/30">
+                    <i class="fas fa-scroll text-gold"></i>
+                </div>
+                <div class="font-serif text-xl sm:text-2xl font-bold text-navy">100% Traditional</div>
+                <p class="text-xs text-gray-500 mt-1">Authentic classical texts & structured Sanad guidance</p>
+            </div>
+
+            <div class="pt-3 md:pt-0 px-3">
+                <div class="w-12 h-12 rounded-xl bg-navy/10 text-navy mx-auto flex items-center justify-center text-xl mb-3 border border-gold/30">
+                    <i class="fas fa-language text-emerald"></i>
+                </div>
+                <div class="font-serif text-xl sm:text-2xl font-bold text-navy">Tamil Medium</div>
+                <p class="text-xs text-gray-500 mt-1">Sacred sciences explained lucidly in the mother tongue</p>
+            </div>
+
+            <div class="pt-3 md:pt-0 px-3">
+                <div class="w-12 h-12 rounded-xl bg-navy/10 text-navy mx-auto flex items-center justify-center text-xl mb-3 border border-gold/30">
+                    <i class="fas fa-user-graduate text-gold"></i>
+                </div>
+                <div class="font-serif text-xl sm:text-2xl font-bold text-navy">Qualified Faculty</div>
+                <p class="text-xs text-gray-500 mt-1">Mentorship from recognized, credentialed scholars</p>
+            </div>
+
+            <div class="pt-3 md:pt-0 px-3">
+                <div class="w-12 h-12 rounded-xl bg-navy/10 text-navy mx-auto flex items-center justify-center text-xl mb-3 border border-gold/30">
+                    <i class="fas fa-globe-americas text-emerald"></i>
+                </div>
+                <div class="font-serif text-xl sm:text-2xl font-bold text-navy">Global Access</div>
+                <p class="text-xs text-gray-500 mt-1">Live classes, recordings & interactive community worldwide</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 4. Featured Academic Courses Showcase (Live from Database) -->
+<section id="featuredCourses" class="py-20 bg-sand border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-emerald bg-emerald/10 px-3.5 py-1.5 rounded-full inline-block mb-3 border border-emerald/20">
+                    Academic Offerings · கல்வித் திட்டங்கள்
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-serif font-bold text-navy">Active & Upcoming Programs</h2>
+                <p class="text-gray-600 text-sm sm:text-base mt-2 max-w-xl">
+                    Enroll in our structured courses designed for seekers at all levels—from foundational recitation to advanced jurisprudence.
+                </p>
+            </div>
+            <a href="/courses" class="mt-4 md:mt-0 inline-flex items-center text-sm font-bold text-navy hover:text-emerald transition-colors">
+                View All Courses <i class="fas fa-arrow-right ml-2 text-xs text-gold"></i>
+            </a>
+        </div>
+
+        {% if courses and courses|length > 0 %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for course in courses[:6] %}
+            <div class="course-card luxury-card bg-white rounded-2xl overflow-hidden shadow-md border border-gray-200/90 flex flex-col">
+                <!-- Course Poster with Price & Status Overlays -->
+                <div class="relative overflow-hidden group">
+                    <img src="{{ course.image_url }}" 
+                         alt="{{ course.title }}" 
+                         class="w-full h-52 object-cover border-b-2 border-gold transition-transform duration-500 group-hover:scale-105"
+                         onerror="this.onerror=null; this.src='/static/img/logo.jpeg';"
+                         loading="lazy">
+
+                    <!-- Price Badge -->
+                    <div class="absolute top-3 left-3 pointer-events-none">
+                        <span class="inline-flex items-center text-xs font-bold px-3 py-1 rounded-lg {% if course.price and course.price.strip().lower() != 'free' %}bg-gold text-dark shadow-md{% else %}bg-dark/85 text-white backdrop-blur-sm border border-gold/30 shadow{% endif %}">
+                            <i class="fas fa-tag mr-1.5 text-xs"></i> {{ course.price or 'Free' }}
+                        </span>
+                    </div>
+
+                    <!-- Status Badge -->
+                    <div class="absolute top-3 right-3 pointer-events-none">
+                        {% if course.status == 'past' %}
+                        <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-lg bg-dark/85 text-gray-200 backdrop-blur-sm shadow border border-white/10">
+                            <i class="fas fa-check-circle mr-1.5 text-gray-400"></i> Completed
+                        </span>
+                        {% elif course.status == 'upcoming' %}
+                        <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-lg bg-amber-500 text-white shadow">
+                            <i class="fas fa-clock mr-1.5"></i> Upcoming
+                        </span>
+                        {% else %}
+                        <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald text-white shadow">
+                            <i class="fas fa-play-circle mr-1.5"></i> Ongoing
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Course Body -->
+                <div class="p-6 flex flex-col flex-grow">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="inline-block bg-navy/10 text-navy text-xs font-bold uppercase tracking-wider py-1 px-2.5 rounded-md">
+                            {{ course.category }}
+                        </span>
+                        {% if course.start_date %}
+                        <span class="text-xs text-gray-500 font-medium flex items-center">
+                            <i class="far fa-calendar-alt mr-1 text-emerald"></i> {{ course.start_date }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <h3 class="text-xl font-serif font-bold text-navy mb-2 leading-snug line-clamp-2">
+                        {{ course.title }}
+                    </h3>
+                    <p class="text-gray-600 mb-5 text-sm leading-relaxed flex-grow line-clamp-3">
+                        {{ course.description }}
+                    </p>
+
+                    <!-- CTAs based on status -->
+                    {% if course.status == 'past' %}
+                    <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl transition-colors shadow-sm flex items-center justify-center cursor-pointer text-sm">
+                        <i class="fab fa-youtube mr-2 text-base"></i> Watch on YouTube
+                    </a>
+                    {% else %}
+                    <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22%20(Fee%3A%20{{ (course.price or 'Free') | urlencode }}).%20Please%20share%20the%20details." 
+                       target="_blank" 
+                       class="enroll-btn w-full bg-emerald hover:bg-teal-700 text-white font-bold py-2.5 rounded-xl transition-colors shadow-sm flex items-center justify-center cursor-pointer text-sm"
+                       data-id="{{ course.id }}"
+                       data-title="{{ course.title }}">
+                        <i class="fab fa-whatsapp mr-2 text-base"></i> Enroll via WhatsApp
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="feature-card luxury-card p-8 rounded-2xl border border-gray-200/80 bg-white text-center flex flex-col items-center">
-                <div class="w-16 h-16 bg-navy text-gold rounded-2xl flex items-center justify-center mb-6 text-2xl shadow-md border border-gold/20">
-                    <i class="fas fa-book-quran"></i>
+        <div class="text-center mt-12">
+            <a href="/courses" class="inline-flex items-center justify-center bg-navy hover:bg-teal-700 text-white font-bold py-3.5 px-8 rounded-xl transition-all shadow-md text-sm cursor-pointer">
+                <i class="fas fa-th-large mr-2 text-gold"></i> View Complete Course Directory
+            </a>
+        </div>
+        {% else %}
+        <div class="text-center py-16 bg-white rounded-2xl border-2 border-dashed border-gray-200">
+            <i class="fas fa-book-reader text-4xl text-gray-400 mb-3"></i>
+            <h3 class="text-lg font-serif font-bold text-navy">Courses Opening Soon</h3>
+            <p class="text-sm text-gray-500 mt-1 max-w-md mx-auto">Our instructors are preparing upcoming batches. Join our WhatsApp channel to be notified first!</p>
+            <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="mt-4 inline-flex items-center text-sm font-bold text-emerald hover:underline">
+                <i class="fab fa-whatsapp mr-1.5"></i> Join Announcement Channel
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- 5. Classical Madrasah Curriculum Journey -->
+<section class="py-24 bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-xs font-bold uppercase tracking-widest text-emerald bg-emerald/10 px-3.5 py-1.5 rounded-full inline-block mb-3 border border-emerald/20">
+                Foundations of Knowledge · கல்வித் துறைகள்
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-serif font-bold text-navy">The Four Pillars of Salsabeel</h2>
+            <div class="w-20 h-1 bg-gold mx-auto mt-4 rounded-full"></div>
+            <p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base mt-4">
+                Our curriculum reflects the structured progression of classical Islamic academies, grounded in sacred texts and balanced understanding.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Discipline 1 -->
+            <div class="feature-card luxury-card p-7 rounded-2xl border border-gray-200/80 bg-sand flex flex-col justify-between">
+                <div>
+                    <div class="w-14 h-14 bg-navy text-gold rounded-2xl flex items-center justify-center mb-5 text-2xl shadow-sm border border-gold/30">
+                        <i class="fas fa-book-quran"></i>
+                    </div>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-emerald">Pillar I</span>
+                    <h3 class="text-xl font-serif font-bold text-navy mt-1 mb-2.5">Uloom al-Qur'an & Tajweed</h3>
+                    <p class="text-xs text-gray-500 font-semibold mb-3">குர்ஆன் மற்றும் தஜ்வீத் கலைகள்</p>
+                    <p class="text-gray-600 text-xs sm:text-sm leading-relaxed">
+                        Mastery of articulation points (Makharij), rules of recitation, memorization methods, and classical thematic Tafseer.
+                    </p>
                 </div>
-                <h3 class="text-2xl font-serif font-bold text-navy mb-3">Mother Tongue Learning</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">Complex classical sciences of Tafseer, Tajweed, and Fiqh explained clearly and eloquently in Tamil and English.</p>
+                <div class="mt-6 pt-4 border-t border-gray-200/60 text-xs text-navy font-semibold flex items-center">
+                    <i class="fas fa-check-circle text-emerald mr-1.5"></i> Step-by-Step Pronunciation
+                </div>
             </div>
-            
-            <div class="feature-card luxury-card p-8 rounded-2xl border border-gray-200/80 bg-white text-center flex flex-col items-center">
-                <div class="w-16 h-16 bg-navy text-gold rounded-2xl flex items-center justify-center mb-6 text-2xl shadow-md border border-gold/20">
-                    <i class="fas fa-graduation-cap"></i>
+
+            <!-- Discipline 2 -->
+            <div class="feature-card luxury-card p-7 rounded-2xl border border-gray-200/80 bg-sand flex flex-col justify-between">
+                <div>
+                    <div class="w-14 h-14 bg-navy text-gold rounded-2xl flex items-center justify-center mb-5 text-2xl shadow-sm border border-gold/30">
+                        <i class="fas fa-scale-balanced"></i>
+                    </div>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-emerald">Pillar II</span>
+                    <h3 class="text-xl font-serif font-bold text-navy mt-1 mb-2.5">Fiqh & Shari'ah Essentials</h3>
+                    <p class="text-xs text-gray-500 font-semibold mb-3">நடைமுறை ஃபிக்ஹ் சட்டங்கள்</p>
+                    <p class="text-gray-600 text-xs sm:text-sm leading-relaxed">
+                        Practical jurisprudence for daily worship (Taharah, Salah, Zakah, Sawm), marital life, and contemporary ethical transactions.
+                    </p>
                 </div>
-                <h3 class="text-2xl font-serif font-bold text-navy mb-3">Authentic Scholarship</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">Learn directly under qualified instructors grounded in traditional credentials, unbroken chains of transmission, and upright character.</p>
+                <div class="mt-6 pt-4 border-t border-gray-200/60 text-xs text-navy font-semibold flex items-center">
+                    <i class="fas fa-check-circle text-emerald mr-1.5"></i> Real-life Applications
+                </div>
             </div>
-            
-            <div class="feature-card luxury-card p-8 rounded-2xl border border-gray-200/80 bg-white text-center flex flex-col items-center">
-                <div class="w-16 h-16 bg-navy text-gold rounded-2xl flex items-center justify-center mb-6 text-2xl shadow-md border border-gold/20">
-                    <i class="fas fa-laptop-code"></i>
+
+            <!-- Discipline 3 -->
+            <div class="feature-card luxury-card p-7 rounded-2xl border border-gray-200/80 bg-sand flex flex-col justify-between">
+                <div>
+                    <div class="w-14 h-14 bg-navy text-gold rounded-2xl flex items-center justify-center mb-5 text-2xl shadow-sm border border-gold/30">
+                        <i class="fas fa-feather-pointed"></i>
+                    </div>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-emerald">Pillar III</span>
+                    <h3 class="text-xl font-serif font-bold text-navy mt-1 mb-2.5">Hadith & Prophetic Sunnah</h3>
+                    <p class="text-xs text-gray-500 font-semibold mb-3">ஹதீஸ் & சுன்னாஹ் ஆய்வுகள்</p>
+                    <p class="text-gray-600 text-xs sm:text-sm leading-relaxed">
+                        Study of pivotal prophetic traditions, understanding chains of narrators (Isnad), and embodying the character (Shama'il) of Rasulullah ﷺ.
+                    </p>
                 </div>
-                <h3 class="text-2xl font-serif font-bold text-navy mb-3">Accessible & Modern</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">A pristine, distraction-free digital campus crafted for seamless learning across mobile, tablet, and desktop devices.</p>
+                <div class="mt-6 pt-4 border-t border-gray-200/60 text-xs text-navy font-semibold flex items-center">
+                    <i class="fas fa-check-circle text-emerald mr-1.5"></i> Authentic Sources
+                </div>
+            </div>
+
+            <!-- Discipline 4 -->
+            <div class="feature-card luxury-card p-7 rounded-2xl border border-gray-200/80 bg-sand flex flex-col justify-between">
+                <div>
+                    <div class="w-14 h-14 bg-navy text-gold rounded-2xl flex items-center justify-center mb-5 text-2xl shadow-sm border border-gold/30">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-emerald">Pillar IV</span>
+                    <h3 class="text-xl font-serif font-bold text-navy mt-1 mb-2.5">Tazkiyah & Islamic Tarbiyah</h3>
+                    <p class="text-xs text-gray-500 font-semibold mb-3">ஆன்ம சுத்தி & நற்பண்புகள்</p>
+                    <p class="text-gray-600 text-xs sm:text-sm leading-relaxed">
+                        Purification of the spiritual heart, developing sincere devotion (Ikhlas), overcoming spiritual illnesses, and family guidance.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-gray-200/60 text-xs text-navy font-semibold flex items-center">
+                    <i class="fas fa-check-circle text-emerald mr-1.5"></i> Character Cultivation
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Motion One Scroll & Entry Animations -->
+<!-- 6. Frequently Asked Questions (Accordion) -->
+<section class="py-20 bg-sand border-b border-gray-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-12">
+            <span class="text-xs font-bold uppercase tracking-widest text-emerald bg-emerald/10 px-3.5 py-1.5 rounded-full inline-block mb-3 border border-emerald/20">
+                Frequently Asked Questions
+            </span>
+            <h2 class="text-3xl font-serif font-bold text-navy">Questions Seekers Ask</h2>
+            <div class="w-16 h-1 bg-gold mx-auto mt-3 rounded-full"></div>
+        </div>
+
+        <div class="space-y-4" id="faqAccordion">
+            <!-- FAQ Item 1 -->
+            <div class="bg-white rounded-2xl border border-gray-200/90 shadow-xs overflow-hidden">
+                <button type="button" class="faq-toggle w-full px-6 py-4.5 text-left flex justify-between items-center text-navy font-serif font-bold text-base sm:text-lg cursor-pointer hover:text-emerald transition-colors">
+                    <span>What language is used for course instruction?</span>
+                    <i class="fas fa-chevron-down text-xs text-gold transition-transform duration-300"></i>
+                </button>
+                <div class="faq-content hidden px-6 pb-5 text-gray-600 text-sm leading-relaxed border-t border-gray-100 pt-3">
+                    Classes are conducted predominantly in <strong>Tamil</strong>, with Arabic terms explained clearly. English terminology is also referenced where beneficial, ensuring students from India, Sri Lanka, Malaysia, and the Western diaspora follow effortlessly.
+                </div>
+            </div>
+
+            <!-- FAQ Item 2 -->
+            <div class="bg-white rounded-2xl border border-gray-200/90 shadow-xs overflow-hidden">
+                <button type="button" class="faq-toggle w-full px-6 py-4.5 text-left flex justify-between items-center text-navy font-serif font-bold text-base sm:text-lg cursor-pointer hover:text-emerald transition-colors">
+                    <span>Are class recordings available if I miss a live session?</span>
+                    <i class="fas fa-chevron-down text-xs text-gold transition-transform duration-300"></i>
+                </button>
+                <div class="faq-content hidden px-6 pb-5 text-gray-600 text-sm leading-relaxed border-t border-gray-100 pt-3">
+                    Yes. Enrolled students receive recorded lectures, course notes, and supplementary reading material so you can review at your own pace and revisit complex topics anytime.
+                </div>
+            </div>
+
+            <!-- FAQ Item 3 -->
+            <div class="bg-white rounded-2xl border border-gray-200/90 shadow-xs overflow-hidden">
+                <button type="button" class="faq-toggle w-full px-6 py-4.5 text-left flex justify-between items-center text-navy font-serif font-bold text-base sm:text-lg cursor-pointer hover:text-emerald transition-colors">
+                    <span>Are there dedicated programs for sisters?</span>
+                    <i class="fas fa-chevron-down text-xs text-gold transition-transform duration-300"></i>
+                </button>
+                <div class="faq-content hidden px-6 pb-5 text-gray-600 text-sm leading-relaxed border-t border-gray-100 pt-3">
+                    Absolutely. Salsabeel Academy is led by dedicated female scholars (including Founder Hazira Umma) and offers specialized sisters' batches, comfortable learning circles, and timings suitable for homemakers and working professionals.
+                </div>
+            </div>
+
+            <!-- FAQ Item 4 -->
+            <div class="bg-white rounded-2xl border border-gray-200/90 shadow-xs overflow-hidden">
+                <button type="button" class="faq-toggle w-full px-6 py-4.5 text-left flex justify-between items-center text-navy font-serif font-bold text-base sm:text-lg cursor-pointer hover:text-emerald transition-colors">
+                    <span>How do I enroll in a course?</span>
+                    <i class="fas fa-chevron-down text-xs text-gold transition-transform duration-300"></i>
+                </button>
+                <div class="faq-content hidden px-6 pb-5 text-gray-600 text-sm leading-relaxed border-t border-gray-100 pt-3">
+                    Simply click the <strong>"Enroll via WhatsApp"</strong> button on any active course card, or message our Admissions desk at <strong>+91 99405 23013</strong>. Our administrative team will share batch timings, admission links, and syllabus details.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 7. Global Community Channel & Admissions CTA -->
+<section class="py-16 bg-gradient-to-br from-navy via-dark to-navy text-white text-center relative overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4 relative z-10">
+        <div class="w-16 h-16 rounded-full bg-gold/20 text-gold flex items-center justify-center mx-auto mb-5 text-2xl border border-gold/40">
+            <i class="fab fa-whatsapp"></i>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-serif font-bold mb-4 text-sand">
+            Join the Salsabeel Seeker Community
+        </h2>
+        <p class="text-gray-200 text-base sm:text-lg max-w-2xl mx-auto font-light leading-relaxed mb-8">
+            Stay connected with weekly Hadith reflections, course schedule announcements, and live Q&A webinars by following our official channels.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="w-full sm:w-auto bg-emerald hover:bg-teal-700 text-white font-bold py-3.5 px-8 rounded-xl shadow-glow-teal transition-all flex items-center justify-center text-sm sm:text-base">
+                <i class="fab fa-whatsapp mr-2 text-xl"></i> Follow WhatsApp Channel
+            </a>
+            <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-8 rounded-xl shadow-md transition-all flex items-center justify-center text-sm sm:text-base">
+                <i class="fab fa-youtube mr-2 text-xl"></i> Subscribe on YouTube
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Motion One Scroll Reveals & FAQ Handler -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // FAQ Accordion Interaction
+    document.querySelectorAll('.faq-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const content = btn.nextElementSibling;
+            const icon = btn.querySelector('i');
+            const isHidden = content.classList.contains('hidden');
+
+            // Close other FAQs
+            document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.faq-toggle i').forEach(ic => ic.classList.remove('rotate-180'));
+
+            if (isHidden) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            }
+        });
+    });
+
+    // Motion One Animations
     if (window.Motion) {
         const { animate, stagger, inView } = window.Motion;
 
@@ -86,18 +419,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const heroItems = document.querySelectorAll('.hero-content > *');
         if (heroItems.length > 0) {
             animate(heroItems, 
-                { opacity: [0, 1], y: [24, 0] }, 
-                { delay: stagger(0.12), duration: 0.8, easing: [0.22, 1, 0.36, 1] }
+                { opacity: [0, 1], y: [22, 0] }, 
+                { delay: stagger(0.1), duration: 0.75, easing: [0.22, 1, 0.36, 1] }
             );
         }
 
         // Feature cards inView reveal
-        const featureCards = document.querySelectorAll('.feature-card');
+        const featureCards = document.querySelectorAll('.feature-card, .course-card');
         featureCards.forEach((card, idx) => {
             inView(card, () => {
                 animate(card, 
-                    { opacity: [0, 1], y: [30, 0] }, 
-                    { delay: idx * 0.12, duration: 0.65, easing: [0.22, 1, 0.36, 1] }
+                    { opacity: [0, 1], y: [24, 0] }, 
+                    { delay: (idx % 3) * 0.1, duration: 0.6, easing: [0.22, 1, 0.36, 1] }
                 );
             });
         });

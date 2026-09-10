@@ -86,9 +86,49 @@
             box-shadow: 0 20px 35px -10px rgba(4, 39, 44, 0.16), 0 0 16px rgba(196, 152, 81, 0.22);
             border-color: rgba(196, 152, 81, 0.45);
         }
+
+        /* Subtle Islamic Arabesque Pattern */
+        .islamic-subtle-pattern {
+            background-color: #04272c;
+            background-image: radial-gradient(rgba(196, 152, 81, 0.15) 1px, transparent 1px), radial-gradient(rgba(14, 104, 115, 0.2) 1px, #04272c 1px);
+            background-size: 28px 28px;
+            background-position: 0 0, 14px 14px;
+        }
+
+        .gold-shimmer {
+            background: linear-gradient(120deg, #c49851 0%, #fae596 50%, #c49851 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Toast Animation */
+        @keyframes toastSlideIn {
+            from { transform: translateX(100%) scale(0.95); opacity: 0; }
+            to { transform: translateX(0) scale(1); opacity: 1; }
+        }
+        .toast-item {
+            animation: toastSlideIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            pointer-events: auto;
+        }
     </style>
 </head>
 <body class="text-gray-800 font-sans flex flex-col min-h-screen">
+
+    <!-- Top Sacred Announcement & Admissions Ribbon -->
+    <div class="bg-dark text-gray-300 text-xs py-1.5 px-4 border-b border-gold/20 flex justify-between items-center tracking-wide">
+        <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
+            <div class="flex items-center space-x-2 text-gold-light font-medium">
+                <span class="font-serif">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span>
+                <span class="hidden md:inline text-gray-400">·</span>
+                <span class="hidden md:inline text-gray-300 font-sans">Salsabeel Academy · தமிழ் பேசும் சமூகத்திற்கான பாரம்பரிய இஸ்லாமியக் கல்விக்கூடம்</span>
+            </div>
+            <div class="flex items-center space-x-4 text-xs">
+                <a href="https://wa.me/919940523013" target="_blank" class="text-gold-light hover:text-white transition-colors flex items-center font-medium">
+                    <i class="fab fa-whatsapp text-emerald mr-1.5"></i> Admissions: +91 99405 23013
+                </a>
+            </div>
+        </div>
+    </div>
 
     <!-- Navbar -->
     <nav class="bg-navy shadow-lg sticky top-0 z-50 border-b border-gold/30 backdrop-blur-md">
@@ -219,7 +259,34 @@
         </div>
     </footer>
 
-    <!-- Custom JS (v3.6 cache bust) -->
-    <script src="/static/js/main.js?v=3.6"></script>
+    <!-- Global Toast Notification Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+    <!-- Custom Branded Confirmation Dialog Modal -->
+    <div id="customConfirmModal" class="hidden fixed inset-0 z-[9998] overflow-y-auto bg-dark/75 backdrop-blur-xs flex items-center justify-center p-4" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 cursor-pointer" id="confirmModalBackdrop"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 z-10 border border-gold/30 transform transition-all text-left">
+            <div class="flex items-start space-x-4">
+                <div id="confirmModalIconBg" class="w-12 h-12 rounded-xl bg-amber-50 border border-gold/40 flex items-center justify-center flex-shrink-0 text-gold text-xl">
+                    <i id="confirmModalIcon" class="fas fa-question-circle"></i>
+                </div>
+                <div class="flex-grow">
+                    <h3 id="confirmModalTitle" class="text-lg font-serif font-bold text-navy">Confirm Action</h3>
+                    <p id="confirmModalMessage" class="text-sm text-gray-600 mt-1 leading-relaxed">Are you sure you want to proceed?</p>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+                <button type="button" id="confirmModalCancelBtn" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer">
+                    Cancel
+                </button>
+                <button type="button" id="confirmModalConfirmBtn" class="px-5 py-2 text-sm font-bold text-white bg-navy hover:bg-teal-700 rounded-xl transition-all shadow-sm cursor-pointer">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom JS (v4.0 cache bust) -->
+    <script src="/static/js/main.js?v=4.0"></script>
 </body>
 </html>

@@ -195,8 +195,9 @@ except Exception as e:
     print(f"Notice: Course seeding deferred or skipped: {e}")
 
 @app.get("/")
-async def home(request: Request):
-    return templates.TemplateResponse(request=request, name="index.html")
+async def home(request: Request, db: Session = Depends(database.get_db)):
+    courses = db.query(models.Course).all()
+    return templates.TemplateResponse(request=request, name="index.html", context={"courses": courses})
 
 @app.get("/courses")
 async def courses_page(request: Request, db: Session = Depends(database.get_db)):
@@ -510,15 +511,28 @@ async def delete_course(
     if not course:
         raise HTTPException(status_code=404, detail="Course not found")
     
-    # Clean up uploaded image file on disk if stored locally
-    if course.image_url and course.image_url.startswith("/static/img/uploads/"):
-        filename = os.path.basename(course.image_url)
-        filepath = os.path.join(get_upload_dir(), filename)
-        if os.path.exists(filepath):
+    # Clean up uploaded image file from Supabase and local cache
+    if course.image_url:
+        if course.image_url.startswith("/api/images/"):
+            filename = os.path.basename(course.image_url)
             try:
-                os.remove(filepath)
+                db.query(models.UploadedFile).filter(models.UploadedFile.filename == filename).delete()
             except Exception as err:
-                print(f"Notice: could not delete local image file {filepath}: {err}")
+                print(f"Notice: could not delete persistent db file {filename}: {err}")
+            filepath = os.path.join(get_upload_dir(), filename)
+            if os.path.exists(filepath):
+                try:
+                    os.remove(filepath)
+                except Exception:
+                    pass
+        elif course.image_url.startswith("/static/img/uploads/"):
+            filename = os.path.basename(course.image_url)
+            filepath = os.path.join(get_upload_dir(), filename)
+            if os.path.exists(filepath):
+                try:
+                    os.remove(filepath)
+                except Exception as err:
+                    print(f"Notice: could not delete local image file {filepath}: {err}")
     
     db.query(models.Enrollment).filter(models.Enrollment.course_id == course_id).delete()
     db.query(models.CourseRecording).filter(models.CourseRecording.course_id == course_id).delete()

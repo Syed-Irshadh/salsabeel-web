@@ -1,4 +1,116 @@
-// Salsabeel Academy - Main Frontend Script
+// Salsabeel Academy - Main Frontend Script & Design System
+
+// Global Toast Notification Helper
+window.showToast = function(message, type = 'info', duration = 3800) {
+    const container = document.getElementById('toastContainer');
+    if (!container) {
+        console.warn('Toast:', message);
+        return;
+    }
+    const toast = document.createElement('div');
+    toast.className = 'toast-item pointer-events-auto flex items-start p-4 rounded-2xl shadow-xl border text-sm transition-all duration-300 transform';
+    
+    let iconClass = 'fa-info-circle text-navy';
+    let bgBorder = 'bg-white border-gray-200 text-gray-800';
+    
+    if (type === 'success') {
+        iconClass = 'fa-check-circle text-emerald';
+        bgBorder = 'bg-white border-emerald/50 text-gray-800 shadow-glow-teal';
+    } else if (type === 'error') {
+        iconClass = 'fa-exclamation-circle text-red-500';
+        bgBorder = 'bg-white border-red-200 text-gray-800 shadow-lg';
+    } else if (type === 'warning') {
+        iconClass = 'fa-exclamation-triangle text-amber-500';
+        bgBorder = 'bg-white border-amber-300 text-gray-800 shadow-glow-gold';
+    }
+    
+    toast.className += ` ${bgBorder}`;
+    toast.innerHTML = `
+        <div class="mr-3 text-lg flex-shrink-0 mt-0.5">
+            <i class="fas ${iconClass}"></i>
+        </div>
+        <div class="flex-grow pr-2 leading-relaxed">
+            ${message}
+        </div>
+        <button type="button" class="text-gray-400 hover:text-gray-700 ml-2 text-sm cursor-pointer p-0.5" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+
+    const closeBtn = toast.querySelector('button');
+    let dismissed = false;
+    function dismissToast() {
+        if (dismissed) return;
+        dismissed = true;
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%) scale(0.95)';
+        setTimeout(() => {
+            if (toast.parentNode) toast.parentNode.removeChild(toast);
+        }, 300);
+    }
+    if (closeBtn) closeBtn.addEventListener('click', dismissToast);
+    container.appendChild(toast);
+    setTimeout(dismissToast, duration);
+};
+
+// Global Custom Confirmation Modal Helper
+window.confirmModal = function({ title, message, confirmText = 'Confirm', cancelText = 'Cancel', isDestructive = false, onConfirm }) {
+    const modal = document.getElementById('customConfirmModal');
+    if (!modal) {
+        if (window.confirm(message)) {
+            if (onConfirm) onConfirm();
+        }
+        return;
+    }
+    const titleEl = document.getElementById('confirmModalTitle');
+    const msgEl = document.getElementById('confirmModalMessage');
+    const confirmBtn = document.getElementById('confirmModalConfirmBtn');
+    const cancelBtn = document.getElementById('confirmModalCancelBtn');
+    const backdrop = document.getElementById('confirmModalBackdrop');
+    const icon = document.getElementById('confirmModalIcon');
+    const iconBg = document.getElementById('confirmModalIconBg');
+
+    if (titleEl) titleEl.textContent = title || 'Confirm Action';
+    if (msgEl) msgEl.textContent = message || 'Are you sure you want to proceed?';
+    if (confirmBtn) {
+        confirmBtn.textContent = confirmText;
+        if (isDestructive) {
+            confirmBtn.className = 'px-5 py-2 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl transition-all shadow-sm cursor-pointer';
+        } else {
+            confirmBtn.className = 'px-5 py-2 text-sm font-bold text-white bg-navy hover:bg-teal-700 rounded-xl transition-all shadow-sm cursor-pointer';
+        }
+    }
+    if (cancelBtn) cancelBtn.textContent = cancelText;
+
+    if (icon && iconBg) {
+        if (isDestructive) {
+            icon.className = 'fas fa-trash-alt text-red-500';
+            iconBg.className = 'w-12 h-12 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center flex-shrink-0 text-xl';
+        } else {
+            icon.className = 'fas fa-question-circle text-gold';
+            iconBg.className = 'w-12 h-12 rounded-xl bg-amber-50 border border-gold/40 flex items-center justify-center flex-shrink-0 text-xl';
+        }
+    }
+
+    modal.classList.remove('hidden');
+
+    function closeModal() {
+        modal.classList.add('hidden');
+        if (confirmBtn) confirmBtn.removeEventListener('click', handleConfirm);
+        if (cancelBtn) cancelBtn.removeEventListener('click', closeModal);
+        if (backdrop) backdrop.removeEventListener('click', closeModal);
+    }
+
+    function handleConfirm() {
+        closeModal();
+        if (typeof onConfirm === 'function') onConfirm();
+    }
+
+    if (confirmBtn) confirmBtn.addEventListener('click', handleConfirm, { once: true });
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal, { once: true });
+    if (backdrop) backdrop.addEventListener('click', closeModal, { once: true });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // -------------------------------------------------------------
     // Auth State & Navigation Controls
@@ -145,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Password minimum 8 characters validation
             if (password.length < 8) {
-                alert('Password must be at least 8 characters long.');
+                showToast('Password must be at least 8 characters long.', 'warning');
                 return;
             }
 
@@ -159,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     const regData = await regRes.json();
                     if (!regRes.ok) {
-                        alert(regData.detail || 'Registration failed.');
+                        showToast(regData.detail || 'Registration failed.', 'error');
                         return;
                     }
                 }
@@ -174,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const tokenData = await tokenRes.json();
 
                 if (!tokenRes.ok) {
-                    alert(tokenData.detail || 'Incorrect email or password.');
+                    showToast(tokenData.detail || 'Incorrect email or password.', 'error');
                     return;
                 }
 
@@ -186,10 +298,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 closeModal();
-                window.location.reload();
+                showToast('Welcome to Salsabeel Academy!', 'success');
+                setTimeout(() => window.location.reload(), 600);
             } catch (err) {
                 console.error(err);
-                alert('Connection error. Please try again.');
+                showToast('Connection error. Please try again.', 'error');
             }
         });
     }
@@ -222,36 +335,43 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', async (e) => {
             e.preventDefault();
             if (!token) {
-                alert('Please log in as an administrator to delete courses.');
+                showToast('Please log in as an administrator to delete courses.', 'warning');
                 return;
             }
             const courseId = btn.getAttribute('data-id');
-            if (!confirm('Are you sure you want to permanently delete this course?')) return;
 
-            btn.disabled = true;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Deleting...';
+            confirmModal({
+                title: 'Delete Course',
+                message: 'Are you sure you want to permanently delete this course? This action cannot be undone.',
+                confirmText: 'Delete Course',
+                isDestructive: true,
+                onConfirm: async () => {
+                    btn.disabled = true;
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Deleting...';
 
-            try {
-                const res = await fetch(`/api/courses/${courseId}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
+                    try {
+                        const res = await fetch(`/api/courses/${courseId}`, {
+                            method: 'DELETE',
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
 
-                if (res.ok) {
-                    alert('Course deleted successfully.');
-                    window.location.reload();
-                } else {
-                    alert('Failed to delete course.');
-                    btn.disabled = false;
-                    btn.innerHTML = originalText;
+                        if (res.ok) {
+                            showToast('Course deleted successfully.', 'success');
+                            setTimeout(() => window.location.reload(), 700);
+                        } else {
+                            showToast('Failed to delete course.', 'error');
+                            btn.disabled = false;
+                            btn.innerHTML = originalText;
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        showToast('Network error.', 'error');
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                    }
                 }
-            } catch (err) {
-                console.error(err);
-                alert('Network error.');
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
+            });
         });
     });
 
@@ -263,7 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
         addCourseForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!token) {
-                alert('Please log in as an administrator to publish a course.');
+                showToast('Please log in as an administrator to publish a course.', 'warning');
                 return;
             }
 
@@ -273,7 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const hasUrl = imageUrlInput && imageUrlInput.value.trim().length > 0;
 
             if (!hasFile && !hasUrl) {
-                alert('Please upload a cover image or use the AI Course Parser.');
+                showToast('Please upload a cover image or use the AI Course Parser.', 'warning');
                 return;
             }
 
@@ -293,15 +413,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (res.ok) {
-                    alert('Course published successfully!');
-                    window.location.href = '/courses';
+                    showToast('Course published successfully!', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/courses';
+                    }, 800);
                 } else {
                     const err = await res.text();
-                    alert('Error publishing course: ' + err);
+                    showToast('Error publishing course: ' + err, 'error');
                 }
             } catch (err) {
                 console.error(err);
-                alert('Network error.');
+                showToast('Network error.', 'error');
             } finally {
                 if (submitBtn) {
                     submitBtn.disabled = false;

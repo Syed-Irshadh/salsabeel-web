@@ -9,6 +9,25 @@
         <div class="w-20 h-1 bg-gold mx-auto mt-4 rounded-full"></div>
     </div>
 
+    <!-- Live Search & Category Discovery -->
+    <div class="max-w-xl mx-auto mb-8">
+        <div class="relative flex items-center">
+            <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-emerald">
+                <i class="fas fa-search text-base"></i>
+            </span>
+            <input type="text" 
+                   id="courseSearchInput" 
+                   placeholder="Search courses by topic, title, category, or keyword..." 
+                   class="w-full pl-11 pr-10 py-3.5 bg-white rounded-2xl border border-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald focus:border-emerald text-sm placeholder-gray-400 transition-all">
+            <button type="button" id="clearCourseSearch" class="hidden absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer" aria-label="Clear search">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <p class="text-[11px] text-gray-400 mt-2 text-center">
+            <span class="bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded text-gray-500 font-mono">/</span> Press slash to quickly search
+        </p>
+    </div>
+
     <!-- Filter Tabs (Past, Current, Future) -->
     <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12">
         <button class="filter-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-navy text-white shadow-sm cursor-pointer" data-filter="all">
@@ -28,7 +47,11 @@
     <!-- Courses Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="coursesContainer">
         {% for course in courses %}
-        <div class="course-card luxury-card bg-white rounded-2xl overflow-hidden shadow-md border border-gray-200/80 flex flex-col" data-status="{{ course.status | default('current') }}">
+        <div class="course-card luxury-card bg-white rounded-2xl overflow-hidden shadow-md border border-gray-200/80 flex flex-col" 
+             data-status="{{ course.status | default('current') }}"
+             data-title="{{ course.title | lower }}"
+             data-category="{{ course.category | lower }}"
+             data-desc="{{ course.description | lower }}">
             <!-- Course Image with Clickable Zoom Overlay -->
             <div class="relative group cursor-pointer overflow-hidden open-poster-btn"
                  data-id="{{ course.id }}"
@@ -198,14 +221,43 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Tab filtering
+    // Unified Search & Tab Filtering
     const tabs = document.querySelectorAll('.filter-tab');
     const cards = document.querySelectorAll('.course-card');
     const emptyState = document.getElementById('noCoursesFiltered');
+    const searchInput = document.getElementById('courseSearchInput');
+    const clearSearchBtn = document.getElementById('clearCourseSearch');
+
+    let currentFilter = 'all';
+    let searchQuery = '';
+
+    function applyFilters() {
+        let visible = 0;
+        cards.forEach(card => {
+            const status = (card.getAttribute('data-status') || '').toLowerCase();
+            const title = (card.getAttribute('data-title') || '').toLowerCase();
+            const category = (card.getAttribute('data-category') || '').toLowerCase();
+            const desc = (card.getAttribute('data-desc') || '').toLowerCase();
+
+            const statusMatch = (currentFilter === 'all') || (status === currentFilter);
+            const searchMatch = !searchQuery || title.includes(searchQuery) || category.includes(searchQuery) || desc.includes(searchQuery);
+
+            if (statusMatch && searchMatch) {
+                card.classList.remove('hidden');
+                visible++;
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+
+        if (emptyState) {
+            emptyState.classList.toggle('hidden', visible > 0);
+        }
+    }
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            const filter = tab.getAttribute('data-filter');
+            currentFilter = tab.getAttribute('data-filter') || 'all';
 
             // Reset tab styles
             tabs.forEach(t => {
@@ -214,23 +266,37 @@ document.addEventListener('DOMContentLoaded', () => {
             // Active tab style
             tab.className = 'filter-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-navy text-white shadow-sm cursor-pointer';
 
-            // Filter cards
-            let visible = 0;
-            cards.forEach(card => {
-                const status = card.getAttribute('data-status');
-                if (filter === 'all' || status === filter) {
-                    card.classList.remove('hidden');
-                    visible++;
-                } else {
-                    card.classList.add('hidden');
-                }
-            });
-
-            if (emptyState) {
-                emptyState.classList.toggle('hidden', visible > 0);
-            }
+            applyFilters();
         });
     });
+
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            searchQuery = searchInput.value.toLowerCase().trim();
+            if (clearSearchBtn) {
+                clearSearchBtn.classList.toggle('hidden', searchQuery.length === 0);
+            }
+            applyFilters();
+        });
+
+        // Quick search hotkey: press '/' to focus
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '/' && document.activeElement !== searchInput && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+        });
+    }
+
+    if (clearSearchBtn && searchInput) {
+        clearSearchBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            searchQuery = '';
+            clearSearchBtn.classList.add('hidden');
+            searchInput.focus();
+            applyFilters();
+        });
+    }
 
     // Motion One Card Entrance
     if (window.Motion) {

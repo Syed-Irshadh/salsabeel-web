@@ -339,8 +339,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('token');
     if (!token) {
-        alert("Not authenticated. Please log in.");
-        window.location.href = '/';
+        showToast("Not authenticated. Please log in.", "warning");
+        setTimeout(() => { window.location.href = '/'; }, 800);
         return;
     }
 
@@ -525,82 +525,90 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Attach Unenroll Handlers
         enrollmentsTableBody.querySelectorAll('.remove-enrollment-btn').forEach(btn => {
-            btn.addEventListener('click', async () => {
+            btn.addEventListener('click', () => {
                 const enrollmentId = btn.getAttribute('data-id');
                 const student = btn.getAttribute('data-student');
                 const email = btn.getAttribute('data-email');
                 const course = btn.getAttribute('data-course');
 
-                const confirmMsg = `Are you sure you want to unenroll ${student} (${email}) from the course:\n"${course}"?`;
-                if (!confirm(confirmMsg)) return;
+                const confirmMsg = `Are you sure you want to unenroll ${student} (${email}) from "${course}"?`;
+                confirmModal({
+                    title: 'Unenroll Student',
+                    message: confirmMsg,
+                    confirmText: 'Unenroll',
+                    isDestructive: true,
+                    onConfirm: async () => {
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Removing...';
 
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Removing...';
-
-                try {
-                    const delRes = await fetch(`/api/admin/enrollments/${enrollmentId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Authorization': `Bearer ${token}`
+                        try {
+                            const delRes = await fetch(`/api/admin/enrollments/${enrollmentId}`, {
+                                method: 'DELETE',
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            });
+                            const delData = await delRes.json();
+                            if (delRes.ok) {
+                                showToast(delData.message || 'Enrollment successfully removed.', 'success');
+                                loadEnrollments();
+                            } else {
+                                showToast(delData.detail || 'Failed to remove enrollment.', 'error');
+                                btn.disabled = false;
+                                btn.innerHTML = '<i class="fas fa-user-minus mr-1 text-amber-600"></i> Unenroll';
+                            }
+                        } catch (err) {
+                            showToast('Network error while removing enrollment.', 'error');
+                            btn.disabled = false;
+                            btn.innerHTML = '<i class="fas fa-user-minus mr-1 text-amber-600"></i> Unenroll';
                         }
-                    });
-                    const delData = await delRes.json();
-                    if (delRes.ok) {
-                        alert(delData.message || 'Enrollment successfully removed.');
-                        loadEnrollments();
-                    } else {
-                        alert(delData.detail || 'Failed to remove enrollment.');
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="fas fa-user-minus mr-1 text-amber-600"></i> Unenroll';
                     }
-                } catch (err) {
-                    alert('Network error while removing enrollment.');
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-user-minus mr-1 text-amber-600"></i> Unenroll';
-                }
+                });
             });
         });
 
         // Attach Delete User Handlers (Available to all admins for non-admin users)
         enrollmentsTableBody.querySelectorAll('.delete-student-btn').forEach(btn => {
-            btn.addEventListener('click', async () => {
+            btn.addEventListener('click', () => {
                 const userId = btn.getAttribute('data-user-id');
                 const student = btn.getAttribute('data-student');
                 const email = btn.getAttribute('data-email');
 
                 if (!userId || userId === 'null') {
-                    alert('User record not found.');
+                    showToast('User record not found.', 'warning');
                     return;
                 }
 
-                const confirmMsg = `WARNING: Are you sure you want to PERMANENTLY delete the student account for:\n"${student}" (${email})?\n\nThis will remove their account and all course enrollments.`;
-                if (!confirm(confirmMsg)) return;
+                const confirmMsg = `Are you sure you want to PERMANENTLY delete the student account for "${student}" (${email})? All course enrollments will be wiped.`;
+                confirmModal({
+                    title: 'Delete Student Account',
+                    message: confirmMsg,
+                    confirmText: 'Delete Permanently',
+                    isDestructive: true,
+                    onConfirm: async () => {
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Deleting...';
 
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Deleting...';
-
-                try {
-                    const delRes = await fetch(`/api/admin/users/${userId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Authorization': `Bearer ${token}`
+                        try {
+                            const delRes = await fetch(`/api/admin/users/${userId}`, {
+                                method: 'DELETE',
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            });
+                            const delData = await delRes.json();
+                            if (delRes.ok) {
+                                showToast(delData.message || 'User account deleted successfully.', 'success');
+                                loadEnrollments();
+                                loadAdmins();
+                            } else {
+                                showToast(delData.detail || 'Failed to delete user account.', 'error');
+                                btn.disabled = false;
+                                btn.innerHTML = '<i class="fas fa-user-times mr-1 text-red-600"></i> Delete User';
+                            }
+                        } catch (err) {
+                            showToast('Network error while deleting user account.', 'error');
+                            btn.disabled = false;
+                            btn.innerHTML = '<i class="fas fa-user-times mr-1 text-red-600"></i> Delete User';
                         }
-                    });
-                    const delData = await delRes.json();
-                    if (delRes.ok) {
-                        alert(delData.message || 'User account deleted successfully.');
-                        loadEnrollments();
-                        loadAdmins();
-                    } else {
-                        alert(delData.detail || 'Failed to delete user account.');
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="fas fa-user-times mr-1 text-red-600"></i> Delete User';
                     }
-                } catch (err) {
-                    alert('Network error while deleting user account.');
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-user-times mr-1 text-red-600"></i> Delete User';
-                }
+                });
             });
         });
     }
@@ -617,8 +625,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 renderEnrollments();
             } else {
                 if (res.status === 401 || res.status === 403) {
-                    alert("Unauthorized or session expired. Please log in as an administrator.");
-                    window.location.href = '/';
+                    showToast("Unauthorized or session expired. Please log in as an administrator.", "warning");
+                    setTimeout(() => { window.location.href = '/'; }, 1000);
                 }
             }
         } catch (err) {
@@ -661,13 +669,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const emails = [...new Set(filtered.map(e => e.student_email).filter(Boolean))];
             if (emails.length === 0) {
-                alert('No emails to copy.');
+                showToast('No student emails found with the current filter.', 'warning');
                 return;
             }
             navigator.clipboard.writeText(emails.join(', ')).then(() => {
-                alert(`Copied ${emails.length} email(s) to clipboard:\n\n` + emails.join(', '));
+                showToast(`Copied ${emails.length} email(s) to clipboard!`, 'success');
             }).catch(() => {
-                alert('Emails: ' + emails.join(', '));
+                showToast(`Student Emails: ${emails.slice(0, 3).join(', ')}...`, 'info');
             });
         });
     }
@@ -692,7 +700,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         if (filtered.length === 0) {
-            alert('No student enrollment rows to export with the current filter.');
+            showToast('No student enrollment rows to export with current filter.', 'warning');
             return;
         }
 
@@ -829,9 +837,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (removePreviewBtn) {
         removePreviewBtn.addEventListener('click', () => {
             if (coverInput) coverInput.value = '';
+            if (posterInput) posterInput.value = '';
             if (coverUrlInput) coverUrlInput.value = '';
             if (previewContainer) previewContainer.classList.add('hidden');
             if (previewImg) previewImg.src = '';
+            showToast('Cover image preview cleared.', 'info');
         });
     }
 
@@ -880,16 +890,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
 
                     if (data.error_notice) {
-                        alert(data.error_notice);
+                        showToast(data.error_notice, 'warning');
                     } else {
-                        alert("AI extraction complete! Poster image and course details were automatically applied to the dashboard form below. Review and click Publish Course.");
+                        showToast("AI extraction complete! Details and poster preview applied.", 'success');
                     }
                 } else {
                     const error = await res.text();
-                    alert("Failed to parse poster: " + error);
+                    showToast("Failed to parse poster: " + error, 'error');
                 }
             } catch (err) {
-                alert("Network error.");
+                showToast("Network error parsing poster.", 'error');
             } finally {
                 btn.innerHTML = '<i class="fas fa-robot mr-2"></i> Extract Details';
                 btn.disabled = false;
@@ -972,30 +982,36 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 // Attach remove handlers
                 document.querySelectorAll('.remove-admin-btn').forEach(btn => {
-                    btn.addEventListener('click', async () => {
+                    btn.addEventListener('click', () => {
                         const targetId = btn.getAttribute('data-id');
                         const targetEmail = btn.getAttribute('data-email');
-                        if (!confirm(`Are you sure you want to revoke admin privileges for ${targetEmail}?`)) return;
-
-                        try {
-                            const remRes = await fetch('/api/admin/remove-admin', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': `Bearer ${token}`
-                                },
-                                body: JSON.stringify({ user_id: parseInt(targetId) })
-                            });
-                            const remData = await remRes.json();
-                            if (remRes.ok) {
-                                alert(remData.message || 'Admin privileges revoked.');
-                                loadAdmins();
-                            } else {
-                                alert(remData.detail || 'Failed to revoke admin.');
+                        confirmModal({
+                            title: 'Revoke Admin Privileges',
+                            message: `Are you sure you want to revoke admin privileges for ${targetEmail}?`,
+                            confirmText: 'Revoke Access',
+                            isDestructive: true,
+                            onConfirm: async () => {
+                                try {
+                                    const remRes = await fetch('/api/admin/remove-admin', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'Authorization': `Bearer ${token}`
+                                        },
+                                        body: JSON.stringify({ user_id: parseInt(targetId) })
+                                    });
+                                    const remData = await remRes.json();
+                                    if (remRes.ok) {
+                                        showToast(remData.message || 'Admin privileges revoked.', 'success');
+                                        loadAdmins();
+                                    } else {
+                                        showToast(remData.detail || 'Failed to revoke admin.', 'error');
+                                    }
+                                } catch (err) {
+                                    showToast('Network error.', 'error');
+                                }
                             }
-                        } catch (err) {
-                            alert('Network error.');
-                        }
+                        });
                     });
                 });
             }
@@ -1041,15 +1057,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
                 const addData = await addRes.json();
                 if (addRes.ok) {
-                    alert(addData.message || 'Administrator saved successfully!');
+                    showToast(addData.message || 'Administrator saved successfully!', 'success');
                     addAdminForm.reset();
                     if (addAdminFormContainer) addAdminFormContainer.classList.add('hidden');
                     loadAdmins();
                 } else {
-                    alert(addData.detail || 'Failed to add administrator.');
+                    showToast(addData.detail || 'Failed to add administrator.', 'error');
                 }
             } catch (err) {
-                alert('Network error.');
+                showToast('Network error.', 'error');
             } finally {
                 if (saveBtn) {
                     saveBtn.disabled = false;
