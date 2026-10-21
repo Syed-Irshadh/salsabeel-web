@@ -9,7 +9,8 @@ import tempfile
 import asyncio
 import base64
 import requests
-from datetime import datetime
+import secrets
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -29,7 +30,7 @@ BASE_DIR = str(Path(__file__).resolve().parent.parent)
 if BASE_DIR not in sys.path:
     sys.path.append(BASE_DIR)
 
-from app import models, database, auth
+from app import models, database, auth, email_service
 
 load_dotenv()
 
@@ -580,6 +581,95 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
     
     access_token = auth.create_access_token(data={"sub": user.email})
     return {"access_token": access_token, "token_type": "bearer", "role": user.role, "user_id": user.id, "name": user.name or ""}
+
+class ForgotPasswordRequest(BaseModel):
+    email: str
+
+class VerifyResetPasswordRequest(BaseModel):
+    email: str
+    code: str
+    new_password: str
+    confirm_password: str
+
+@app.post("/api/auth/forgot-password/request")
+async def request_password_reset(data: ForgotPasswordRequest, db: Session = Depends(database.get_db)):
+    clean_email = data.email.strip().lower()
+    if not clean_email:
+        raise HTTPException(status_code=400, detail="Please enter a valid email address.")
+    
+    user = db.query(models.User).filter(models.User.email == clean_email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="No registered account found with this email address.")
+
+    code = str(secrets.randbelow(900000) + 100000)
+    expires_at = datetime.now(timezone.utc) + timedelta(minutes=15)
+
+    # Invalidate previous unused codes for this email
+    db.query(models.PasswordResetCode).filter(
+        models.PasswordResetCode.email == clean_email,
+        models.PasswordResetCode.used == 0
+    ).update({"used": 2})
+
+    reset_record = models.PasswordResetCode(
+        email=clean_email,
+        code=code,
+        expires_at=expires_at,
+        used=0
+    )
+    db.add(reset_record)
+    db.commit()
+
+    dispatch_res = email_service.send_password_reset_email(clean_email, code)
+    
+    return {
+        "status": "success",
+        "message": "A 6-digit verification code has been sent to your email. Check your inbox and spam folder.",
+        "dev_code": code if dispatch_res.get("dev_mode") else None
+    }
+
+@app.post("/api/auth/forgot-password/verify-and-reset")
+async def verify_and_reset_password(data: VerifyResetPasswordRequest, db: Session = Depends(database.get_db)):
+    clean_email = data.email.strip().lower()
+    clean_code = data.code.strip()
+    
+    if not clean_email or not clean_code:
+        raise HTTPException(status_code=400, detail="Email and reset code are required.")
+
+    if len(data.new_password) < 8:
+        raise HTTPException(status_code=400, detail="New password must be at least 8 characters long.")
+
+    if data.new_password != data.confirm_password:
+        raise HTTPException(status_code=400, detail="New password and confirmation do not match.")
+
+    user = db.query(models.User).filter(models.User.email == clean_email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User account not found.")
+
+    now_utc = datetime.now(timezone.utc)
+    reset_entry = db.query(models.PasswordResetCode).filter(
+        models.PasswordResetCode.email == clean_email,
+        models.PasswordResetCode.code == clean_code,
+        models.PasswordResetCode.used == 0
+    ).order_by(models.PasswordResetCode.id.desc()).first()
+
+    if not reset_entry:
+        raise HTTPException(status_code=400, detail="Invalid reset code. Please check the code or request a new one.")
+
+    exp = reset_entry.expires_at
+    if exp.tzinfo is None:
+        exp = exp.replace(tzinfo=timezone.utc)
+    
+    if exp < now_utc:
+        raise HTTPException(status_code=400, detail="This reset code has expired (valid for 15 mins). Please request a new code.")
+
+    user.hashed_password = auth.get_password_hash(data.new_password)
+    reset_entry.used = 1
+    db.commit()
+
+    return {
+        "status": "success",
+        "message": "Your password has been successfully reset! You can now sign in with your new password."
+    }
 
 class EnrollmentCreate(BaseModel):
     user_id: int

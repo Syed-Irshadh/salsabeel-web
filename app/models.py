@@ -56,3 +56,13 @@ class User(Base):
     role = Column(String(50), default="student")
 
     enrollments = relationship("Enrollment", back_populates="user")
+
+class PasswordResetCode(Base):
+    __tablename__ = "password_resets"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String(255), index=True, nullable=False)
+    code = Column(String(10), nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    used = Column(Integer, default=0)  # 0 = active/unused, 1 = completed
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))

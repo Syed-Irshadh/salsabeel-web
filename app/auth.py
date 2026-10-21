@@ -9,7 +9,8 @@ from app import database, models
 
 SECRET_KEY = os.getenv("SECRET_KEY", "salsabeel-academy-secret-key-2026")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 1 week
+# Enforce secure time-bounded sessions (default 60 minutes session timeout)
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("SESSION_EXPIRE_MINUTES", "60"))
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/token")

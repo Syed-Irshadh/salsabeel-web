@@ -1,53 +1,105 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-    <div class="text-center mb-10">
-        <span class="text-xs font-bold uppercase tracking-widest text-emerald bg-emerald/10 px-3.5 py-1.5 rounded-full inline-block mb-3">Academic Offerings</span>
-        <h2 class="text-4xl font-serif font-bold text-navy mb-3">Courses & Seminars</h2>
-        <p class="text-gray-600 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">Explore our ongoing, upcoming, and archived courses. Deepen your understanding of sacred Islamic sciences at your own pace.</p>
-        <div class="w-20 h-1 bg-gold mx-auto mt-4 rounded-full"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Header Section (Clean, Ageless, High-End Educational Design) -->
+    <div class="text-center max-w-3xl mx-auto mb-10">
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-navy mb-4">
+            Sacred Sciences Directory
+        </h1>
+        <p class="text-gray-600 text-sm sm:text-base leading-relaxed">
+            Authentic, traditional Islamic sciences taught in the Tamil language under qualified scholarship. 
+            Explore courses across Qur'anic studies, Hadith traditions, Tajweed, Fiqh, and Arabic grammar.
+        </p>
     </div>
 
-    <!-- Live Search & Category Discovery -->
-    <div class="max-w-xl mx-auto mb-8">
-        <div class="relative flex items-center">
+    <!-- Live Search & Multi-Level Filtering Control Hub -->
+    <div class="bg-white rounded-3xl border border-gray-200/80 shadow-xs p-5 sm:p-6 mb-10">
+        <!-- Search Input -->
+        <div class="relative flex items-center mb-6">
             <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-emerald">
                 <i class="fas fa-search text-base"></i>
             </span>
             <input type="text" 
                    id="courseSearchInput" 
-                   placeholder="Search courses by topic, title, category, or keyword..." 
-                   class="w-full pl-11 pr-10 py-3.5 bg-white rounded-2xl border border-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald focus:border-emerald text-sm placeholder-gray-400 transition-all">
+                   placeholder="Search 31 courses by topic, teacher, discipline, or keyword..." 
+                   class="w-full pl-11 pr-10 py-3.5 bg-gray-50/80 rounded-2xl border border-gray-200 shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald focus:border-emerald text-sm placeholder-gray-400 transition-all">
             <button type="button" id="clearCourseSearch" class="hidden absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer" aria-label="Clear search">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <p class="text-[11px] text-gray-400 mt-2 text-center">
-            <span class="bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded text-gray-500 font-mono">/</span> Press slash to quickly search
-        </p>
-    </div>
 
-    <!-- Filter Tabs (Past, Current, Future) -->
-    <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12">
-        <button class="filter-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-navy text-white shadow-sm cursor-pointer" data-filter="all">
-            All Courses
-        </button>
-        <button class="filter-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-white text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer" data-filter="current">
-            <i class="fas fa-play-circle mr-1.5 text-emerald"></i> Current Courses
-        </button>
-        <button class="filter-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-white text-gray-700 hover:bg-amber-50 hover:text-amber-700 border border-gray-200 cursor-pointer" data-filter="upcoming">
-            <i class="fas fa-clock mr-1.5 text-amber-500"></i> Future / Upcoming
-        </button>
-        <button class="filter-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-white text-gray-700 hover:bg-gray-100 hover:text-gray-900 border border-gray-200 cursor-pointer" data-filter="past">
-            <i class="fas fa-check-circle mr-1.5 text-gray-500"></i> Past / Completed
-        </button>
+        <!-- Discipline Category Filter Pills -->
+        <div class="mb-5 pb-5 border-b border-gray-100">
+            <div class="flex items-center justify-between mb-3 text-xs">
+                <span class="font-bold uppercase tracking-wider text-gray-600 flex items-center">
+                    <i class="fas fa-layer-group mr-1.5 text-gold"></i> Islamic Science Disciplines
+                </span>
+                <button type="button" id="resetFiltersBtn" class="text-emerald hover:text-teal-800 font-semibold cursor-pointer">
+                    Clear Selection
+                </button>
+            </div>
+            <div class="flex flex-wrap gap-2" id="categoryFilterBar">
+                <button type="button" class="category-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all" data-category="all">
+                    All Disciplines
+                </button>
+                <button type="button" class="category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="tafseer">
+                    📖 Tafseer
+                </button>
+                <button type="button" class="category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="tajweed">
+                    🎙️ Tajweed & Qira'at
+                </button>
+                <button type="button" class="category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="hadith">
+                    📜 Hadith & Sunnah
+                </button>
+                <button type="button" class="category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="arabic">
+                    ✍️ Arabic Language
+                </button>
+                <button type="button" class="category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="quran">
+                    🕋 Quran & Hifz
+                </button>
+                <button type="button" class="category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="fiqh">
+                    ⚖️ Fiqh & Shariah
+                </button>
+                <button type="button" class="category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="seerah">
+                    🌴 Seerah & History
+                </button>
+                <button type="button" class="category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="tazkiyah">
+                    🤍 Tazkiyah & Adab
+                </button>
+            </div>
+        </div>
+
+        <!-- Status Filter Tabs & Results Count -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-1">
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-gray-500 mr-1 hidden lg:inline">Status:</span>
+                <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-semibold text-xs transition-all bg-[#04272c] text-white shadow-xs cursor-pointer border border-gold/30" data-status="all">
+                    All Batches
+                </button>
+                <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer" data-status="current">
+                    <i class="fas fa-play-circle mr-1 text-emerald"></i> Ongoing
+                </button>
+                <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-gray-50 text-gray-700 hover:bg-amber-50 hover:text-amber-700 border border-gray-200 cursor-pointer" data-status="upcoming">
+                    <i class="fas fa-clock mr-1 text-amber-500"></i> Upcoming
+                </button>
+                <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-gray-900 border border-gray-200 cursor-pointer" data-status="past">
+                    <i class="fas fa-check-circle mr-1 text-gray-500"></i> Completed
+                </button>
+            </div>
+            
+            <div class="flex items-center space-x-2 text-xs">
+                <span id="coursesCountBadge" class="font-medium text-emerald bg-emerald/10 border border-emerald/20 px-3 py-1 rounded-full text-xs">
+                    Showing {{ courses|length }} programs
+                </span>
+            </div>
+        </div>
     </div>
     
     <!-- Courses Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="coursesContainer">
         {% for course in courses %}
-        <div class="course-card luxury-card bg-white rounded-2xl overflow-hidden shadow-md border border-gray-200/80 flex flex-col" 
+        <div class="course-card shadcn-card rounded-2xl overflow-hidden flex flex-col" 
              data-status="{{ course.status | default('current') }}"
              data-title="{{ course.title | lower }}"
              data-category="{{ course.category | lower }}"
@@ -116,16 +168,10 @@
                     </button>
                 </div>
 
-                <h3 class="text-2xl font-serif font-bold text-navy mb-2 cursor-pointer hover:text-emerald transition-colors open-poster-btn leading-snug"
-                    data-id="{{ course.id }}"
-                    data-poster="{{ course.image_url }}" 
-                    data-title="{{ course.title }}" 
-                    data-category="{{ course.category }}"
-                    data-startdate="{{ course.start_date or '' }}"
-                    data-price="{{ course.price or 'Free' }}"
-                    data-status="{{ course.status | default('current') }}"
-                    title="Click to view full poster">
-                    {{ course.title }}
+                <h3 class="text-xl font-bold tracking-tight text-navy mb-2 leading-snug">
+                    <a href="/viewer/{{ course.id }}" class="hover:text-emerald transition-colors" title="View Full Course Syllabus & Details">
+                        {{ course.title }}
+                    </a>
                 </h3>
                 <p class="text-gray-600 mb-5 flex-grow text-sm leading-relaxed">{{ course.description }}</p>
                 
@@ -187,7 +233,7 @@
         <div class="flex items-center justify-between px-6 py-4 bg-navy text-white border-b-2 border-gold flex-shrink-0">
             <div class="flex items-center space-x-3 overflow-hidden">
                 <span id="posterModalCategory" class="inline-block bg-emerald text-white text-xs font-bold uppercase tracking-wider py-0.5 px-2.5 rounded-full flex-shrink-0">Category</span>
-                <h3 id="posterModalTitle" class="text-lg sm:text-xl font-serif font-bold truncate">Course Poster</h3>
+                <h3 id="posterModalTitle" class="text-lg sm:text-xl font-bold tracking-tight truncate">Course Poster</h3>
             </div>
             <button type="button" id="closePosterModal" class="text-gray-300 hover:text-white text-2xl leading-none p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer ml-4" title="Close">
                 <i class="fas fa-times"></i>
@@ -221,14 +267,17 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Unified Search & Tab Filtering
-    const tabs = document.querySelectorAll('.filter-tab');
+    // Multi-Dimensional Category & Status Filtering
+    const categoryPills = document.querySelectorAll('.category-pill');
+    const statusTabs = document.querySelectorAll('.status-tab');
     const cards = document.querySelectorAll('.course-card');
     const emptyState = document.getElementById('noCoursesFiltered');
     const searchInput = document.getElementById('courseSearchInput');
     const clearSearchBtn = document.getElementById('clearCourseSearch');
+    const resetFiltersBtn = document.getElementById('resetFiltersBtn');
 
-    let currentFilter = 'all';
+    let currentCategory = 'all';
+    let currentStatus = 'all';
     let searchQuery = '';
 
     function applyFilters() {
@@ -239,10 +288,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const category = (card.getAttribute('data-category') || '').toLowerCase();
             const desc = (card.getAttribute('data-desc') || '').toLowerCase();
 
-            const statusMatch = (currentFilter === 'all') || (status === currentFilter);
+            // Category match (all or contains substring like 'tafseer', 'tajweed', etc.)
+            const categoryMatch = (currentCategory === 'all') || category.includes(currentCategory);
+            // Status match
+            const statusMatch = (currentStatus === 'all') || (status === currentStatus);
+            // Search query match
             const searchMatch = !searchQuery || title.includes(searchQuery) || category.includes(searchQuery) || desc.includes(searchQuery);
 
-            if (statusMatch && searchMatch) {
+            if (categoryMatch && statusMatch && searchMatch) {
                 card.classList.remove('hidden');
                 visible++;
             } else {
@@ -250,25 +303,72 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        const countBadge = document.getElementById('coursesCountBadge');
+        if (countBadge) {
+            countBadge.textContent = `Showing ${visible} of ${cards.length} programs`;
+        }
+
         if (emptyState) {
             emptyState.classList.toggle('hidden', visible > 0);
         }
     }
 
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            currentFilter = tab.getAttribute('data-filter') || 'all';
+    // Category Pill Click
+    categoryPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+            currentCategory = (pill.getAttribute('data-category') || 'all').toLowerCase();
 
-            // Reset tab styles
-            tabs.forEach(t => {
-                t.className = 'filter-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-white text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer';
+            categoryPills.forEach(p => {
+                p.className = 'category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all';
             });
-            // Active tab style
-            tab.className = 'filter-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-navy text-white shadow-sm cursor-pointer';
+            pill.className = 'category-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all';
 
             applyFilters();
         });
     });
+
+    // Status Tab Click
+    statusTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            currentStatus = (tab.getAttribute('data-status') || 'all').toLowerCase();
+
+            statusTabs.forEach(t => {
+                t.className = 'status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer';
+            });
+            tab.className = 'status-tab px-3 py-1.5 rounded-lg font-semibold text-xs transition-all bg-[#04272c] text-white shadow-xs cursor-pointer border border-gold/30';
+
+            applyFilters();
+        });
+    });
+
+    // Reset All Filters
+    if (resetFiltersBtn) {
+        resetFiltersBtn.addEventListener('click', () => {
+            currentCategory = 'all';
+            currentStatus = 'all';
+            searchQuery = '';
+            if (searchInput) searchInput.value = '';
+            if (clearSearchBtn) clearSearchBtn.classList.add('hidden');
+
+            categoryPills.forEach((p, idx) => {
+                if (idx === 0) {
+                    p.className = 'category-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all';
+                } else {
+                    p.className = 'category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all';
+                }
+            });
+
+            statusTabs.forEach((t, idx) => {
+                if (idx === 0) {
+                    t.className = 'status-tab px-3 py-1.5 rounded-lg font-semibold text-xs transition-all bg-[#04272c] text-white shadow-xs cursor-pointer border border-gold/30';
+                } else {
+                    t.className = 'status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer';
+                }
+            });
+
+            applyFilters();
+        });
+    }
 
     if (searchInput) {
         searchInput.addEventListener('input', () => {

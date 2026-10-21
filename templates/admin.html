@@ -4,7 +4,7 @@
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-6 border-b border-gray-200">
         <div>
-            <h2 class="text-3xl font-serif font-bold text-navy">Admin Dashboard</h2>
+            <h2 class="text-3xl font-bold tracking-tight text-navy">Admin Dashboard</h2>
             <p class="text-xs sm:text-sm text-gray-500 mt-1">Manage courses, student enrollments, and configure security credentials.</p>
         </div>
         <div class="flex items-center gap-3">
@@ -44,8 +44,19 @@
                     </div>
                     
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Category</label>
-                        <input type="text" id="category" name="category" required class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald">
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Category / Discipline</label>
+                        <input type="text" id="category" name="category" list="categorySuggestions" required placeholder="e.g. Tafseer, Tajweed, Hadith..." class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald">
+                        <datalist id="categorySuggestions">
+                            <option value="Tafseer">
+                            <option value="Tajweed & Qira'at">
+                            <option value="Hadith">
+                            <option value="Arabic Language">
+                            <option value="Quran & Hifz">
+                            <option value="Fiqh">
+                            <option value="Aqeedah">
+                            <option value="Seerah & History">
+                            <option value="Tazkiyah & Adab">
+                        </datalist>
                     </div>
                     
                     <div>
@@ -226,7 +237,12 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-gray-700 mb-1">Password</label>
-                                <input type="password" id="newAdminPassword" minlength="8" placeholder="Min 8 chars (for new user)" class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-emerald focus:border-emerald bg-white">
+                                <div class="relative">
+                                    <input type="password" id="newAdminPassword" minlength="8" placeholder="Min 8 chars (for new user)" class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-emerald focus:border-emerald bg-white pr-9">
+                                    <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-2.5 flex items-center text-gray-400 hover:text-gray-700 cursor-pointer text-xs" data-target="newAdminPassword" title="Toggle password visibility">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="flex justify-end space-x-2 pt-2">
@@ -272,7 +288,7 @@
                     <i class="fas fa-lock text-gold text-lg"></i>
                 </div>
                 <div>
-                    <h3 id="changePasswordTitle" class="text-xl font-serif font-bold text-navy">Change Password</h3>
+                    <h3 id="changePasswordTitle" class="text-xl font-bold tracking-tight text-navy">Change Password</h3>
                     <p class="text-xs text-gray-500">Update your administrator login credentials</p>
                 </div>
             </div>

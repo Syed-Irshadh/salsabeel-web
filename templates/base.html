@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salsabeel Academy</title>
+    <title>Salsabeel Academy - Sacred Islamic Sciences</title>
     <link rel="icon" type="image/jpeg" href="/static/img/logo.jpeg">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Modern Sans-Serif Fonts (Plus Jakarta Sans & Inter) + Classical Arabic Calligraphy (Amiri) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -33,16 +37,17 @@
                             dark: '#a17936'
                         },
                         dark: '#04272c',     /* Deep Petrol Night */
-                        sand: '#fdfbf7'      /* Warm Ivory Canvas */
+                        sand: '#f8faf9'      /* Soft Clean Background */
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+                        arabic: ['"Amiri"', '"Traditional Arabic"', '"Scheherazade New"', 'serif']
                     },
                     boxShadow: {
-                        'glow-gold': '0 0 24px rgba(196, 152, 81, 0.4)',
+                        'glow-gold': '0 0 24px rgba(196, 152, 81, 0.35)',
                         'glow-teal': '0 0 28px rgba(14, 104, 115, 0.35)',
-                        'luxury': '0 12px 32px -8px rgba(4, 39, 44, 0.12), 0 4px 10px -2px rgba(4, 39, 44, 0.04)'
+                        'shadcn': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
+                        'shadcn-hover': '0 10px 25px -5px rgba(4, 39, 44, 0.12), 0 8px 10px -6px rgba(4, 39, 44, 0.06)'
                     }
                 }
             }
@@ -50,55 +55,137 @@
     </script>
     
     <style>
-        body { 
-            background-color: #fdfbf7; 
-            color: #1a2e30; 
-            font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+        * {
+            box-sizing: border-box;
         }
-        
+        body { 
+            background-color: #f8faf9; 
+            color: #0f2427; 
+            font-family: 'Plus Jakarta Sans', Inter, system-ui, sans-serif;
+            letter-spacing: -0.015em;
+        }
+
+        /* Classical Calligraphy Utility */
+        .font-arabic {
+            font-family: 'Amiri', 'Traditional Arabic', 'Scheherazade New', serif;
+        }
+
+        /* Custom Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #04272c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0e6873;
+            border-radius: 9999px;
+            border: 1px solid rgba(196, 152, 81, 0.2);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c49851;
+        }
+
+        /* Logo-tinted Text Selection */
+        ::selection {
+            background: rgba(196, 152, 81, 0.3);
+            color: #04272c;
+        }
+
+        /* React Shadcn Aesthetic & Logo-Derived Gradients */
+        .bg-gradient-teal {
+            background: linear-gradient(135deg, #04272c 0%, #08535c 50%, #0e6873 100%);
+        }
+        .bg-gradient-gold {
+            background: linear-gradient(135deg, #c49851 0%, #dfb76c 50%, #a17936 100%);
+        }
+        .bg-mesh-dark {
+            background-color: #04272c;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(14, 104, 115, 0.35) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(196, 152, 81, 0.25) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(8, 83, 92, 0.4) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(4, 39, 44, 0.8) 0px, transparent 50%);
+        }
+        .text-gradient-gold {
+            background: linear-gradient(135deg, #dfb76c 0%, #c49851 50%, #fae596 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-teal {
+            background: linear-gradient(135deg, #08535c 0%, #0e6873 50%, #17a2b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
         /* Ambient Breathing Halo for Emblem */
         @keyframes emblemBreathing {
             0%, 100% { 
-                box-shadow: 0 0 22px rgba(196, 152, 81, 0.35), 0 0 45px rgba(14, 104, 115, 0.2); 
+                box-shadow: 0 0 20px rgba(196, 152, 81, 0.35), 0 0 40px rgba(14, 104, 115, 0.2); 
             }
             50% { 
-                box-shadow: 0 0 35px rgba(196, 152, 81, 0.6), 0 0 65px rgba(14, 104, 115, 0.35); 
+                box-shadow: 0 0 35px rgba(196, 152, 81, 0.65), 0 0 60px rgba(14, 104, 115, 0.35); 
             }
         }
         .emblem-halo {
             animation: emblemBreathing 4s ease-in-out infinite;
         }
 
-        .hero-pattern {
-            background-color: #04272c;
-            background-image: 
-                radial-gradient(circle at 18% 25%, rgba(196, 152, 81, 0.14) 0%, transparent 45%),
-                radial-gradient(circle at 82% 75%, rgba(14, 104, 115, 0.24) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(8, 83, 92, 0.4) 0%, transparent 70%);
+        /* Shadcn-Style Clean Card Transitions */
+        .shadcn-card {
+            background: #ffffff;
+            border: 1px solid rgba(8, 83, 92, 0.1);
+            box-shadow: 0 1px 3px 0 rgba(4, 39, 44, 0.05), 0 1px 2px -1px rgba(4, 39, 44, 0.05);
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        /* Tactical Luxury Hover for Cards */
-        .luxury-card {
-            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s ease;
-        }
-        .luxury-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 35px -10px rgba(4, 39, 44, 0.16), 0 0 16px rgba(196, 152, 81, 0.22);
+        .shadcn-card:hover {
             border-color: rgba(196, 152, 81, 0.45);
+            box-shadow: 0 14px 30px -6px rgba(4, 39, 44, 0.12), 0 0 16px rgba(196, 152, 81, 0.15);
+            transform: translateY(-3px);
         }
 
-        /* Subtle Islamic Arabesque Pattern */
-        .islamic-subtle-pattern {
-            background-color: #04272c;
-            background-image: radial-gradient(rgba(196, 152, 81, 0.15) 1px, transparent 1px), radial-gradient(rgba(14, 104, 115, 0.2) 1px, #04272c 1px);
-            background-size: 28px 28px;
-            background-position: 0 0, 14px 14px;
+        /* Top Navigation Link Styles */
+        .top-nav-link {
+            position: relative;
+            color: #d1d5db;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.5rem 0.875rem;
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+        .top-nav-link:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+        .top-nav-link.active {
+            color: #ffffff;
+            font-weight: 600;
+            background-color: rgba(196, 152, 81, 0.2);
+            border: 1px solid rgba(196, 152, 81, 0.35);
+        }
+        .top-nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 2px;
+            background: #c49851;
+            border-radius: 9999px;
         }
 
-        .gold-shimmer {
-            background: linear-gradient(120deg, #c49851 0%, #fae596 50%, #c49851 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        /* Hardware-Accelerated Animation Helpers */
+        @keyframes fadeInSlideUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-enter {
+            animation: fadeInSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         /* Toast Animation */
@@ -112,85 +199,222 @@
         }
     </style>
 </head>
-<body class="text-gray-800 font-sans flex flex-col min-h-screen">
+<body class="text-gray-900 font-sans min-h-screen flex flex-col antialiased">
 
-    <!-- Top Sacred Announcement & Admissions Ribbon -->
-    <div class="bg-dark text-gray-300 text-xs py-1.5 px-4 border-b border-gold/20 flex justify-between items-center tracking-wide">
+    <!-- ============================================================== -->
+    <!-- SACRED TOP BANNER (Bismillah & Global Admissions)              -->
+    <!-- ============================================================== -->
+    <div class="bg-[#031d21] text-gray-300 text-xs py-2 px-4 border-b border-gold/15 flex justify-between items-center tracking-wide">
         <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
-            <div class="flex items-center space-x-2 text-gold-light font-medium">
-                <span class="font-serif">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span>
-                <span class="hidden md:inline text-gray-400">·</span>
-                <span class="hidden md:inline text-gray-300 font-sans">Salsabeel Academy · தமிழ் பேசும் சமூகத்திற்கான பாரம்பரிய இஸ்லாமியக் கல்விக்கூடம்</span>
+            <div class="flex items-center space-x-2 text-gold-light font-medium mx-auto sm:mx-0">
+                <span class="font-arabic text-sm text-gold-light tracking-wide">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span>
+                <span class="hidden lg:inline text-gray-500">·</span>
+                <span class="hidden lg:inline text-gray-300 font-sans">Salsabeel Academy · பாரம்பரிய இஸ்லாமியக் கல்விக்கூடம்</span>
             </div>
-            <div class="flex items-center space-x-4 text-xs">
+            <div class="hidden sm:flex items-center space-x-4 text-xs">
                 <a href="https://wa.me/919940523013" target="_blank" class="text-gold-light hover:text-white transition-colors flex items-center font-medium">
-                    <i class="fab fa-whatsapp text-emerald mr-1.5"></i> Admissions: +91 99405 23013
+                    <i class="fab fa-whatsapp text-emerald mr-1.5 text-sm"></i> Admissions Desk: +91 99405 23013
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Navbar -->
-    <nav class="bg-navy shadow-lg sticky top-0 z-50 border-b border-gold/30 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <a href="/" class="flex items-center text-white hover:text-gold transition-colors font-serif text-2xl font-bold tracking-wide">
-                    <img src="/static/img/logo.jpeg" alt="Salsabeel Academy Logo" class="h-12 w-12 rounded-full mr-3 border-2 border-gold object-cover shadow-sm">
-                    <span>Salsabeel Academy</span>
-                </a>
-                
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="/" class="text-gray-200 hover:text-gold transition-colors font-medium text-sm tracking-wide">Home</a>
-                    <a href="/courses" class="text-gray-200 hover:text-gold transition-colors font-medium text-sm tracking-wide">Courses</a>
-                    <a href="/about" class="text-gray-200 hover:text-gold transition-colors font-medium text-sm tracking-wide">About Us</a>
-                    
-                    <!-- Social Links -->
-                    <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="text-emerald hover:text-green-300 text-xl transition-transform hover:scale-110" title="WhatsApp Channel">
-                        <i class="fab fa-whatsapp"></i>
-                    </a>
-                    <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="text-red-400 hover:text-red-300 text-xl transition-transform hover:scale-110" title="YouTube Channel">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-
-                    <!-- Auth Buttons -->
-                    <a href="#" id="loginBtn" class="ml-4 border-2 border-gold text-gold hover:bg-gold hover:text-dark transition-all px-4 py-2 rounded-lg font-semibold text-sm shadow-sm hover:shadow-glow-gold">Sign Up / Login</a>
-                    <a href="/admin" id="adminBtn" class="hidden ml-4 bg-emerald text-white hover:bg-teal-700 transition-colors px-4 py-2 rounded-lg font-semibold text-sm shadow-sm">Dashboard</a>
-                    <a href="#" id="logoutBtn" class="hidden ml-4 border border-red-400 text-red-300 hover:bg-red-500 hover:text-white transition-colors px-4 py-2 rounded-lg font-semibold text-sm">Logout</a>
+    <!-- ============================================================== -->
+    <!-- PREMIER STICKY TOP NAVBAR                                      -->
+    <!-- ============================================================== -->
+    <header class="sticky top-0 z-50 bg-[#04272c]/95 backdrop-blur-md border-b border-gold/25 shadow-md transition-all duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Left: Brand Logo & Title -->
+            <a href="/" class="flex items-center space-x-3.5 group flex-shrink-0">
+                <img src="/static/img/logo.jpeg" alt="Salsabeel Emblem" class="h-11 w-11 rounded-full border-2 border-gold object-cover shadow-sm transition-transform group-hover:scale-105">
+                <div class="flex flex-col justify-center">
+                    <span class="font-bold text-lg leading-tight text-white tracking-tight flex items-center">
+                        Salsabeel <span class="text-gold ml-1">Academy</span>
+                    </span>
+                    <span class="text-[10px] uppercase tracking-widest text-gold-light font-medium">Sacred Islamic Sciences</span>
                 </div>
+            </a>
+
+            <!-- Center: Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                <a href="/" class="top-nav-link" data-page="/">
+                    <i class="fas fa-home text-gold-light mr-2 text-xs"></i>
+                    <span>Home</span>
+                </a>
+                <a href="/courses" class="top-nav-link" data-page="/courses">
+                    <i class="fas fa-book-open text-gold-light mr-2 text-xs"></i>
+                    <span>Courses</span>
+                    <span class="ml-1.5 text-[10px] font-bold bg-emerald/30 text-emerald-200 border border-emerald/40 px-1.5 py-0.2 rounded-md">31 Programs</span>
+                </a>
+                <a href="/about" class="top-nav-link" data-page="/about">
+                    <i class="fas fa-landmark text-gold-light mr-2 text-xs"></i>
+                    <span>About Us</span>
+                </a>
+                <a href="https://wa.me/919940523013" target="_blank" class="top-nav-link text-emerald-300 hover:text-emerald-200">
+                    <i class="fab fa-whatsapp text-emerald-400 mr-1.5 text-sm"></i>
+                    <span>Admissions</span>
+                </a>
+                <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="top-nav-link text-green-300 hover:text-green-200">
+                    <i class="fas fa-bullhorn text-green-400 mr-1.5 text-xs"></i>
+                    <span>Updates</span>
+                </a>
+            </nav>
+
+            <!-- Right: Search, Auth & Mobile Menu Toggle -->
+            <div class="flex items-center space-x-2.5 sm:space-x-3">
+                <!-- Search Hotkey Pill -->
+                <a href="/courses" class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-gray-300 hover:text-white border border-white/10 text-xs transition-colors" title="Quick Search">
+                    <i class="fas fa-search text-gold text-xs"></i>
+                    <span class="text-xs">Search</span>
+                    <kbd class="px-1.5 py-0.5 rounded bg-black/30 border border-white/10 text-[10px] font-mono text-gray-400">/</kbd>
+                </a>
+
+                <!-- Sign In / Sign Up Button (Guest) -->
+                <button type="button" id="topLoginBtn" class="inline-flex items-center px-4 py-2 rounded-xl border border-gold/50 text-gold hover:bg-gold hover:text-dark font-semibold text-xs tracking-wide transition-all shadow-xs cursor-pointer">
+                    <i class="fas fa-user-circle mr-1.5 text-sm"></i>
+                    <span>Sign In</span>
+                </button>
+
+                <!-- Admin Dashboard (Logged in Admin) -->
+                <a href="/admin" id="topAdminBtn" class="hidden inline-flex items-center px-3.5 py-2 rounded-xl bg-emerald hover:bg-teal-700 text-white font-semibold text-xs tracking-wide transition-all shadow-sm">
+                    <i class="fas fa-shield-halved mr-1.5"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <!-- Sign Out (Logged in User) -->
+                <button type="button" id="topLogoutBtn" class="hidden inline-flex items-center px-3 py-2 rounded-xl border border-red-400/40 text-red-300 hover:bg-red-600 hover:text-white font-medium text-xs tracking-wide transition-all cursor-pointer" title="Sign Out">
+                    <i class="fas fa-arrow-right-from-bracket mr-1"></i>
+                    <span class="hidden sm:inline">Sign Out</span>
+                </button>
 
                 <!-- Mobile Hamburger Button -->
-                <div class="flex md:hidden items-center">
-                    <button type="button" id="mobileMenuBtn" class="text-gray-300 hover:text-gold p-2 rounded-md focus:outline-none cursor-pointer" aria-label="Toggle navigation menu">
-                        <i id="mobileMenuIcon" class="fas fa-bars text-2xl"></i>
-                    </button>
+                <button type="button" id="mobileDrawerOpenBtn" class="md:hidden text-gray-300 hover:text-gold p-2 rounded-lg cursor-pointer focus:outline-none" aria-label="Open mobile navigation menu">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer Overlay Backdrop -->
+    <div id="mobileDrawerBackdrop" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 hidden transition-opacity"></div>
+
+    <!-- Mobile Slide-In Drawer Navigation -->
+    <div id="mobileDrawer" class="fixed inset-y-0 left-0 w-[82vw] max-w-xs bg-gradient-to-b from-[#04272c] via-[#08535c] to-[#04272c] z-50 transform -translate-x-full transition-transform duration-300 ease-in-out border-r border-gold/30 p-5 flex flex-col justify-between shadow-2xl overflow-y-auto">
+        <div>
+            <!-- Drawer Header -->
+            <div class="flex items-center justify-between pb-4 border-b border-white/10">
+                <div class="flex items-center space-x-3">
+                    <img src="/static/img/logo.jpeg" alt="Logo" class="h-10 w-10 rounded-full border-2 border-gold object-cover">
+                    <div>
+                        <h4 class="font-bold text-white text-sm">Salsabeel Academy</h4>
+                        <span class="text-[10px] text-gold-light uppercase tracking-widest">Islamic Sciences</span>
+                    </div>
+                </div>
+                <button type="button" id="mobileDrawerCloseBtn" class="text-gray-400 hover:text-white p-2 text-lg cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Drawer Nav Links -->
+            <nav class="py-5 space-y-2">
+                <a href="/" class="mobile-nav-link flex items-center px-3.5 py-2.5 rounded-xl text-gray-200 hover:text-gold hover:bg-white/10 transition-colors">
+                    <i class="fas fa-home w-6 text-gold-light"></i>
+                    <span class="font-medium text-sm">Home</span>
+                </a>
+                <a href="/courses" class="mobile-nav-link flex items-center px-3.5 py-2.5 rounded-xl text-gray-200 hover:text-gold hover:bg-white/10 transition-colors">
+                    <i class="fas fa-book-open w-6 text-gold-light"></i>
+                    <span class="font-medium text-sm">Courses</span>
+                </a>
+                <a href="/about" class="mobile-nav-link flex items-center px-3.5 py-2.5 rounded-xl text-gray-200 hover:text-gold hover:bg-white/10 transition-colors">
+                    <i class="fas fa-landmark w-6 text-gold-light"></i>
+                    <span class="font-medium text-sm">About Us</span>
+                </a>
+
+                <div class="pt-3 pb-2 border-t border-white/10 space-y-2">
+                    <a href="https://wa.me/919940523013" target="_blank" class="flex items-center px-3.5 py-2 rounded-xl text-emerald-300 hover:bg-emerald/10 text-sm font-medium">
+                        <i class="fab fa-whatsapp w-6 text-emerald-400 text-base"></i> Admissions: +91 99405 23013
+                    </a>
+                    <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="flex items-center px-3.5 py-2 rounded-xl text-green-300 hover:bg-white/10 text-sm font-medium">
+                        <i class="fas fa-bullhorn w-6 text-green-400 text-base"></i> WhatsApp Channel
+                    </a>
+                    <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="flex items-center px-3.5 py-2 rounded-xl text-red-300 hover:bg-white/10 text-sm font-medium">
+                        <i class="fab fa-youtube w-6 text-red-400 text-base"></i> YouTube Channel
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Drawer Bottom Auth -->
+        <div class="pt-4 border-t border-white/10 space-y-2">
+            <a href="#" id="mobileDrawerLoginBtn" class="block text-center py-2.5 px-4 rounded-xl border border-gold text-gold font-semibold text-sm hover:bg-gold hover:text-dark transition-colors">
+                Sign Up / Login
+            </a>
+            <a href="/admin" id="mobileDrawerAdminBtn" class="hidden block text-center py-2.5 px-4 rounded-xl bg-emerald text-white font-semibold text-sm hover:bg-teal-700 transition-colors">
+                Admin Dashboard
+            </a>
+            <a href="#" id="mobileDrawerLogoutBtn" class="hidden block text-center py-2 px-4 rounded-xl border border-red-400 text-red-300 hover:bg-red-500 hover:text-white text-sm font-medium transition-colors">
+                Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- MAIN CONTENT CANVAS                                            -->
+    <!-- ============================================================== -->
+    <div id="mainCanvas" class="flex-1 flex flex-col w-full min-w-0">
+        <!-- Main Page Content -->
+        <main class="flex-grow min-w-0">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Modern Footer (Shadcn aesthetic) -->
+        <footer class="bg-[#04272c] text-white py-12 mt-auto border-t border-gold/30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="flex items-center justify-center space-x-3 mb-3">
+                    <img src="/static/img/logo.jpeg" alt="Salsabeel Academy Logo" class="h-10 w-10 rounded-full border-2 border-gold object-cover shadow-sm">
+                    <span class="text-lg font-bold text-white tracking-tight">Salsabeel Academy</span>
+                </div>
+                <p class="text-gray-400 text-xs sm:text-sm max-w-md mx-auto mb-5 leading-relaxed">
+                    Dedicated to providing structured classical Islamic education in the Tamil language for seekers worldwide.
+                </p>
+                <div class="flex items-center justify-center space-x-5 mb-5">
+                    <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="text-emerald hover:text-green-300 transition-colors text-xl" title="WhatsApp Channel"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="text-red-400 hover:text-red-300 transition-colors text-xl" title="YouTube Channel"><i class="fab fa-youtube"></i></a>
+                </div>
+                <p class="text-gray-500 text-xs">&copy; 2026 Salsabeel Academy. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Global Toast Notification Container -->
+    <div id="toastContainer" class="fixed bottom-5 sm:right-5 inset-x-4 sm:inset-x-auto sm:w-80 z-[9999] flex flex-col gap-2.5 pointer-events-none"></div>
+
+    <!-- Custom Branded Confirmation Dialog Modal -->
+    <div id="customConfirmModal" class="hidden fixed inset-0 z-[9998] overflow-y-auto bg-dark/75 backdrop-blur-xs flex items-center justify-center p-4" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 cursor-pointer" id="confirmModalBackdrop"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 z-10 border border-gold/30 transform transition-all text-left">
+            <div class="flex items-start space-x-4">
+                <div id="confirmModalIconBg" class="w-12 h-12 rounded-xl bg-amber-50 border border-gold/40 flex items-center justify-center flex-shrink-0 text-gold text-xl">
+                    <i id="confirmModalIcon" class="fas fa-question-circle"></i>
+                </div>
+                <div class="flex-grow">
+                    <h3 id="confirmModalTitle" class="text-lg font-bold text-navy tracking-tight">Confirm Action</h3>
+                    <p id="confirmModalMessage" class="text-sm text-gray-600 mt-1 leading-relaxed">Are you sure you want to proceed?</p>
                 </div>
             </div>
-        </div>
-
-        <!-- Mobile Dropdown Menu Drawer -->
-        <div id="mobileMenu" class="hidden md:hidden bg-dark border-t border-navy px-4 pt-3 pb-6 space-y-3">
-            <a href="/" class="block text-gray-300 hover:text-gold transition-colors font-medium py-1.5">Home</a>
-            <a href="/courses" class="block text-gray-300 hover:text-gold transition-colors font-medium py-1.5">Courses</a>
-            <a href="/about" class="block text-gray-300 hover:text-gold transition-colors font-medium py-1.5">About Us</a>
-            
-            <div class="flex items-center space-x-6 py-2.5 border-t border-white/10">
-                <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="text-emerald hover:text-green-400 text-sm font-medium flex items-center">
-                    <i class="fab fa-whatsapp text-lg mr-2"></i> WhatsApp Channel
-                </a>
-                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="text-red-500 hover:text-red-400 text-sm font-medium flex items-center">
-                    <i class="fab fa-youtube text-lg mr-2"></i> YouTube
-                </a>
-            </div>
-
-            <div class="pt-2 border-t border-white/10 space-y-2">
-                <a href="#" class="mobile-login-btn block text-center border-2 border-gold text-gold hover:bg-gold hover:text-dark transition-colors px-4 py-2.5 rounded-lg font-semibold text-sm">Sign Up / Login</a>
-                <a href="/admin" class="mobile-admin-btn hidden block text-center bg-emerald text-white hover:bg-teal-700 transition-colors px-4 py-2.5 rounded-lg font-semibold text-sm">Admin Dashboard</a>
-                <a href="#" class="mobile-logout-btn hidden block text-center border border-red-400 text-red-300 hover:bg-red-500 hover:text-white transition-colors px-4 py-2.5 rounded-lg font-semibold text-sm">Logout</a>
+            <div class="mt-6 flex justify-end gap-3">
+                <button type="button" id="confirmModalCancelBtn" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer">
+                    Cancel
+                </button>
+                <button type="button" id="confirmModalConfirmBtn" class="px-5 py-2 text-sm font-bold text-white bg-navy hover:bg-teal-700 rounded-xl transition-all shadow-sm cursor-pointer">
+                    Confirm
+                </button>
             </div>
         </div>
-    </nav>
+    </div>
 
-    <!-- Auth Modal -->
+    <!-- Auth Modal (Modern Shadcn dialog style) -->
     <div id="authModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <!-- Background overlay -->
@@ -211,21 +435,31 @@
                         <div class="flex justify-center mb-4">
                             <img src="/static/img/logo.jpeg" alt="Logo" class="h-14 w-14 rounded-full border-2 border-gold object-cover shadow-sm">
                         </div>
-                        <h3 class="text-2xl font-serif font-bold text-navy text-center mb-6" id="modalTitle">Sign In to Salsabeel</h3>
+                        <h3 class="text-2xl font-bold text-navy text-center mb-6 tracking-tight" id="modalTitle">Sign In to Salsabeel</h3>
                         <form id="authForm" class="space-y-4">
                             <div id="nameGroup" class="hidden">
-                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                                <input type="text" id="name" placeholder="Your Name" autocomplete="name" class="block w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald focus:border-emerald">
+                                <label for="name" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Full Name</label>
+                                <input type="text" id="name" placeholder="Your Name" autocomplete="name" class="block w-full border border-gray-300 rounded-xl shadow-xs py-2.5 px-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald focus:border-emerald">
                             </div>
                             <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                                <input type="email" id="email" required autocomplete="email" class="block w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald focus:border-emerald">
+                                <label for="email" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Email Address</label>
+                                <input type="email" id="email" required autocomplete="email" class="block w-full border border-gray-300 rounded-xl shadow-xs py-2.5 px-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald focus:border-emerald">
                             </div>
                             <div>
-                                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                                <input type="password" id="password" required minlength="8" autocomplete="current-password" placeholder="At least 8 characters" class="block w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald focus:border-emerald">
+                                <div class="flex items-center justify-between mb-1">
+                                    <label for="password" class="block text-xs font-bold uppercase tracking-wider text-gray-700">Password</label>
+                                    <button type="button" id="forgotPasswordOpenBtn" class="text-xs text-emerald hover:underline font-semibold cursor-pointer">
+                                        Forgot Password?
+                                    </button>
+                                </div>
+                                <div class="relative">
+                                    <input type="password" id="password" required minlength="8" autocomplete="current-password" placeholder="At least 8 characters" class="block w-full border border-gray-300 rounded-xl shadow-xs py-2.5 pl-3.5 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-emerald focus:border-emerald">
+                                    <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-700 cursor-pointer text-sm" data-target="password" title="Toggle password visibility">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <button type="submit" id="authSubmitBtn" class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-emerald hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald transition-colors">
+                            <button type="submit" id="authSubmitBtn" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-emerald hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald transition-colors">
                                 Sign In
                             </button>
                             <p class="text-center text-sm text-gray-500 pt-2">
@@ -239,54 +473,95 @@
         </div>
     </div>
 
-    <!-- Main Content -->
-    <main class="flex-grow">
-        {% block content %}{% endblock %}
-    </main>
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="hidden fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-dark/75 backdrop-blur-xs transition-opacity forgot-modal-overlay"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md w-full relative z-10 border border-gray-100">
+                <div class="bg-white px-6 pt-6 pb-6 sm:p-8">
+                    <div class="absolute top-0 right-0 pt-4 pr-4">
+                        <button type="button" id="closeForgotModalBtn" class="text-gray-400 hover:text-gray-600 focus:outline-none p-1 rounded-lg">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-12 mt-auto border-t border-gold/30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="flex items-center justify-center space-x-3 mb-3">
-                <img src="/static/img/logo.jpeg" alt="Salsabeel Academy Logo" class="h-11 w-11 rounded-full border-2 border-gold object-cover shadow-sm">
-                <span class="font-serif text-xl font-bold text-white tracking-wide">Salsabeel Academy</span>
-            </div>
-            <p class="font-serif text-gray-300 text-sm">&copy; 2026 Salsabeel Academy. All rights reserved.</p>
-            <div class="mt-4 space-x-5">
-                <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="text-emerald hover:text-green-300 transition-colors" title="WhatsApp Channel"><i class="fab fa-whatsapp text-2xl"></i></a>
-                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="text-red-400 hover:text-red-300 transition-colors" title="YouTube Channel"><i class="fab fa-youtube text-2xl"></i></a>
-            </div>
-        </div>
-    </footer>
+                    <!-- Step 1: Request Code Form -->
+                    <div id="forgotStep1">
+                        <div class="w-12 h-12 bg-amber-50 text-gold rounded-2xl border border-gold/30 flex items-center justify-center mx-auto mb-4 text-xl">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-navy text-center mb-2 tracking-tight">Forgot Your Password?</h3>
+                        <p class="text-xs text-gray-500 text-center mb-6 leading-relaxed">
+                            Enter the email registered with your account. We will send a 6-digit verification code to reset your password.
+                        </p>
+                        <form id="requestCodeForm" class="space-y-4">
+                            <div>
+                                <label for="forgotEmail" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Email Address</label>
+                                <input type="email" id="forgotEmail" required placeholder="name@example.com" class="block w-full border border-gray-300 rounded-xl shadow-xs py-2.5 px-3.5 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald">
+                            </div>
+                            <button type="submit" id="sendCodeBtn" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-navy hover:bg-teal-700 transition-colors cursor-pointer">
+                                Send 6-Digit Code
+                            </button>
+                            <p class="text-center text-xs text-gray-500 pt-1">
+                                <button type="button" id="backToSignInBtn" class="text-emerald hover:underline font-semibold">
+                                    <i class="fas fa-arrow-left mr-1"></i> Back to Sign In
+                                </button>
+                            </p>
+                        </form>
+                    </div>
 
-    <!-- Global Toast Notification Container -->
-    <div id="toastContainer" class="fixed bottom-5 right-5 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
-
-    <!-- Custom Branded Confirmation Dialog Modal -->
-    <div id="customConfirmModal" class="hidden fixed inset-0 z-[9998] overflow-y-auto bg-dark/75 backdrop-blur-xs flex items-center justify-center p-4" role="dialog" aria-modal="true">
-        <div class="fixed inset-0 cursor-pointer" id="confirmModalBackdrop"></div>
-        <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 z-10 border border-gold/30 transform transition-all text-left">
-            <div class="flex items-start space-x-4">
-                <div id="confirmModalIconBg" class="w-12 h-12 rounded-xl bg-amber-50 border border-gold/40 flex items-center justify-center flex-shrink-0 text-gold text-xl">
-                    <i id="confirmModalIcon" class="fas fa-question-circle"></i>
+                    <!-- Step 2: Verify Code and Reset Password Form -->
+                    <div id="forgotStep2" class="hidden">
+                        <div class="w-12 h-12 bg-emerald/10 text-emerald rounded-2xl border border-emerald/30 flex items-center justify-center mx-auto mb-4 text-xl">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-navy text-center mb-2 tracking-tight">Enter Verification Code</h3>
+                        <p class="text-xs text-gray-500 text-center mb-6 leading-relaxed">
+                            We've sent a 6-digit code to <span id="displayTargetEmail" class="font-bold text-navy"></span>. Enter it below along with your new password.
+                        </p>
+                        <form id="resetPasswordForm" class="space-y-4">
+                            <div>
+                                <label for="resetCode" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">6-Digit Code</label>
+                                <input type="text" id="resetCode" required maxlength="6" pattern="\d{6}" placeholder="e.g. 123456" class="block w-full text-center text-xl font-mono tracking-widest border border-gray-300 rounded-xl py-2 px-3 focus:ring-2 focus:ring-emerald focus:border-emerald">
+                            </div>
+                            <div>
+                                <label for="resetNewPassword" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">New Password (Min. 8 characters)</label>
+                                <div class="relative">
+                                    <input type="password" id="resetNewPassword" required minlength="8" placeholder="Enter new password" class="block w-full border border-gray-300 rounded-xl py-2.5 pl-3.5 pr-10 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald">
+                                    <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-700 cursor-pointer text-sm" data-target="resetNewPassword" title="Toggle password visibility">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="resetConfirmPassword" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Confirm New Password</label>
+                                <div class="relative">
+                                    <input type="password" id="resetConfirmPassword" required minlength="8" placeholder="Confirm new password" class="block w-full border border-gray-300 rounded-xl py-2.5 pl-3.5 pr-10 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald">
+                                    <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-700 cursor-pointer text-sm" data-target="resetConfirmPassword" title="Toggle password visibility">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="submit" id="resetSubmitBtn" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-emerald hover:bg-teal-700 transition-colors cursor-pointer">
+                                Update & Save Password
+                            </button>
+                            <div class="flex items-center justify-between text-xs text-gray-500 pt-1">
+                                <button type="button" id="resendCodeBtn" class="text-emerald hover:underline font-medium">
+                                    Resend Code
+                                </button>
+                                <button type="button" id="backToStep1Btn" class="text-gray-400 hover:text-gray-600">
+                                    Change Email
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="flex-grow">
-                    <h3 id="confirmModalTitle" class="text-lg font-serif font-bold text-navy">Confirm Action</h3>
-                    <p id="confirmModalMessage" class="text-sm text-gray-600 mt-1 leading-relaxed">Are you sure you want to proceed?</p>
-                </div>
-            </div>
-            <div class="mt-6 flex justify-end gap-3">
-                <button type="button" id="confirmModalCancelBtn" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer">
-                    Cancel
-                </button>
-                <button type="button" id="confirmModalConfirmBtn" class="px-5 py-2 text-sm font-bold text-white bg-navy hover:bg-teal-700 rounded-xl transition-all shadow-sm cursor-pointer">
-                    Confirm
-                </button>
             </div>
         </div>
     </div>
 
-    <!-- Custom JS (v4.0 cache bust) -->
-    <script src="/static/js/main.js?v=4.0"></script>
+    <!-- Custom JS (v5.1 cache bust) -->
+    <script src="/static/js/main.js?v=5.1"></script>
 </body>
 </html>

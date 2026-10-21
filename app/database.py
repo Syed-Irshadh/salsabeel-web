@@ -37,16 +37,20 @@ if raw_db_url:
         if "sqlite" in db_url:
             connect_args["check_same_thread"] = False
         else:
+            connect_args["connect_timeout"] = 3
             engine_kwargs["pool_size"] = 5
             engine_kwargs["max_overflow"] = 5
             
-        engine = create_engine(
+        temp_engine = create_engine(
             db_url,
             connect_args=connect_args,
             **engine_kwargs
         )
+        with temp_engine.connect() as test_conn:
+            print("Successfully connected to Supabase PostgreSQL database.")
+        engine = temp_engine
     except Exception as e:
-        print(f"Warning: Failed to create engine with DATABASE_URL: {e}")
+        print(f"Notice: DATABASE_URL not reachable ({e}). Falling back to local database.")
         engine = None
 
 # 2. If no DATABASE_URL, attempt local MySQL only when NOT on Vercel

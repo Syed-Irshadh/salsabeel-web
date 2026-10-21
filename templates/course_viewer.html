@@ -1,57 +1,176 @@
 {% extends "base.html" %}
 
+{% block title %}{{ course.title }} - Salsabeel Academy{% endblock %}
+
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200/80">
-        <div class="bg-navy p-8 sm:p-10 text-center border-b-4 border-gold">
-            <h1 class="text-3xl sm:text-4xl font-serif font-bold text-white mb-3">{{ course.title }}</h1>
-            <div class="flex flex-wrap items-center justify-center gap-2 mt-3">
-                <span class="inline-block bg-white/10 text-white border border-white/20 text-xs font-bold uppercase tracking-wider py-1 px-3.5 rounded-lg">{{ course.category }}</span>
-                <span class="inline-flex items-center bg-gold text-dark text-xs font-bold py-1 px-3.5 rounded-lg shadow-sm">
-                    <i class="fas fa-tag mr-1.5"></i> {{ course.price or 'Free' }}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <!-- Breadcrumb Navigation -->
+    <nav class="flex items-center space-x-2 text-xs text-gray-500 mb-6 font-medium">
+        <a href="/" class="hover:text-emerald transition-colors flex items-center">
+            <i class="fas fa-home mr-1.5 text-gold"></i> Home
+        </a>
+        <span>/</span>
+        <a href="/courses" class="hover:text-emerald transition-colors">Courses</a>
+        <span>/</span>
+        <span class="text-navy font-semibold truncate max-w-xs sm:max-w-md">{{ course.title }}</span>
+    </nav>
+
+    <!-- Course Hero Header -->
+    <div class="bg-mesh-dark rounded-3xl p-6 sm:p-10 mb-8 border border-gold/30 text-white relative overflow-hidden shadow-xl">
+        <div class="max-w-3xl">
+            <div class="flex flex-wrap items-center gap-2.5 mb-4">
+                <span class="inline-block bg-white/10 text-white border border-white/20 text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-lg backdrop-blur-xs">
+                    {{ course.category }}
+                </span>
+                <span class="inline-flex items-center text-xs font-bold py-1 px-3 rounded-lg {% if course.price and course.price.strip().lower() != 'free' %}bg-gradient-gold text-dark shadow-sm{% else %}bg-emerald/30 text-emerald-200 border border-emerald/40{% endif %}">
+                    <i class="fas fa-tag mr-1.5 text-xs"></i> {{ course.price or 'Free' }}
+                </span>
+                {% if course.status == 'past' %}
+                <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-white/10 text-gray-300 border border-white/10">
+                    <i class="fas fa-check-circle mr-1.5 text-gray-400"></i> Completed
+                </span>
+                {% elif course.status == 'upcoming' %}
+                <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-amber-500/90 text-white shadow-xs">
+                    <i class="fas fa-clock mr-1.5"></i> Upcoming Batch
+                </span>
+                {% else %}
+                <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-emerald text-white shadow-xs">
+                    <i class="fas fa-play-circle mr-1.5"></i> Ongoing Program
+                </span>
+                {% endif %}
+            </div>
+
+            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+                {{ course.title }}
+            </h1>
+
+            {% if course.description %}
+            <p class="text-gray-200 text-sm sm:text-base leading-relaxed font-normal mb-6">
+                {{ course.description }}
+            </p>
+            {% endif %}
+
+            <div class="flex flex-wrap items-center gap-4 text-xs text-gold-light font-medium">
+                {% if course.start_date %}
+                <span class="inline-flex items-center bg-black/30 border border-white/10 px-3 py-1.5 rounded-xl">
+                    <i class="far fa-calendar-alt mr-2 text-gold"></i> Schedule: {{ course.start_date }}
+                </span>
+                {% endif %}
+                <span class="inline-flex items-center bg-black/30 border border-white/10 px-3 py-1.5 rounded-xl">
+                    <i class="fas fa-language mr-2 text-emerald-300"></i> Medium: Tamil & Sacred Terms
                 </span>
             </div>
         </div>
-        
-        <div class="p-6 sm:p-10">
+    </div>
+
+    <!-- Main Content & Sticky Action Card Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left: Course Poster & Full Syllabus Content -->
+        <div class="lg:col-span-2 space-y-8">
             {% if course.image_url %}
-            <div class="mb-8 text-center">
-                <div class="inline-block relative group rounded-2xl overflow-hidden shadow-lg border-2 border-gold/40">
+            <div class="shadcn-card rounded-2xl p-4 sm:p-6 overflow-hidden">
+                <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+                    <h3 class="text-base font-bold text-navy flex items-center">
+                        <i class="fas fa-image text-emerald mr-2"></i> Official Program Poster
+                    </h3>
+                    <a href="{{ course.image_url }}" target="_blank" class="text-xs font-semibold text-emerald hover:text-teal-800 transition-colors inline-flex items-center">
+                        <i class="fas fa-external-link-alt mr-1"></i> Full Resolution
+                    </a>
+                </div>
+                <div class="relative group rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center p-2 border border-gray-200">
                     <img src="{{ course.image_url }}" 
                          alt="{{ course.title }} Poster" 
-                         class="max-h-[500px] w-auto mx-auto object-contain"
+                         class="max-h-[520px] w-auto max-w-full rounded-lg object-contain transition-transform duration-300 group-hover:scale-[1.01]"
                          onerror="this.onerror=null; this.src='/static/img/logo.jpeg';">
-                    <a href="{{ course.image_url }}" target="_blank" class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-medium text-sm gap-2 backdrop-blur-xs">
-                        <i class="fas fa-search-plus text-gold text-lg"></i> Open Full Resolution Poster
-                    </a>
                 </div>
             </div>
             {% endif %}
 
-            <div class="prose max-w-none text-gray-700 space-y-4 leading-relaxed">
-                {{ course.content | replace('\n', '<br>') | safe }}
+            <!-- Syllabus & Detailed Content Card -->
+            <div class="shadcn-card rounded-2xl p-6 sm:p-8">
+                <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-gray-100">
+                    <div class="w-10 h-10 rounded-xl bg-navy/10 text-navy flex items-center justify-center text-lg">
+                        <i class="fas fa-book-open text-emerald"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold tracking-tight text-navy">Curriculum & Detailed Content</h2>
+                        <p class="text-xs text-gray-500">Comprehensive study modules and lesson outline</p>
+                    </div>
+                </div>
+
+                <div class="prose max-w-none text-gray-700 space-y-4 leading-relaxed text-sm sm:text-base">
+                    {{ course.content | replace('\n', '<br>') | safe }}
+                </div>
             </div>
-            
-            <div class="mt-10 pt-6 border-t border-gray-100 flex flex-wrap gap-4">
-                {% if course.status == 'past' %}
-                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="inline-flex items-center justify-center w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-7 rounded-xl transition-colors shadow-sm text-sm">
-                    <i class="fab fa-youtube mr-2 text-lg"></i> Watch Recordings on YouTube
-                </a>
-                {% else %}
-                <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22%20(Fee%3A%20{{ (course.price or 'Free') | urlencode }}).%20Please%20share%20the%20details." 
-                   target="_blank" 
-                   class="enroll-btn inline-flex items-center justify-center w-full sm:w-auto bg-emerald hover:bg-teal-700 text-white font-bold py-3.5 px-7 rounded-xl transition-colors shadow-sm cursor-pointer text-sm"
-                   data-id="{{ course.id }}"
-                   data-title="{{ course.title }}">
-                    <i class="fab fa-whatsapp mr-2 text-lg"></i> Enroll via WhatsApp
-                </a>
-                {% endif %}
-            </div>
-            
-            <div class="mt-8 pt-6 border-t border-gray-100 text-center">
-                <a href="/courses" class="inline-flex items-center text-emerald hover:text-teal-800 font-bold transition-colors text-sm">
-                    <i class="fas fa-arrow-left mr-2"></i> Back to Courses
-                </a>
+        </div>
+
+        <!-- Right: Sticky Quick Action Card -->
+        <div class="lg:col-span-1">
+            <div class="sticky top-20 space-y-6">
+                <!-- Registration / Enrollment Box -->
+                <div class="shadcn-card rounded-2xl p-6 border-t-4 border-gold shadow-md">
+                    <span class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-1">Tuition & Admission</span>
+                    <div class="flex items-baseline space-x-2 mb-6">
+                        <span class="text-3xl font-extrabold text-navy tracking-tight">
+                            {{ course.price or 'Free' }}
+                        </span>
+                        {% if course.price and course.price.strip().lower() != 'free' %}
+                        <span class="text-xs text-gray-500">one-time enrollment</span>
+                        {% else %}
+                        <span class="text-xs text-emerald font-semibold">Community Access</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="space-y-3 mb-6">
+                        {% if course.status == 'past' %}
+                        <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-sm flex items-center justify-center text-sm">
+                            <i class="fab fa-youtube mr-2 text-lg"></i> Watch Recordings on YouTube
+                        </a>
+                        {% else %}
+                        <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22%20(Fee%3A%20{{ (course.price or 'Free') | urlencode }}).%20Please%20share%20the%20details." 
+                           target="_blank" 
+                           class="enroll-btn w-full bg-emerald hover:bg-teal-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-glow-teal flex items-center justify-center text-sm cursor-pointer"
+                           data-id="{{ course.id }}"
+                           data-title="{{ course.title }}">
+                            <i class="fab fa-whatsapp mr-2 text-lg"></i> Enroll via WhatsApp
+                        </a>
+                        {% endif %}
+
+                        <!-- Direct WhatsApp Share Button -->
+                        <a href="https://api.whatsapp.com/send?text=Assalamu%20Alaikum%2C%20check%20out%20this%20program%20at%20Salsabeel%20Academy%3A%20{{ course.title | urlencode }}%20-%20https%3A%2F%2Fsalsabeelacademy.com%2Fviewer%2F{{ course.id }}" 
+                           target="_blank" 
+                           class="w-full bg-sand hover:bg-gray-100 text-navy font-semibold py-2.5 px-4 rounded-xl border border-gray-200 transition-colors flex items-center justify-center text-xs">
+                            <i class="fas fa-share-alt mr-2 text-emerald"></i> Share with Family & Friends
+                        </a>
+                    </div>
+
+                    <!-- Program Highlights Checklist -->
+                    <div class="pt-5 border-t border-gray-100 space-y-3 text-xs text-gray-600">
+                        <div class="flex items-center">
+                            <i class="fas fa-user-tie w-5 text-emerald flex-shrink-0"></i>
+                            <span>Instructor: <strong>Hazira Umma</strong> (Founder, BE, BAIS)</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-language w-5 text-emerald flex-shrink-0"></i>
+                            <span>Instruction in clear, authentic <strong>Tamil</strong></span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-video w-5 text-emerald flex-shrink-0"></i>
+                            <span>Live interactive sessions & lecture recordings</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-certificate w-5 text-gold flex-shrink-0"></i>
+                            <span>Certificate of Program Completion</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Back to Directory -->
+                <div class="text-center">
+                    <a href="/courses" class="inline-flex items-center text-xs font-bold text-navy hover:text-emerald transition-colors">
+                        <i class="fas fa-arrow-left mr-2 text-gold"></i> Back to Complete Course Directory
+                    </a>
+                </div>
             </div>
         </div>
     </div>
