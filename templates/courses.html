@@ -29,43 +29,70 @@
             </button>
         </div>
 
-        <!-- Discipline Category Filter Pills -->
+        <!-- Discipline Category Filter Hub -->
         <div class="mb-5 pb-5 border-b border-gray-100">
             <div class="flex items-center justify-between mb-3 text-xs">
-                <span class="font-bold uppercase tracking-wider text-gray-600 flex items-center">
+                <span class="font-bold uppercase tracking-wider text-gray-700 flex items-center">
                     <i class="fas fa-layer-group mr-1.5 text-gold"></i> Islamic Science Disciplines
                 </span>
                 <button type="button" id="resetFiltersBtn" class="text-emerald hover:text-teal-800 font-semibold cursor-pointer">
                     Clear Selection
                 </button>
             </div>
-            <div class="flex flex-wrap gap-2" id="categoryFilterBar">
-                <button type="button" class="category-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all" data-category="all">
+
+            <!-- Mobile Quick Dropdown (Visible on Phone Screens) -->
+            <div class="sm:hidden mb-3">
+                <label for="mobileCategorySelect" class="sr-only">Filter by Discipline</label>
+                <div class="relative">
+                    <select id="mobileCategorySelect" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-navy focus:ring-2 focus:ring-emerald focus:border-emerald appearance-none">
+                        <option value="all">🌟 All Disciplines (31 Programs)</option>
+                        <option value="tafseer">📖 Tafseer (Qur'anic Exegesis)</option>
+                        <option value="tajweed">🎙️ Tajweed & Qira'at (Sacred Recitation)</option>
+                        <option value="hadith">📜 Hadith & Prophetic Sunnah</option>
+                        <option value="arabic">✍️ Arabic Language & Grammar</option>
+                        <option value="quran">🕋 Quran & Hifz Memorization</option>
+                        <option value="fiqh">⚖️ Fiqh & Shariah Essentials</option>
+                        <option value="seerah">🌴 Seerah & Prophetic History</option>
+                        <option value="tazkiyah">🤍 Tazkiyah & Character Tarbiyah</option>
+                        <option value="aqeedah">💎 Aqeedah & Foundations</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                        <i class="fas fa-chevron-down text-xs text-gold"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Horizontally Scrollable Pills on Phones, Wrapping on Desktop -->
+            <div class="flex overflow-x-auto pb-2 sm:pb-0 sm:flex-wrap gap-2 scrollbar-none -mx-2 px-2 sm:mx-0 sm:px-0" id="categoryFilterBar" style="-webkit-overflow-scrolling: touch;">
+                <button type="button" class="category-pill active flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all" data-category="all">
                     All Disciplines
                 </button>
-                <button type="button" class="category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="tafseer">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="tafseer">
                     📖 Tafseer
                 </button>
-                <button type="button" class="category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="tajweed">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="tajweed">
                     🎙️ Tajweed & Qira'at
                 </button>
-                <button type="button" class="category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="hadith">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="hadith">
                     📜 Hadith & Sunnah
                 </button>
-                <button type="button" class="category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="arabic">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="arabic">
                     ✍️ Arabic Language
                 </button>
-                <button type="button" class="category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="quran">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="quran">
                     🕋 Quran & Hifz
                 </button>
-                <button type="button" class="category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="fiqh">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="fiqh">
                     ⚖️ Fiqh & Shariah
                 </button>
-                <button type="button" class="category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="seerah">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="seerah">
                     🌴 Seerah & History
                 </button>
-                <button type="button" class="category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="tazkiyah">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="tazkiyah">
                     🤍 Tazkiyah & Adab
+                </button>
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="aqeedah">
+                    💎 Aqeedah
                 </button>
             </div>
         </div>
@@ -313,19 +340,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    const mobileCategorySelect = document.getElementById('mobileCategorySelect');
+
+    function syncCategoryUI(selectedCategory) {
+        currentCategory = selectedCategory.toLowerCase();
+        
+        // Update pills
+        categoryPills.forEach(p => {
+            const pillCat = (p.getAttribute('data-category') || 'all').toLowerCase();
+            if (pillCat === currentCategory) {
+                p.className = 'category-pill active flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all';
+                // Scroll pill into view smoothly if in scrollable track
+                p.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            } else {
+                p.className = 'category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all';
+            }
+        });
+
+        // Update mobile select
+        if (mobileCategorySelect) {
+            mobileCategorySelect.value = currentCategory;
+        }
+
+        applyFilters();
+    }
+
     // Category Pill Click
     categoryPills.forEach(pill => {
         pill.addEventListener('click', () => {
-            currentCategory = (pill.getAttribute('data-category') || 'all').toLowerCase();
-
-            categoryPills.forEach(p => {
-                p.className = 'category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all';
-            });
-            pill.className = 'category-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all';
-
-            applyFilters();
+            const cat = (pill.getAttribute('data-category') || 'all').toLowerCase();
+            syncCategoryUI(cat);
         });
     });
+
+    // Mobile Select Change
+    if (mobileCategorySelect) {
+        mobileCategorySelect.addEventListener('change', (e) => {
+            syncCategoryUI(e.target.value);
+        });
+    }
+
+    // Parse URL Query Parameter (e.g. /courses?category=tafseer)
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialCategoryParam = (urlParams.get('category') || '').toLowerCase().trim();
+    if (initialCategoryParam && initialCategoryParam !== 'all') {
+        syncCategoryUI(initialCategoryParam);
+    }
 
     // Status Tab Click
     statusTabs.forEach(tab => {
@@ -344,19 +404,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Reset All Filters
     if (resetFiltersBtn) {
         resetFiltersBtn.addEventListener('click', () => {
-            currentCategory = 'all';
             currentStatus = 'all';
             searchQuery = '';
             if (searchInput) searchInput.value = '';
             if (clearSearchBtn) clearSearchBtn.classList.add('hidden');
-
-            categoryPills.forEach((p, idx) => {
-                if (idx === 0) {
-                    p.className = 'category-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all';
-                } else {
-                    p.className = 'category-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all';
-                }
-            });
 
             statusTabs.forEach((t, idx) => {
                 if (idx === 0) {
@@ -366,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            applyFilters();
+            syncCategoryUI('all');
         });
     }
 

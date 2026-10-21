@@ -87,6 +87,15 @@
             background: #c49851;
         }
 
+        /* Hide scrollbars for touch-friendly horizontal swipe bars */
+        .scrollbar-none::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-none {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
         /* Logo-tinted Text Selection */
         ::selection {
             background: rgba(196, 152, 81, 0.3);
@@ -322,10 +331,48 @@
                     <i class="fas fa-home w-6 text-gold-light"></i>
                     <span class="font-medium text-sm">Home</span>
                 </a>
-                <a href="/courses" class="mobile-nav-link flex items-center px-3.5 py-2.5 rounded-xl text-gray-200 hover:text-gold hover:bg-white/10 transition-colors">
-                    <i class="fas fa-book-open w-6 text-gold-light"></i>
-                    <span class="font-medium text-sm">Courses</span>
+                <a href="/courses" class="mobile-nav-link flex items-center justify-between px-3.5 py-2.5 rounded-xl text-gray-200 hover:text-gold hover:bg-white/10 transition-colors">
+                    <span class="flex items-center">
+                        <i class="fas fa-book-open w-6 text-gold-light"></i>
+                        <span class="font-medium text-sm">All Courses</span>
+                    </span>
+                    <span class="text-[10px] font-bold bg-emerald/30 text-emerald-200 border border-emerald/40 px-2 py-0.5 rounded-full">31 Live</span>
                 </a>
+
+                <!-- Mobile Drawer Discipline Directory -->
+                <div class="pt-2 pb-1">
+                    <div class="px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-gold-light flex items-center justify-between">
+                        <span>Disciplines</span>
+                        <i class="fas fa-layer-group text-xs text-gold"></i>
+                    </div>
+                    <div class="grid grid-cols-2 gap-1.5 px-2 mt-1.5">
+                        <a href="/courses?category=tafseer" class="flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors">
+                            <span class="mr-1.5 text-xs">📖</span> Tafseer
+                        </a>
+                        <a href="/courses?category=tajweed" class="flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors">
+                            <span class="mr-1.5 text-xs">🎙️</span> Tajweed
+                        </a>
+                        <a href="/courses?category=hadith" class="flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors">
+                            <span class="mr-1.5 text-xs">📜</span> Hadith
+                        </a>
+                        <a href="/courses?category=arabic" class="flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors">
+                            <span class="mr-1.5 text-xs">✍️</span> Arabic
+                        </a>
+                        <a href="/courses?category=quran" class="flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors">
+                            <span class="mr-1.5 text-xs">🕋</span> Quran
+                        </a>
+                        <a href="/courses?category=fiqh" class="flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors">
+                            <span class="mr-1.5 text-xs">⚖️</span> Fiqh
+                        </a>
+                        <a href="/courses?category=seerah" class="flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors">
+                            <span class="mr-1.5 text-xs">🌴</span> Seerah
+                        </a>
+                        <a href="/courses?category=tazkiyah" class="flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors">
+                            <span class="mr-1.5 text-xs">🤍</span> Tazkiyah
+                        </a>
+                    </div>
+                </div>
+
                 <a href="/about" class="mobile-nav-link flex items-center px-3.5 py-2.5 rounded-xl text-gray-200 hover:text-gold hover:bg-white/10 transition-colors">
                     <i class="fas fa-landmark w-6 text-gold-light"></i>
                     <span class="font-medium text-sm">About Us</span>
