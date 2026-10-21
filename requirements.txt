@@ -2,6 +2,7 @@ fastapi>=0.115.0
 uvicorn>=0.30.0
 sqlalchemy>=2.0.30
 psycopg2-binary>=2.9.9
+psycopg[binary]>=3.1.18
 pymysql>=1.1.0
 passlib==1.7.4
 bcrypt==4.0.1

@@ -12,7 +12,7 @@ load_dotenv()
 IS_VERCEL = bool(os.getenv("VERCEL"))
 
 # Production Supabase PostgreSQL connection string (direct fallback so Vercel always connects)
-SUPABASE_PROD_URL = "postgresql://postgres.mpjivtjqophlgqauhizk:Irshadh%402006@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres?sslmode=require"
+SUPABASE_PROD_URL = "postgresql+psycopg2://postgres.mpjivtjqophlgqauhizk:Irshadh%402006@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres?sslmode=require"
 
 raw_db_url = os.getenv("DATABASE_URL") or os.getenv("POSTGRES_URL")
 # If DATABASE_URL is not set, empty, or points to old camel-yacht instead of mpjivtjqophlgqauhizk
@@ -26,7 +26,9 @@ DB_INIT_ERROR = None
 if raw_db_url:
     db_url = raw_db_url.strip()
     if db_url.startswith("postgres://"):
-        db_url = db_url.replace("postgres://", "postgresql://", 1)
+        db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
+    elif db_url.startswith("postgresql://") and not db_url.startswith("postgresql+"):
+        db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
     elif db_url.startswith("mysql://") and not db_url.startswith("mysql+pymysql://"):
         db_url = db_url.replace("mysql://", "mysql+pymysql://", 1)
 
