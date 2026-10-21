@@ -10,7 +10,14 @@ load_dotenv()
 
 IS_VERCEL = bool(os.getenv("VERCEL"))
 
+# Production Supabase PostgreSQL connection string (direct fallback so Vercel always connects)
+SUPABASE_PROD_URL = "postgresql://postgres.mpjivtjqophlgqauhizk:Irshadh%402006@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres"
+
 raw_db_url = os.getenv("DATABASE_URL")
+# If DATABASE_URL is not set, empty, or mistakenly set to https://...
+if not raw_db_url or not raw_db_url.strip() or raw_db_url.startswith("http"):
+    raw_db_url = SUPABASE_PROD_URL
+
 engine = None
 
 # 1. If DATABASE_URL is explicitly set (e.g. from Vercel / Cloud DB)
