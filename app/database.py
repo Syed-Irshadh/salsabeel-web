@@ -20,6 +20,7 @@ if not raw_db_url or not raw_db_url.strip() or "mpjivtjqophlgqauhizk" not in raw
     raw_db_url = SUPABASE_PROD_URL
 
 engine = None
+DB_INIT_ERROR = None
 
 # 1. If DATABASE_URL is explicitly set (e.g. from Vercel / Cloud DB)
 if raw_db_url:
@@ -71,6 +72,8 @@ if raw_db_url:
                 print("Successfully connected to Supabase PostgreSQL database.")
         engine = temp_engine
     except Exception as e:
+        import traceback
+        DB_INIT_ERROR = f"{type(e).__name__}: {e}\n{traceback.format_exc()}"
         print(f"Notice: DATABASE_URL initialization error ({e}).")
         if not IS_VERCEL:
             engine = None
