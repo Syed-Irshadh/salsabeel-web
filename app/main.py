@@ -111,11 +111,12 @@ def process_and_store_image(file_bytes: bytes, filename: str, db: Session) -> st
 
     return f"/api/images/{unique_filename}"
 
-# Safely initialize database tables on startup
-try:
-    models.Base.metadata.create_all(bind=database.engine)
-except Exception as e:
-    print(f"Notice: Table creation deferred or handled: {e}")
+# Initialize database tables only in local development (never block serverless cold starts)
+if not os.getenv("VERCEL"):
+    try:
+        models.Base.metadata.create_all(bind=database.engine)
+    except Exception as e:
+        print(f"Notice: Table creation deferred or handled: {e}")
 
 app = FastAPI(title="Salsabeel Academy")
 
@@ -188,21 +189,30 @@ def seed_courses(db: Session):
         db.add_all(courses)
         db.commit()
 
-# Safely call seed on startup
-try:
-    with database.SessionLocal() as db:
-        seed_courses(db)
-except Exception as e:
-    print(f"Notice: Course seeding deferred or skipped: {e}")
+# Safely call seed only in local dev environment
+if not os.getenv("VERCEL"):
+    try:
+        with database.SessionLocal() as db:
+            seed_courses(db)
+    except Exception as e:
+        print(f"Notice: Course seeding deferred or skipped: {e}")
 
 @app.get("/")
 async def home(request: Request, db: Session = Depends(database.get_db)):
-    courses = db.query(models.Course).all()
+    try:
+        courses = db.query(models.Course).all()
+    except Exception as e:
+        print(f"Notice: Course query error on /: {e}")
+        courses = []
     return templates.TemplateResponse(request=request, name="index.html", context={"courses": courses})
 
 @app.get("/courses")
 async def courses_page(request: Request, db: Session = Depends(database.get_db)):
-    courses = db.query(models.Course).all()
+    try:
+        courses = db.query(models.Course).all()
+    except Exception as e:
+        print(f"Notice: Course query error on /courses: {e}")
+        courses = []
     return templates.TemplateResponse(request=request, name="courses.html", context={"courses": courses})
 
 @app.get("/about")

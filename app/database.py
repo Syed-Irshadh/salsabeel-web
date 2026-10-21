@@ -11,7 +11,7 @@ load_dotenv()
 IS_VERCEL = bool(os.getenv("VERCEL"))
 
 # Production Supabase PostgreSQL connection string (direct fallback so Vercel always connects)
-SUPABASE_PROD_URL = "postgresql://postgres.mpjivtjqophlgqauhizk:Irshadh%402006@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres"
+SUPABASE_PROD_URL = "postgresql://postgres.mpjivtjqophlgqauhizk:Irshadh%402006@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres?sslmode=require"
 
 raw_db_url = os.getenv("DATABASE_URL")
 # If DATABASE_URL is not set, empty, or mistakenly set to https://...
@@ -35,6 +35,9 @@ if raw_db_url:
         if "@" in pwd:
             db_url = f"{scheme}{user}:{quote_plus(pwd)}@{rest}"
 
+    if "sslmode=" not in db_url and "sqlite" not in db_url:
+        db_url += ("&" if "?" in db_url else "?") + "sslmode=require"
+
     try:
         connect_args = {}
         engine_kwargs = {
@@ -44,9 +47,13 @@ if raw_db_url:
         if "sqlite" in db_url:
             connect_args["check_same_thread"] = False
         else:
-            connect_args["connect_timeout"] = 15
-            engine_kwargs["pool_size"] = 5
-            engine_kwargs["max_overflow"] = 5
+            connect_args["connect_timeout"] = 5
+            if IS_VERCEL:
+                engine_kwargs["pool_size"] = 1
+                engine_kwargs["max_overflow"] = 2
+            else:
+                engine_kwargs["pool_size"] = 5
+                engine_kwargs["max_overflow"] = 5
             
         temp_engine = create_engine(
             db_url,
@@ -64,7 +71,7 @@ if raw_db_url:
             engine = None
         else:
             # On Vercel, always preserve the Supabase engine rather than falling back to empty /tmp SQLite
-            engine = temp_engine
+            engine = temp_engine if 'temp_engine' in locals() else None
 
 # 2. If no DATABASE_URL, attempt local MySQL only when NOT on Vercel
 if engine is None and not IS_VERCEL:
