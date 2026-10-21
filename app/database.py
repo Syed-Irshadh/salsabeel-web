@@ -2,6 +2,7 @@ import os
 import re
 from urllib.parse import quote_plus
 from sqlalchemy import create_engine
+from sqlalchemy.pool import NullPool
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
@@ -14,8 +15,8 @@ IS_VERCEL = bool(os.getenv("VERCEL"))
 SUPABASE_PROD_URL = "postgresql://postgres.mpjivtjqophlgqauhizk:Irshadh%402006@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres?sslmode=require"
 
 raw_db_url = os.getenv("DATABASE_URL") or os.getenv("POSTGRES_URL")
-# If DATABASE_URL is not set, empty, or mistakenly set to https://...
-if not raw_db_url or not raw_db_url.strip() or raw_db_url.startswith("http"):
+# If DATABASE_URL is not set, empty, or points to old camel-yacht instead of mpjivtjqophlgqauhizk
+if not raw_db_url or not raw_db_url.strip() or "mpjivtjqophlgqauhizk" not in raw_db_url:
     raw_db_url = SUPABASE_PROD_URL
 
 engine = None
@@ -40,20 +41,24 @@ if raw_db_url:
 
     try:
         connect_args = {}
-        engine_kwargs = {
-            "pool_pre_ping": True,
-            "pool_recycle": 300,
-        }
         if "sqlite" in db_url:
             connect_args["check_same_thread"] = False
+            engine_kwargs = {}
         else:
-            connect_args["connect_timeout"] = 5
+            connect_args["connect_timeout"] = 10
             if IS_VERCEL:
-                engine_kwargs["pool_size"] = 1
-                engine_kwargs["max_overflow"] = 2
+                # NullPool avoids stale/dead connections across serverless lambda freezes
+                engine_kwargs = {
+                    "poolclass": NullPool,
+                    "pool_pre_ping": True,
+                }
             else:
-                engine_kwargs["pool_size"] = 5
-                engine_kwargs["max_overflow"] = 5
+                engine_kwargs = {
+                    "pool_size": 5,
+                    "max_overflow": 5,
+                    "pool_pre_ping": True,
+                    "pool_recycle": 300,
+                }
             
         temp_engine = create_engine(
             db_url,

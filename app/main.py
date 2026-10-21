@@ -137,6 +137,27 @@ async def health_check():
         "architecture": "3-Tier (Vercel Frontend | Render Backend | Supabase DB)"
     }
 
+@app.get("/api/db-check")
+async def db_check(db: Session = Depends(database.get_db)):
+    from sqlalchemy import text
+    try:
+        res = db.execute(text("SELECT count(*) FROM courses;")).fetchone()
+        return {
+            "status": "connected",
+            "courses_count": res[0] if res else 0,
+            "engine_url": str(database.engine.url) if database.engine else "None",
+            "is_vercel": bool(os.getenv("VERCEL"))
+        }
+    except Exception as e:
+        import traceback
+        return {
+            "status": "error",
+            "error": str(e),
+            "traceback": traceback.format_exc(),
+            "engine_url": str(database.engine.url) if database.engine else "None",
+            "is_vercel": bool(os.getenv("VERCEL"))
+        }
+
 @app.get("/api/images/{filename}")
 @app.get("/static/img/uploads/{filename}")
 async def serve_uploaded_image(filename: str, db: Session = Depends(database.get_db)):
