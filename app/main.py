@@ -175,8 +175,22 @@ async def serve_uploaded_image(filename: str, db: Session = Depends(database.get
         
     raise HTTPException(status_code=404, detail="Image not found")
 
-app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
-templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
+static_dir = os.path.join(BASE_DIR, "static")
+if not os.path.exists(static_dir):
+    try:
+        os.makedirs(static_dir, exist_ok=True)
+    except OSError:
+        pass
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+templates_dir = os.path.join(BASE_DIR, "templates")
+if not os.path.exists(templates_dir):
+    for candidate in [os.path.join(os.getcwd(), "templates"), "/var/task/templates", os.path.join(os.path.dirname(BASE_DIR), "templates")]:
+        if os.path.exists(candidate):
+            templates_dir = candidate
+            break
+templates = Jinja2Templates(directory=templates_dir)
 
 # Seed some initial courses if empty
 def seed_courses(db: Session):
