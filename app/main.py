@@ -677,11 +677,26 @@ async def request_password_reset(data: ForgotPasswordRequest, db: Session = Depe
 
     dispatch_res = email_service.send_password_reset_email(clean_email, code)
     
-    return {
-        "status": "success",
-        "message": "A 6-digit verification code has been sent to your email. Check your inbox and spam folder.",
-        "dev_code": code if dispatch_res.get("dev_mode") else None
-    }
+    if dispatch_res.get("delivered"):
+        return {
+            "status": "success",
+            "message": "A 6-digit verification code has been sent to your email. Please check your Inbox and Spam / Junk folder.",
+            "dev_code": None
+        }
+    elif dispatch_res.get("dev_mode"):
+        return {
+            "status": "success",
+            "message": "SMTP credentials not configured in environment. Verification code provided below.",
+            "dev_code": code
+        }
+    else:
+        err_msg = dispatch_res.get("error", "SMTP delivery failed")
+        return {
+            "status": "warning",
+            "message": f"Notice: Email dispatch issue ({err_msg}). Temporary code provided below for testing.",
+            "dev_code": code,
+            "error": err_msg
+        }
 
 @app.post("/api/auth/forgot-password/verify-and-reset")
 async def verify_and_reset_password(data: VerifyResetPasswordRequest, db: Session = Depends(database.get_db)):

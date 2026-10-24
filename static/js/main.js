@@ -520,13 +520,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 activeResetEmail = email;
                 if (displayTargetEmail) displayTargetEmail.textContent = email;
-                showToast(data.message || 'Verification code sent to your email!', 'success', 5000);
+                const toastType = data.status === 'warning' ? 'warning' : 'success';
+                showToast(data.message || 'Verification code sent to your email!', toastType, 6000);
 
                 // Switch to Step 2
                 if (forgotStep1) forgotStep1.classList.add('hidden');
                 if (forgotStep2) forgotStep2.classList.remove('hidden');
                 const codeInput = document.getElementById('resetCode');
-                if (codeInput) codeInput.focus();
+                if (codeInput) {
+                    if (data.dev_code) {
+                        codeInput.value = data.dev_code;
+                    }
+                    codeInput.focus();
+                }
             } catch (err) {
                 console.error(err);
                 showToast('Network error while requesting code.', 'error');
