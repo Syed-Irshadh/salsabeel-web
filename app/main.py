@@ -520,6 +520,7 @@ async def create_course(
     price: str = Form("Free"),
     start_date: str = Form(""),
     status: str = Form("current"),
+    language: str = Form("Tamil"),
     image: Optional[UploadFile] = File(None),
     image_url: Optional[str] = Form(None),
     db: Session = Depends(database.get_db),
@@ -549,6 +550,7 @@ async def create_course(
         price=price.strip() if price else "Free",
         start_date=start_date.strip() if start_date else None,
         status=effective_status,
+        language=(language or "Tamil").strip(),
         image_url=final_image_url
     )
     db.add(db_course)
@@ -854,6 +856,7 @@ async def parse_poster(
             "start_date": "",
             "status": "current",
             "price": "Free",
+            "language": "Tamil",
             "content": "",
             "image_url": saved_image_url,
             "error_notice": "Uploaded poster saved and attached below! GEMINI_API_KEY is not configured. Please fill in the course details manually below."
@@ -878,6 +881,7 @@ async def parse_poster(
             - "current": If the course starts today ({today_str}), is happening now, or is ongoing/recurring
             - "past": If the course has already completed in the past)
         - "price": string (Price if visible, otherwise "Free")
+        - "language": string (Medium of instruction or language. One of "Tamil", "English", "Bilingual (Tamil & English)", or "Arabic")
         - "content": string (Text outline of syllabus, instructor, contact info, etc.)
         """
         
@@ -960,6 +964,18 @@ async def parse_poster(
         else:
             content_str = str(content_val or "")
             
+        raw_lang = (data.get("language") or data.get("medium") or "").strip()
+        if not raw_lang:
+            full_txt = f"{title} {desc} {content_str}".lower()
+            if "english" in full_txt and "tamil" in full_txt:
+                raw_lang = "Bilingual (Tamil & English)"
+            elif "english" in full_txt and "tamil" not in full_txt:
+                raw_lang = "English"
+            elif any('\u0b80' <= ch <= '\u0bff' for ch in full_txt) or "tamil" in full_txt:
+                raw_lang = "Tamil"
+            else:
+                raw_lang = "Tamil"
+
         return {
             "title": title,
             "description": desc,
@@ -967,6 +983,7 @@ async def parse_poster(
             "start_date": start,
             "status": status_val,
             "price": price,
+            "language": raw_lang,
             "content": content_str,
             "image_url": saved_image_url
         }
@@ -982,6 +999,7 @@ async def parse_poster(
             "start_date": "",
             "status": "current",
             "price": "Free",
+            "language": "Tamil",
             "content": "",
             "image_url": saved_image_url,
             "error_notice": notice

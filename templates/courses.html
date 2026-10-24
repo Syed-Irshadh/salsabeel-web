@@ -97,6 +97,30 @@
             </div>
         </div>
 
+        <!-- Medium / Language Segregated Filter Hub -->
+        <div class="mb-5 pb-5 border-b border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-2 flex-wrap" id="languageFilterBar">
+                <span class="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center mr-1">
+                    <i class="fas fa-language text-emerald mr-1.5 text-sm"></i> Medium:
+                </span>
+                <button type="button" class="language-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all" data-language="all">
+                    🌐 All Mediums ({{ courses|length }})
+                </button>
+                <button type="button" class="language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-language="tamil">
+                    🌿 Tamil Medium (தமிழ்)
+                </button>
+                <button type="button" class="language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-language="english">
+                    📘 English Medium
+                </button>
+                <button type="button" class="language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-language="bilingual">
+                    🌓 Bilingual (Tamil & English)
+                </button>
+            </div>
+            <div class="text-[11px] text-gray-400 font-medium hidden sm:inline-flex items-center">
+                <i class="fas fa-filter text-gold mr-1 text-[10px]"></i> Filtered by language
+            </div>
+        </div>
+
         <!-- Status Filter Tabs & Results Count -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-1">
             <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
@@ -130,6 +154,7 @@
              data-status="{{ course.status | default('current') }}"
              data-title="{{ course.title | lower }}"
              data-category="{{ course.category | lower }}"
+             data-language="{{ (course.language or 'Tamil') | lower }}"
              data-desc="{{ course.description | lower }}">
             <!-- Course Image with Clickable Zoom Overlay -->
             <div class="relative group cursor-pointer overflow-hidden open-poster-btn"
@@ -178,9 +203,14 @@
 
             <div class="p-6 flex flex-col flex-grow">
                 <div class="flex items-center justify-between mb-3">
-                    <span class="inline-block bg-navy/10 text-navy text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-md">
-                        {{ course.category }}
-                    </span>
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <span class="inline-block bg-navy/10 text-navy text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-md">
+                            {{ course.category }}
+                        </span>
+                        <span class="inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-md {% if 'english' in (course.language or '')|lower and 'tamil' in (course.language or '')|lower %}bg-purple-100 text-purple-800 border border-purple-200{% elif 'english' in (course.language or '')|lower %}bg-blue-100 text-blue-800 border border-blue-200{% else %}bg-emerald/10 text-emerald border border-emerald/20{% endif %}">
+                            <i class="fas fa-language mr-1 text-[9px]"></i> {{ course.language or 'Tamil' }}
+                        </span>
+                    </div>
                     <button type="button" 
                             class="open-poster-btn text-xs font-semibold text-emerald hover:text-teal-800 bg-emerald/10 hover:bg-emerald/20 px-2.5 py-1 rounded-md transition-colors flex items-center cursor-pointer"
                             data-id="{{ course.id }}"
@@ -294,8 +324,9 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Multi-Dimensional Category & Status Filtering
+    // Multi-Dimensional Category, Language & Status Filtering
     const categoryPills = document.querySelectorAll('.category-pill');
+    const languagePills = document.querySelectorAll('.language-pill');
     const statusTabs = document.querySelectorAll('.status-tab');
     const cards = document.querySelectorAll('.course-card');
     const emptyState = document.getElementById('noCoursesFiltered');
@@ -304,6 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetFiltersBtn = document.getElementById('resetFiltersBtn');
 
     let currentCategory = 'all';
+    let currentLanguage = 'all';
     let currentStatus = 'all';
     let searchQuery = '';
 
@@ -313,16 +345,30 @@ document.addEventListener('DOMContentLoaded', () => {
             const status = (card.getAttribute('data-status') || '').toLowerCase();
             const title = (card.getAttribute('data-title') || '').toLowerCase();
             const category = (card.getAttribute('data-category') || '').toLowerCase();
+            const language = (card.getAttribute('data-language') || '').toLowerCase();
             const desc = (card.getAttribute('data-desc') || '').toLowerCase();
 
             // Category match (all or contains substring like 'tafseer', 'tajweed', etc.)
             const categoryMatch = (currentCategory === 'all') || category.includes(currentCategory);
+
+            // Language / Medium match
+            let languageMatch = false;
+            if (currentLanguage === 'all') {
+                languageMatch = true;
+            } else if (currentLanguage === 'tamil') {
+                languageMatch = language.includes('tamil') && !language.includes('bilingual');
+            } else if (currentLanguage === 'english') {
+                languageMatch = language.includes('english') && !language.includes('bilingual');
+            } else if (currentLanguage === 'bilingual') {
+                languageMatch = language.includes('bilingual') || (language.includes('tamil') && language.includes('english'));
+            }
+
             // Status match
             const statusMatch = (currentStatus === 'all') || (status === currentStatus);
-            // Search query match
-            const searchMatch = !searchQuery || title.includes(searchQuery) || category.includes(searchQuery) || desc.includes(searchQuery);
+            // Search query match (including language keywords)
+            const searchMatch = !searchQuery || title.includes(searchQuery) || category.includes(searchQuery) || language.includes(searchQuery) || desc.includes(searchQuery);
 
-            if (categoryMatch && statusMatch && searchMatch) {
+            if (categoryMatch && languageMatch && statusMatch && searchMatch) {
                 card.classList.remove('hidden');
                 visible++;
             } else {
@@ -380,12 +426,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Parse URL Query Parameter (e.g. /courses?category=tafseer)
+    // Parse URL Query Parameter (e.g. /courses?category=tafseer&language=tamil)
     const urlParams = new URLSearchParams(window.location.search);
     const initialCategoryParam = (urlParams.get('category') || '').toLowerCase().trim();
     if (initialCategoryParam && initialCategoryParam !== 'all') {
         syncCategoryUI(initialCategoryParam);
     }
+
+    const initialLangParam = (urlParams.get('language') || urlParams.get('medium') || '').toLowerCase().trim();
+    if (initialLangParam && initialLangParam !== 'all') {
+        currentLanguage = initialLangParam;
+        languagePills.forEach(p => {
+            const l = (p.getAttribute('data-language') || 'all').toLowerCase();
+            if (l === currentLanguage) {
+                p.className = 'language-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all';
+            } else {
+                p.className = 'language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all';
+            }
+        });
+        applyFilters();
+    }
+
+    // Language Pill Click
+    languagePills.forEach(pill => {
+        pill.addEventListener('click', () => {
+            currentLanguage = (pill.getAttribute('data-language') || 'all').toLowerCase();
+            languagePills.forEach(p => {
+                p.className = 'language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all';
+            });
+            pill.className = 'language-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all';
+            applyFilters();
+        });
+    });
 
     // Status Tab Click
     statusTabs.forEach(tab => {
@@ -405,6 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (resetFiltersBtn) {
         resetFiltersBtn.addEventListener('click', () => {
             currentStatus = 'all';
+            currentLanguage = 'all';
             searchQuery = '';
             if (searchInput) searchInput.value = '';
             if (clearSearchBtn) clearSearchBtn.classList.add('hidden');
@@ -414,6 +487,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     t.className = 'status-tab px-3 py-1.5 rounded-lg font-semibold text-xs transition-all bg-[#04272c] text-white shadow-xs cursor-pointer border border-gold/30';
                 } else {
                     t.className = 'status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer';
+                }
+            });
+
+            languagePills.forEach((p, idx) => {
+                if (idx === 0) {
+                    p.className = 'language-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all';
+                } else {
+                    p.className = 'language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all';
                 }
             });
 
