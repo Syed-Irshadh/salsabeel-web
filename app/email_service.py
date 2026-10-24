@@ -9,34 +9,14 @@ load_dotenv()
 def send_password_reset_email(to_email: str, code: str) -> dict:
     """
     Sends a 6-digit password reset verification code to the recipient's email address.
-    If SMTP credentials are not configured in .env, prints code to server logs for testing.
+    Supports HTTP REST APIs (Resend, Brevo) for 100% resilience on serverless platforms (Vercel/AWS),
+    falling back to Gmail SMTP (ports 465/587) for local development and dedicated servers.
     """
+    from_name = os.getenv("SMTP_FROM_NAME", "Salsabeel Academy")
     smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
     smtp_user = os.getenv("SMTP_USER", os.getenv("SMTP_EMAIL", "")).strip()
     smtp_password = os.getenv("SMTP_PASSWORD", "").strip().replace(" ", "")
-    from_name = os.getenv("SMTP_FROM_NAME", "Salsabeel Academy")
-
-    # If SMTP credentials are not provided, print to server console for local testing
-    if not smtp_user or not smtp_password:
-        print(f"\n=======================================================")
-        print(f" [EMAIL DISPATCH NOTICE - SALSABEEL ACADEMY]")
-        print(f" Recipient: {to_email}")
-        print(f" Verification Code: {code}")
-        print(f" Notice: SMTP credentials not set in .env. Code logged above.")
-        print(f"=======================================================\n")
-        return {
-            "delivered": False,
-            "dev_mode": True,
-            "code": code,
-            "message": "Verification code generated and logged to server console (SMTP not configured)."
-        }
-
-    # Construct HTML & plain text email
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = f"{code} is your Salsabeel Academy Password Reset Code"
-    msg["From"] = f"{from_name} <{smtp_user}>"
-    msg["To"] = to_email
 
     text_content = f"""Assalamu Alaikum,
 
@@ -91,6 +71,87 @@ Salsabeel Academy
 </body>
 </html>"""
 
+    # 1. High-Reliability HTTP REST API (Resend / Brevo) - Bypasses cloud SMTP socket blocks
+    resend_api_key = os.getenv("RESEND_API_KEY", "").strip()
+    if resend_api_key:
+        try:
+            import requests
+            r = requests.post(
+                "https://api.resend.com/emails",
+                headers={
+                    "Authorization": f"Bearer {resend_api_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "from": os.getenv("RESEND_FROM", f"{from_name} <onboarding@resend.dev>"),
+                    "to": [to_email],
+                    "subject": f"{code} is your Salsabeel Academy Password Reset Code",
+                    "html": html_content
+                },
+                timeout=10
+            )
+            if r.status_code in [200, 201]:
+                return {
+                    "delivered": True,
+                    "dev_mode": False,
+                    "message": "Verification code sent to your email successfully via Resend."
+                }
+            else:
+                print(f"Notice: Resend API HTTP {r.status_code}: {r.text}")
+        except Exception as re_err:
+            print(f"Notice: Resend API dispatch error: {re_err}")
+
+    brevo_api_key = os.getenv("BREVO_API_KEY", "").strip()
+    if brevo_api_key:
+        try:
+            import requests
+            sender_email = os.getenv("BREVO_SENDER_EMAIL", os.getenv("SMTP_USER", "salsabeelacademy2025@gmail.com"))
+            r = requests.post(
+                "https://api.brevo.com/v3/smtp/email",
+                headers={
+                    "api-key": brevo_api_key,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                json={
+                    "sender": {"name": from_name, "email": sender_email},
+                    "to": [{"email": to_email}],
+                    "subject": f"{code} is your Salsabeel Academy Password Reset Code",
+                    "htmlContent": html_content
+                },
+                timeout=10
+            )
+            if r.status_code in [200, 201]:
+                return {
+                    "delivered": True,
+                    "dev_mode": False,
+                    "message": "Verification code sent to your email successfully via Brevo."
+                }
+            else:
+                print(f"Notice: Brevo API HTTP {r.status_code}: {r.text}")
+        except Exception as br_err:
+            print(f"Notice: Brevo API dispatch error: {br_err}")
+
+    # If SMTP credentials are not provided, print to server console for local testing
+    if not smtp_user or not smtp_password:
+        print(f"\n=======================================================")
+        print(f" [EMAIL DISPATCH NOTICE - SALSABEEL ACADEMY]")
+        print(f" Recipient: {to_email}")
+        print(f" Verification Code: {code}")
+        print(f" Notice: SMTP credentials not set in .env. Code logged above.")
+        print(f"=======================================================\n")
+        return {
+            "delivered": False,
+            "dev_mode": True,
+            "code": code,
+            "message": "Verification code generated and logged to server console (SMTP not configured)."
+        }
+
+    # 2. Standard SMTP Dispatch (Works on localhost & dedicated servers)
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = f"{code} is your Salsabeel Academy Password Reset Code"
+    msg["From"] = f"{from_name} <{smtp_user}>"
+    msg["To"] = to_email
     msg.attach(MIMEText(text_content, "plain"))
     msg.attach(MIMEText(html_content, "html"))
 
