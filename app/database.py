@@ -11,18 +11,12 @@ load_dotenv()
 
 IS_VERCEL = bool(os.getenv("VERCEL"))
 
-# Production Supabase PostgreSQL connection string (direct fallback so Vercel always connects)
-SUPABASE_PROD_URL = "postgresql+psycopg2://postgres.mpjivtjqophlgqauhizk:Irshadh%402006@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres?sslmode=require"
-
-raw_db_url = os.getenv("DATABASE_URL") or os.getenv("POSTGRES_URL")
-# If DATABASE_URL is not set, empty, or points to old camel-yacht instead of mpjivtjqophlgqauhizk
-if not raw_db_url or not raw_db_url.strip() or "mpjivtjqophlgqauhizk" not in raw_db_url:
-    raw_db_url = SUPABASE_PROD_URL
+raw_db_url = (os.getenv("DATABASE_URL") or os.getenv("POSTGRES_URL") or "").strip()
 
 engine = None
 DB_INIT_ERROR = None
 
-# 1. If DATABASE_URL is explicitly set (e.g. from Vercel / Cloud DB)
+# 1. If DATABASE_URL is explicitly set (e.g. from .env or Vercel / Cloud DB)
 if raw_db_url:
     db_url = raw_db_url.strip()
     if db_url.startswith("postgres://"):
@@ -86,7 +80,7 @@ if raw_db_url:
 # 2. If no DATABASE_URL, attempt local MySQL only when NOT on Vercel
 if engine is None and not IS_VERCEL:
     DB_USER = os.getenv("DB_USER", "root")
-    DB_PASS = os.getenv("DB_PASS", "irsh123")
+    DB_PASS = os.getenv("DB_PASS", "")
     DB_HOST = os.getenv("DB_HOST", "localhost")
     DB_NAME = os.getenv("DB_NAME", "salsabeel_db")
 

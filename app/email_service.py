@@ -2,6 +2,9 @@ import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def send_password_reset_email(to_email: str, code: str) -> dict:
     """
@@ -10,8 +13,8 @@ def send_password_reset_email(to_email: str, code: str) -> dict:
     """
     smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
-    smtp_user = os.getenv("SMTP_USER", os.getenv("SMTP_EMAIL", "salsabeelacademy2025@gmail.com")).strip()
-    smtp_password = os.getenv("SMTP_PASSWORD", "umcb dtva ydxc nsjz").strip().replace(" ", "")
+    smtp_user = os.getenv("SMTP_USER", os.getenv("SMTP_EMAIL", "")).strip()
+    smtp_password = os.getenv("SMTP_PASSWORD", "").strip().replace(" ", "")
     from_name = os.getenv("SMTP_FROM_NAME", "Salsabeel Academy")
 
     # If SMTP credentials are not provided, print to server console for local testing
