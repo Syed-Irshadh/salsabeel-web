@@ -95,11 +95,26 @@ Salsabeel Academy
     msg.attach(MIMEText(html_content, "html"))
 
     try:
-        server = smtplib.SMTP(smtp_host, smtp_port, timeout=10)
-        server.starttls()
-        server.login(smtp_user, smtp_password)
-        server.sendmail(smtp_user, to_email, msg.as_string())
-        server.quit()
+        # If port 465 or on serverless cloud, prefer direct SSL
+        if smtp_port == 465:
+            server = smtplib.SMTP_SSL(smtp_host, 465, timeout=12)
+            server.login(smtp_user, smtp_password)
+            server.sendmail(smtp_user, to_email, msg.as_string())
+            server.quit()
+        else:
+            try:
+                server = smtplib.SMTP(smtp_host, smtp_port, timeout=10)
+                server.starttls()
+                server.login(smtp_user, smtp_password)
+                server.sendmail(smtp_user, to_email, msg.as_string())
+                server.quit()
+            except Exception as starttls_err:
+                # Fallback to direct SSL on port 465 (resilient on Vercel / AWS Lambda where STARTTLS socket drops)
+                print(f"Notice: Port {smtp_port} STARTTLS issue ({starttls_err}), retrying with direct SSL (port 465)...")
+                server = smtplib.SMTP_SSL(smtp_host, 465, timeout=12)
+                server.login(smtp_user, smtp_password)
+                server.sendmail(smtp_user, to_email, msg.as_string())
+                server.quit()
         return {
             "delivered": True,
             "dev_mode": False,
