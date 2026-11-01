@@ -44,43 +44,39 @@
     </div>
 
     <!-- ============================================================== -->
-    <!-- PREMIER STICKY TOP NAVBAR                                      -->
+    <!-- PREMIER STICKY TOP NAVBAR (Luminous Modern Academic)            -->
     <!-- ============================================================== -->
-    <header class="sticky top-0 z-50 bg-[#04272c]/95 backdrop-blur-md border-b border-brand-gold/20 shadow-sm transition-all duration-200">
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-brand-border shadow-xs transition-all duration-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
-            <!-- Left: Brand Logo & Institutional Title -->
+            <!-- Left: Brand Logo & Scholarly Institutional Title -->
             <a href="/" class="flex items-center space-x-3.5 group flex-shrink-0">
-                <img src="/static/img/logo.jpeg" alt="Salsabeel Emblem" class="h-11 w-11 rounded-full border-2 border-brand-gold object-cover shadow-sm transition-transform group-hover:scale-105">
+                <img src="/static/img/logo.jpeg" alt="Salsabeel Emblem" class="h-11 w-11 rounded-full border border-brand-border object-cover shadow-xs transition-transform group-hover:scale-105">
                 <div class="flex flex-col justify-center">
-                    <span class="font-bold text-lg leading-tight text-white tracking-tight flex items-center">
-                        Salsabeel <span class="text-brand-gold ml-1">Academy</span>
+                    <span class="font-serif font-bold text-xl leading-tight text-brand-ink tracking-tight">
+                        Salsabeel <span class="text-brand-primary font-medium">Academy</span>
                     </span>
-                    <span class="text-[10px] uppercase tracking-widest text-brand-gold/90 font-medium">Sacred Islamic Sciences</span>
+                    <span class="text-[10px] uppercase tracking-widest text-brand-ink-muted font-medium font-sans">Sacred Islamic Sciences</span>
                 </div>
             </a>
 
             <!-- Center: Desktop Navigation Links -->
             <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
-                <a href="/" class="top-nav-link text-gray-300 hover:text-white hover:bg-white/10 px-3.5 py-2 rounded-xl text-sm font-medium transition-colors" data-page="/">
-                    <i class="fas fa-home text-brand-gold mr-2 text-xs"></i>
+                <a href="/" class="top-nav-link text-brand-ink-muted hover:text-brand-ink hover:bg-gray-100/80 px-3.5 py-2 rounded-xl text-sm font-medium transition-colors" data-page="/">
                     <span>Home</span>
                 </a>
-                <a href="/courses" class="top-nav-link text-gray-300 hover:text-white hover:bg-white/10 px-3.5 py-2 rounded-xl text-sm font-medium transition-colors" data-page="/courses">
-                    <i class="fas fa-book-open text-brand-gold mr-2 text-xs"></i>
+                <a href="/courses" class="top-nav-link text-brand-ink-muted hover:text-brand-ink hover:bg-gray-100/80 px-3.5 py-2 rounded-xl text-sm font-medium transition-colors" data-page="/courses">
                     <span>Courses</span>
-                    <span class="courses-count-badge ml-1.5 text-[10px] font-bold bg-brand-primary/40 text-emerald-200 border border-brand-primary/60 px-1.5 py-0.5 rounded-md">{% set total_courses = courses_count|default(courses|length if courses is defined else 0) %}{{ total_courses }} Program{{ 's' if total_courses != 1 else '' }}</span>
+                    <span class="courses-count-badge ml-1.5 text-[11px] font-semibold bg-brand-deep/5 text-brand-deep border border-brand-deep/15 px-2 py-0.5 rounded-md font-sans">{% set total_courses = courses_count|default(courses|length if courses is defined else 0) %}{{ total_courses }} Program{{ 's' if total_courses != 1 else '' }}</span>
                 </a>
-                <a href="/about" class="top-nav-link text-gray-300 hover:text-white hover:bg-white/10 px-3.5 py-2 rounded-xl text-sm font-medium transition-colors" data-page="/about">
-                    <i class="fas fa-landmark text-brand-gold mr-2 text-xs"></i>
+                <a href="/about" class="top-nav-link text-brand-ink-muted hover:text-brand-ink hover:bg-gray-100/80 px-3.5 py-2 rounded-xl text-sm font-medium transition-colors" data-page="/about">
                     <span>About Us</span>
                 </a>
-                <a href="https://wa.me/919940523013" target="_blank" class="top-nav-link text-emerald-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-xl text-sm font-medium transition-colors">
-                    <i class="fab fa-whatsapp text-emerald-400 mr-1.5 text-sm"></i>
+                <a href="https://wa.me/919940523013" target="_blank" class="top-nav-link text-brand-primary hover:text-brand-deep hover:bg-brand-deep/5 px-3 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center">
+                    <i class="fab fa-whatsapp mr-1.5 text-sm"></i>
                     <span>Admissions</span>
                 </a>
-                <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="top-nav-link text-green-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-xl text-sm font-medium transition-colors">
-                    <i class="fas fa-bullhorn text-green-400 mr-1.5 text-xs"></i>
+                <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="top-nav-link text-brand-ink-muted hover:text-brand-ink hover:bg-gray-100/80 px-3 py-2 rounded-xl text-sm font-medium transition-colors">
                     <span>Updates</span>
                 </a>
             </nav>
@@ -88,45 +84,45 @@
             <!-- Right: Search, Member Gift, Auth & Mobile Menu Toggle -->
             <div class="flex items-center space-x-2.5 sm:space-x-3">
                 <!-- Search Hotkey Pill -->
-                <a href="/courses" class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-gray-300 hover:text-white border border-white/10 text-xs transition-colors" title="Quick Search">
-                    <i class="fas fa-search text-brand-gold text-xs"></i>
-                    <span class="text-xs">Search</span>
-                    <kbd class="px-1.5 py-0.5 rounded bg-black/30 border border-white/10 text-[10px] font-mono text-gray-400">/</kbd>
+                <a href="/courses" class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gray-50 hover:bg-gray-100 text-brand-ink-muted hover:text-brand-ink border border-brand-border text-xs transition-colors" title="Quick Search">
+                    <i class="fas fa-search text-brand-ink-muted text-xs"></i>
+                    <span class="text-xs font-medium">Search</span>
+                    <kbd class="px-1.5 py-0.5 rounded bg-white border border-brand-border text-[10px] font-mono text-gray-500">/</kbd>
                 </a>
 
                 <!-- Member Gift Button (Always visible; triggers gift modal) -->
-                <button type="button" id="memberGiftNavBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/40 text-brand-gold text-xs font-semibold transition-all cursor-pointer shadow-xs" title="Member Gift: Rasmul Mushaf">
-                    <i class="fas fa-gift text-brand-gold animate-bounce"></i>
+                <button type="button" id="memberGiftNavBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-bronze/10 hover:bg-brand-bronze/15 border border-brand-bronze/30 text-brand-bronze text-xs font-semibold transition-all cursor-pointer shadow-xs" title="Member Gift: Rasmul Mushaf">
+                    <i class="fas fa-gift text-brand-bronze"></i>
                     <span class="hidden sm:inline">Member Gift</span>
                 </button>
 
-                <!-- Sign In / Sign Up Button (Guest Only) -->
-                <button type="button" id="topLoginBtn" class="inline-flex items-center px-4 py-2 rounded-xl border border-brand-gold/60 text-brand-gold hover:bg-brand-gold hover:text-brand-dark font-semibold text-xs tracking-wide transition-all shadow-xs cursor-pointer">
-                    <i class="fas fa-user-circle mr-1.5 text-sm"></i>
+                <!-- Sign In Button (Guest Only) -->
+                <button type="button" id="topLoginBtn" class="inline-flex items-center px-4 py-2 rounded-xl border border-brand-ink text-brand-ink hover:bg-brand-ink hover:text-white font-semibold text-xs tracking-wide transition-all shadow-xs cursor-pointer">
+                    <i class="far fa-user mr-1.5 text-xs"></i>
                     <span>Sign In</span>
                 </button>
 
                 <!-- Admin Dashboard (Admin Only) -->
-                <a href="/admin" id="topAdminBtn" class="hidden inline-flex items-center px-3.5 py-2 rounded-xl bg-brand-primary hover:bg-brand-deep text-white font-semibold text-xs tracking-wide transition-all shadow-sm border border-brand-primary/40">
-                    <i class="fas fa-shield-halved mr-1.5 text-brand-gold"></i>
+                <a href="/admin" id="topAdminBtn" class="hidden inline-flex items-center px-3.5 py-2 rounded-xl bg-brand-deep hover:bg-brand-primary text-brand-gold-light font-semibold text-xs tracking-wide transition-all shadow-xs border border-brand-gold/30">
+                    <i class="fas fa-shield-alt mr-1.5 text-brand-gold-light"></i>
                     <span>Dashboard</span>
                 </a>
 
                 <!-- User Monogram Avatar Pill (Logged In) -->
                 <div id="userProfilePill" class="hidden items-center gap-2">
-                    <div id="userMonogramAvatar" class="w-8 h-8 rounded-lg bg-brand-deep border border-brand-gold/50 flex items-center justify-center text-xs font-bold text-brand-ivory select-none">
+                    <div id="userMonogramAvatar" class="w-8 h-8 rounded-lg bg-brand-deep border border-brand-gold/40 flex items-center justify-center text-xs font-bold text-brand-gold-light select-none">
                         ST
                     </div>
                 </div>
 
                 <!-- Sign Out (Logged In User) -->
-                <button type="button" id="topLogoutBtn" class="hidden inline-flex items-center px-3 py-2 rounded-xl border border-red-400/40 text-red-300 hover:bg-red-600 hover:text-white font-medium text-xs tracking-wide transition-all cursor-pointer" title="Sign Out">
-                    <i class="fas fa-arrow-right-from-bracket mr-1"></i>
+                <button type="button" id="topLogoutBtn" class="hidden inline-flex items-center px-3 py-2 rounded-xl border border-red-300 text-red-600 hover:bg-red-50 font-medium text-xs tracking-wide transition-all cursor-pointer" title="Sign Out">
+                    <i class="fas fa-sign-out-alt mr-1"></i>
                     <span class="hidden sm:inline">Sign Out</span>
                 </button>
 
                 <!-- Mobile Hamburger Button -->
-                <button type="button" id="mobileDrawerOpenBtn" class="md:hidden text-gray-300 hover:text-brand-gold p-2 rounded-lg cursor-pointer focus:outline-none" aria-label="Open mobile navigation menu">
+                <button type="button" id="mobileDrawerOpenBtn" class="md:hidden text-brand-ink hover:text-brand-primary p-2 rounded-lg cursor-pointer focus:outline-none" aria-label="Open mobile navigation menu">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
@@ -221,22 +217,22 @@
             {% block content %}{% endblock %}
         </main>
 
-        <!-- Minimal Luxury Academic Footer -->
-        <footer class="bg-[#04272C] text-white py-12 mt-auto border-t border-brand-gold/25">
+        <!-- Distinquished Academic Footer (#06383A Anchor) -->
+        <footer class="bg-brand-deep text-white py-14 mt-auto border-t border-brand-gold/20">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <div class="flex items-center justify-center space-x-3 mb-3">
-                    <img src="/static/img/logo.jpeg" alt="Salsabeel Academy Logo" class="h-10 w-10 rounded-full border-2 border-brand-gold object-cover shadow-sm">
-                    <span class="text-lg font-bold text-white tracking-tight">Salsabeel Academy</span>
+                    <img src="/static/img/logo.jpeg" alt="Salsabeel Academy Logo" class="h-10 w-10 rounded-full border border-brand-gold/40 object-cover shadow-xs">
+                    <span class="font-serif text-xl font-bold text-white tracking-tight">Salsabeel Academy</span>
                 </div>
-                <p class="text-gray-400 text-xs sm:text-sm max-w-md mx-auto mb-5 leading-relaxed font-body">
+                <p class="text-gray-300 text-xs sm:text-sm max-w-md mx-auto mb-6 leading-relaxed font-body">
                     Dedicated to providing structured classical Islamic education in the Tamil language for seekers worldwide.
                 </p>
-                <div class="flex items-center justify-center space-x-6 mb-5">
-                    <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="text-emerald-400 hover:text-emerald-300 transition-colors text-xl" title="Official WhatsApp Channel"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="text-red-400 hover:text-red-300 transition-colors text-xl" title="Official YouTube Channel"><i class="fab fa-youtube"></i></a>
-                    <a href="https://www.instagram.com/salsabeel_academy_quran?igsi=b3h0Ym9yc3FmYXZ5&utm_source=qr" target="_blank" class="text-pink-400 hover:text-pink-300 transition-colors text-xl" title="Official Instagram Page"><i class="fab fa-instagram"></i></a>
+                <div class="flex items-center justify-center space-x-6 mb-6">
+                    <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="text-gray-300 hover:text-white transition-colors text-lg" title="Official WhatsApp Channel"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="text-gray-300 hover:text-white transition-colors text-lg" title="Official YouTube Channel"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.instagram.com/salsabeel_academy_quran?igsi=b3h0Ym9yc3FmYXZ5&utm_source=qr" target="_blank" class="text-gray-300 hover:text-white transition-colors text-lg" title="Official Instagram Page"><i class="fab fa-instagram"></i></a>
                 </div>
-                <p class="text-gray-500 text-xs font-body">&copy; 2026 Salsabeel Academy. All rights reserved.</p>
+                <p class="text-gray-400 text-xs font-body">&copy; 2026 Salsabeel Academy. All rights reserved.</p>
             </div>
         </footer>
     </div>
@@ -247,19 +243,19 @@
     <!-- Member Gift Modal (Rasmul Mushaf Google Classroom) -->
     <div id="memberGiftModal" class="hidden fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="memberGiftTitle">
         <div class="flex items-center justify-center min-h-screen px-4 py-8 text-center sm:p-0">
-            <div class="fixed inset-0 bg-[#04272C]/80 backdrop-blur-xs transition-opacity" id="memberGiftBackdrop"></div>
-            <div class="relative inline-block bg-white rounded-2xl text-left overflow-hidden shadow-academic-modal transform transition-all sm:my-8 sm:max-w-md w-full z-10 border border-brand-gold/30 p-6 sm:p-8">
+            <div class="fixed inset-0 bg-[#06383A]/80 backdrop-blur-xs transition-opacity" id="memberGiftBackdrop"></div>
+            <div class="relative inline-block bg-white rounded-2xl text-left overflow-hidden shadow-academic-modal transform transition-all sm:my-8 sm:max-w-md w-full z-10 border border-brand-border p-6 sm:p-8">
                 <button type="button" id="closeMemberGiftBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 p-1 rounded-lg cursor-pointer">
                     <i class="fas fa-times text-lg"></i>
                 </button>
                 <div class="text-center">
-                    <div class="w-14 h-14 rounded-2xl bg-brand-gold/15 border border-brand-gold/40 flex items-center justify-center mx-auto mb-4 text-2xl text-brand-gold">
-                        🎁
+                    <div class="w-12 h-12 rounded-xl bg-brand-deep text-brand-gold-light border border-brand-gold/30 flex items-center justify-center mx-auto mb-4 text-xl">
+                        <i class="fas fa-gift"></i>
                     </div>
-                    <span class="inline-block bg-brand-gold/15 text-brand-dark border border-brand-gold/40 text-[11px] font-bold uppercase tracking-wider py-0.5 px-3 rounded-full mb-2">
+                    <span class="inline-block bg-brand-deep/5 text-brand-deep border border-brand-deep/15 text-[11px] font-semibold uppercase tracking-wider py-0.5 px-3 rounded-full mb-2 font-sans">
                         Member Privilege
                     </span>
-                    <h3 id="memberGiftTitle" class="text-xl sm:text-2xl font-bold text-brand-dark mb-1 tracking-tight">
+                    <h3 id="memberGiftTitle" class="font-serif text-xl sm:text-2xl font-bold text-brand-ink mb-1 tracking-tight">
                         A lovely gift for our members👇
                     </h3>
                     <h4 class="text-lg font-bold text-brand-primary mb-3">
