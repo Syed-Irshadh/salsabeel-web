@@ -14,6 +14,7 @@ import secrets
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from dotenv import load_dotenv
+import unicodedata
 
 import io
 from typing import Optional
@@ -252,6 +253,30 @@ templates = Jinja2Templates(
     context_processors=[template_context_processor]
 )
 templates.env.globals["get_courses_count"] = get_total_courses_count
+
+def unicode_initial(name: str) -> str:
+    """
+    Extracts the true first Unicode grapheme cluster from a full name,
+    preserving Tamil base consonants + combining vowel markers (e.g., ஹா, மு, செ),
+    Arabic letters (e.g., ف, ع), and Latin characters (e.g., H).
+    """
+    if not name or not str(name).strip():
+        return "?"
+    clean = str(name).strip()
+    first_word = clean.split()[0]
+    cluster = []
+    for ch in first_word:
+        cat = unicodedata.category(ch)
+        if not cluster:
+            cluster.append(ch)
+        elif cat in ('Mn', 'Mc', 'Me'):
+            cluster.append(ch)
+        else:
+            break
+    res = "".join(cluster)
+    return res.upper() if res.isascii() else res
+
+templates.env.filters["unicode_initial"] = unicode_initial
 
 # Seed some initial courses if empty
 def seed_courses(db: Session):
@@ -599,6 +624,82 @@ async def create_course(
     _cached_course_count["count"] = None
     return db_course
 
+@app.put("/api/courses/{course_id}")
+async def update_course(
+    course_id: int,
+    title: Optional[str] = Form(None),
+    description: Optional[str] = Form(None),
+    category: Optional[str] = Form(None),
+    content: Optional[str] = Form(None),
+    price: Optional[str] = Form(None),
+    start_date: Optional[str] = Form(None),
+    status: Optional[str] = Form(None),
+    language: Optional[str] = Form(None),
+    image: Optional[UploadFile] = File(None),
+    image_url: Optional[str] = Form(None),
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    """
+    Updates an existing course and its promotional poster.
+    Requires administrator authorization.
+    Preserves existing poster image if no replacement is uploaded.
+    Preserves course ID, enrollments, and recordings.
+    """
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    course = db.query(models.Course).filter(models.Course.id == course_id).first()
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found")
+
+    # If new poster file is supplied, process, compress, and update image_url
+    if image and image.filename:
+        file_bytes = await image.read()
+        course.image_url = process_and_store_image(file_bytes, image.filename, db)
+    elif image_url and image_url.strip():
+        course.image_url = image_url.strip()
+    # Otherwise, preserve course.image_url untouched
+
+    if title is not None and title.strip():
+        course.title = title.strip()
+    if description is not None:
+        course.description = description.strip()
+    if category is not None and category.strip():
+        course.category = category.strip()
+    if content is not None:
+        course.content = content.strip()
+    if price is not None:
+        course.price = price.strip() if price.strip() else "Free"
+    if start_date is not None:
+        course.start_date = start_date.strip() if start_date.strip() else None
+    if status is not None and status.strip():
+        clean_status = status.strip().lower()
+        if clean_status in ["current", "upcoming", "past"]:
+            course.status = clean_status
+    if language is not None and language.strip():
+        course.language = language.strip()
+
+    db.commit()
+    db.refresh(course)
+    _cached_course_count["count"] = None
+    return {
+        "status": "success",
+        "message": "Course updated successfully",
+        "course": {
+            "id": course.id,
+            "title": course.title,
+            "category": course.category,
+            "status": course.status,
+            "price": course.price,
+            "image_url": course.image_url,
+            "language": course.language,
+            "start_date": course.start_date,
+            "description": course.description,
+            "content": course.content
+        }
+    }
+
 @app.delete("/api/courses/{course_id}")
 async def delete_course(
     course_id: int, 
@@ -813,6 +914,22 @@ async def create_enrollment(
         db.add(enroll)
         db.commit()
     return {"status": "success"}
+
+@app.get("/api/member/resource/rasmul-mushaf")
+async def get_rasmul_mushaf_resource(
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    """
+    Server-protected endpoint for members.
+    Requires valid authentication before disclosing the Rasmul Mushaf Google Classroom access.
+    """
+    return {
+        "status": "success",
+        "resource_name": "Rasmul Mushaf",
+        "classroom_url": "https://classroom.google.com/c/NzkwNDI3MjAyMzc0?cjc=zyahrwyo",
+        "eligible": True,
+        "user_email": current_user.email
+    }
 
 def determine_course_status(text: str, fallback_status: str = "current") -> str:
     """

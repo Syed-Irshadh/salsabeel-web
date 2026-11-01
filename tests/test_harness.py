@@ -295,6 +295,90 @@ def test_image_processing_and_sanitization():
         assert processed_img.width <= 1400
         assert processed_img.height <= 1400
 
+def test_unicode_initial_extraction():
+    from app.main import unicode_initial
+
+    assert unicode_initial("Hazira Umma") == "H"
+    assert unicode_initial("ஹாஜிரா உம்மா") == "ஹா"
+    assert unicode_initial("முஹம்மத் அலி") == "மு"
+    assert unicode_initial("فاطمة الزهراء") == "ف"
+    assert unicode_initial("عائشة") == "ع"
+    assert unicode_initial("செந்தமிழ்") == "செ"
+    assert unicode_initial("") == "?"
+    assert unicode_initial(None) == "?"
+
+def test_course_update_put_endpoint():
+    # 1. Admin login token
+    r_main_login = client.post("/api/token", data={"username": "admin@salsabeel.com", "password": "AdminSecret123!"})
+    main_token = r_main_login.json()["access_token"]
+    main_headers = {"Authorization": f"Bearer {main_token}"}
+
+    # 2. Student login token (password was reset to NewSecurePassword123! in reset test)
+    r_student_login = client.post("/api/token", data={"username": "student_test@example.com", "password": "NewSecurePassword123!"})
+    student_token = r_student_login.json()["access_token"]
+    student_headers = {"Authorization": f"Bearer {student_token}"}
+
+    # Create dummy course
+    course_payload = {
+        "title": "Initial Course Title",
+        "description": "Initial description.",
+        "category": "Hadith",
+        "content": "Initial syllabus",
+        "price": "Free",
+        "start_date": "1st Dec 2026",
+        "status": "upcoming",
+        "language": "Tamil",
+        "image_url": "https://example.com/initial_poster.jpg"
+    }
+    files = {"image": ("", b"", "application/octet-stream")}
+    r_create = client.post("/api/courses", data=course_payload, files=files, headers=main_headers)
+    assert r_create.status_code == 200
+    course_id = r_create.json()["id"]
+
+    # 3. Unauthenticated PUT must return 401
+    r_unauth = client.put(f"/api/courses/{course_id}", data={"title": "Hacked Title"})
+    assert r_unauth.status_code == 401
+
+    # 4. Student PUT must return 403
+    r_forbidden = client.put(f"/api/courses/{course_id}", data={"title": "Student Title"}, headers=student_headers)
+    assert r_forbidden.status_code == 403
+
+    # 5. Admin PUT without uploading new image -> preserves existing image_url and updates metadata
+    update_payload = {
+        "title": "Updated Noble Hadith Masterclass",
+        "price": "Free",
+        "status": "current",
+        "language": "Bilingual (Tamil & English)",
+        "description": "Refined and expanded Hadith explanations.",
+        "content": "Expanded curriculum modules"
+    }
+    r_update = client.put(f"/api/courses/{course_id}", data=update_payload, files=files, headers=main_headers)
+    assert r_update.status_code == 200, f"Course update failed: {r_update.text}"
+    updated = r_update.json()["course"]
+    assert updated["id"] == course_id, "Course ID must remain identical"
+    assert updated["title"] == "Updated Noble Hadith Masterclass"
+    assert updated["image_url"] == "https://example.com/initial_poster.jpg", "Existing image_url must be preserved"
+    assert updated["status"] == "current"
+    assert updated["language"] == "Bilingual (Tamil & English)"
+
+def test_server_side_member_resource_security():
+    # 1. Unauthenticated request to member resource must return 401
+    r_unauth = client.get("/api/member/resource/rasmul-mushaf")
+    assert r_unauth.status_code == 401
+
+    # 2. Authenticated student request must succeed and return classroom URL
+    r_student_login = client.post("/api/token", data={"username": "student_test@example.com", "password": "NewSecurePassword123!"})
+    student_token = r_student_login.json()["access_token"]
+    student_headers = {"Authorization": f"Bearer {student_token}"}
+
+    r_resource = client.get("/api/member/resource/rasmul-mushaf", headers=student_headers)
+    assert r_resource.status_code == 200
+    res_data = r_resource.json()
+    assert res_data["status"] == "success"
+    assert res_data["resource_name"] == "Rasmul Mushaf"
+    assert "classroom.google.com" in res_data["classroom_url"]
+    assert res_data["eligible"] is True
+
 # -----------------------------------------------------------------------------
 # Test Cases: PostgreSQL Staging Integration Verification (Read-Only)
 # -----------------------------------------------------------------------------
@@ -349,6 +433,9 @@ if __name__ == "__main__":
     run_test("Course creation, syllabus viewer, and enrollment", test_course_crud_and_viewer)
     run_test("Password reset expiration & single-use security", test_password_reset_and_expiration)
     run_test("Poster image compression and sanitization", test_image_processing_and_sanitization)
+    run_test("Unicode initial extraction (Latin, Tamil, Arabic)", test_unicode_initial_extraction)
+    run_test("Course update (PUT) with image preservation & RBAC", test_course_update_put_endpoint)
+    run_test("Server-side member resource security & eligibility", test_server_side_member_resource_security)
 
     print("\n--- Phase 2: PostgreSQL Staging Integration Check (Read-Only) ---")
     run_test("Supabase PostgreSQL read-only connectivity and schema", test_postgresql_staging_integration_readonly)
