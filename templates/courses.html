@@ -2,9 +2,12 @@
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <!-- Header Section (Clean, Ageless, High-End Educational Design) -->
+    <!-- Header Section (Luxury Academic Editorial Design) -->
     <div class="text-center max-w-3xl mx-auto mb-10">
-        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-navy mb-4">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-brand-deep/5 border border-brand-gold/30 text-brand-deep text-xs font-semibold uppercase tracking-wider mb-3">
+            <span class="text-brand-gold">۞</span> Sacred Sciences Directory · பாடத்திட்டப் பட்டியல்
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-brand-dark mb-4">
             Sacred Sciences Directory
         </h1>
         <p class="text-gray-600 text-sm sm:text-base leading-relaxed">
@@ -14,16 +17,16 @@
     </div>
 
     <!-- Live Search & Multi-Level Filtering Control Hub -->
-    <div class="bg-white rounded-3xl border border-gray-200/80 shadow-xs p-5 sm:p-6 mb-10">
+    <div class="bg-white rounded-3xl border border-brand-gold/20 shadow-xs p-5 sm:p-6 mb-10">
         <!-- Search Input -->
         <div class="relative flex items-center mb-6">
-            <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-emerald">
+            <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-brand-primary">
                 <i class="fas fa-search text-base"></i>
             </span>
             <input type="text" 
                    id="courseSearchInput" 
-                   placeholder="Search {{ courses_count|default(courses|length if courses is defined else 0) }} courses by topic, teacher, discipline, or keyword..." 
-                   class="w-full pl-11 pr-10 py-3.5 bg-gray-50/80 rounded-2xl border border-gray-200 shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald focus:border-emerald text-sm placeholder-gray-400 transition-all">
+                   placeholder="Search {{ courses_count|default(courses|length if courses is defined else 0) }} courses by topic, teacher, discipline, or keyword... (Press '/' to focus)" 
+                   class="w-full pl-11 pr-10 py-3.5 bg-gray-50/80 rounded-2xl border border-gray-200 shadow-xs focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary text-sm placeholder-gray-400 transition-all">
             <button type="button" id="clearCourseSearch" class="hidden absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer" aria-label="Clear search">
                 <i class="fas fa-times"></i>
             </button>
@@ -32,10 +35,10 @@
         <!-- Discipline Category Filter Hub -->
         <div class="mb-5 pb-5 border-b border-gray-100">
             <div class="flex items-center justify-between mb-3 text-xs">
-                <span class="font-bold uppercase tracking-wider text-gray-700 flex items-center">
-                    <i class="fas fa-layer-group mr-1.5 text-gold"></i> Islamic Science Disciplines
+                <span class="font-bold uppercase tracking-wider text-brand-dark flex items-center">
+                    <i class="fas fa-layer-group mr-1.5 text-brand-gold"></i> Islamic Science Disciplines
                 </span>
-                <button type="button" id="resetFiltersBtn" class="text-emerald hover:text-teal-800 font-semibold cursor-pointer">
+                <button type="button" id="resetFiltersBtn" class="text-brand-primary hover:text-brand-deep font-semibold cursor-pointer transition-colors">
                     Clear Selection
                 </button>
             </div>
@@ -44,7 +47,7 @@
             <div class="sm:hidden mb-3">
                 <label for="mobileCategorySelect" class="sr-only">Filter by Discipline</label>
                 <div class="relative">
-                    <select id="mobileCategorySelect" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-navy focus:ring-2 focus:ring-emerald focus:border-emerald appearance-none">
+                    <select id="mobileCategorySelect" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-brand-dark focus:ring-2 focus:ring-brand-primary focus:border-brand-primary appearance-none">
                         <option value="all">🌟 All Disciplines ({{ courses_count|default(courses|length if courses is defined else 0) }} Programs)</option>
                         <option value="tafseer">📖 Tafseer (Qur'anic Exegesis)</option>
                         <option value="tajweed">🎙️ Tajweed & Qira'at (Sacred Recitation)</option>
@@ -57,41 +60,41 @@
                         <option value="aqeedah">💎 Aqeedah & Foundations</option>
                     </select>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
-                        <i class="fas fa-chevron-down text-xs text-gold"></i>
+                        <i class="fas fa-chevron-down text-xs text-brand-gold"></i>
                     </div>
                 </div>
             </div>
 
             <!-- Horizontally Scrollable Pills on Phones, Wrapping on Desktop -->
             <div class="flex overflow-x-auto pb-2 sm:pb-0 sm:flex-wrap gap-2 scrollbar-none -mx-2 px-2 sm:mx-0 sm:px-0" id="categoryFilterBar" style="-webkit-overflow-scrolling: touch;">
-                <button type="button" class="category-pill active flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all" data-category="all">
+                <button type="button" class="category-pill active flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-brand-deep text-brand-gold border border-brand-gold/40 shadow-xs cursor-pointer transition-all" data-category="all">
                     All Disciplines
                 </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="tafseer">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer transition-all" data-category="tafseer">
                     📖 Tafseer
                 </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="tajweed">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer transition-all" data-category="tajweed">
                     🎙️ Tajweed & Qira'at
                 </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="hadith">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer transition-all" data-category="hadith">
                     📜 Hadith & Sunnah
                 </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="arabic">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer transition-all" data-category="arabic">
                     ✍️ Arabic Language
                 </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="quran">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer transition-all" data-category="quran">
                     🕋 Quran & Hifz
                 </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="fiqh">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer transition-all" data-category="fiqh">
                     ⚖️ Fiqh & Shariah
                 </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="seerah">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer transition-all" data-category="seerah">
                     🌴 Seerah & History
                 </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="tazkiyah">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer transition-all" data-category="tazkiyah">
                     🤍 Tazkiyah & Adab
                 </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-category="aqeedah">
+                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer transition-all" data-category="aqeedah">
                     💎 Aqeedah
                 </button>
             </div>
@@ -100,24 +103,24 @@
         <!-- Medium / Language Segregated Filter Hub -->
         <div class="mb-5 pb-5 border-b border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div class="flex items-center gap-2 flex-wrap" id="languageFilterBar">
-                <span class="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center mr-1">
-                    <i class="fas fa-language text-emerald mr-1.5 text-sm"></i> Medium:
+                <span class="text-xs font-bold uppercase tracking-wider text-brand-dark flex items-center mr-1">
+                    <i class="fas fa-language text-brand-primary mr-1.5 text-sm"></i> Medium:
                 </span>
-                <button type="button" class="language-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all" data-language="all">
+                <button type="button" class="language-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-brand-deep text-brand-gold border border-brand-gold/40 shadow-xs cursor-pointer transition-all" data-language="all">
                     🌐 All Mediums ({{ courses|length }})
                 </button>
-                <button type="button" class="language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-language="tamil">
+                <button type="button" class="language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer transition-all" data-language="tamil">
                     🌿 Tamil Medium (தமிழ்)
                 </button>
-                <button type="button" class="language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-language="english">
+                <button type="button" class="language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer transition-all" data-language="english">
                     📘 English Medium
                 </button>
-                <button type="button" class="language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all" data-language="bilingual">
+                <button type="button" class="language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer transition-all" data-language="bilingual">
                     🌓 Bilingual (Tamil & English)
                 </button>
             </div>
             <div class="text-[11px] text-gray-400 font-medium hidden sm:inline-flex items-center">
-                <i class="fas fa-filter text-gold mr-1 text-[10px]"></i> Filtered by language
+                <i class="fas fa-filter text-brand-gold mr-1 text-[10px]"></i> Filtered by language
             </div>
         </div>
 
@@ -125,13 +128,13 @@
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-1">
             <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
                 <span class="text-xs font-bold uppercase tracking-wider text-gray-500 mr-1 hidden lg:inline">Status:</span>
-                <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-semibold text-xs transition-all bg-[#04272c] text-white shadow-xs cursor-pointer border border-gold/30" data-status="all">
+                <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-semibold text-xs transition-all bg-brand-deep text-brand-gold shadow-xs cursor-pointer border border-brand-gold/40" data-status="all">
                     All Batches
                 </button>
-                <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer" data-status="current">
-                    <i class="fas fa-play-circle mr-1 text-emerald"></i> Ongoing
+                <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer" data-status="current">
+                    <i class="fas fa-play-circle mr-1 text-brand-primary"></i> Ongoing
                 </button>
-                <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-gray-50 text-gray-700 hover:bg-amber-50 hover:text-amber-700 border border-gray-200 cursor-pointer" data-status="upcoming">
+                <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-gray-50 text-gray-700 hover:bg-amber-50 hover:text-amber-800 border border-gray-200 cursor-pointer" data-status="upcoming">
                     <i class="fas fa-clock mr-1 text-amber-500"></i> Upcoming
                 </button>
                 <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-gray-50 text-gray-700 hover:bg-gray-100 hover:text-gray-900 border border-gray-200 cursor-pointer" data-status="past">
@@ -140,7 +143,7 @@
             </div>
             
             <div class="flex items-center space-x-2 text-xs">
-                <span id="coursesCountBadge" class="font-medium text-emerald bg-emerald/10 border border-emerald/20 px-3 py-1 rounded-full text-xs">
+                <span id="coursesCountBadge" class="font-medium text-brand-deep bg-brand-deep/5 border border-brand-deep/20 px-3 py-1 rounded-full text-xs">
                     Showing {{ courses|length }} programs
                 </span>
             </div>
@@ -150,12 +153,13 @@
     <!-- Courses Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="coursesContainer">
         {% for course in courses %}
-        <div class="course-card shadcn-card rounded-2xl overflow-hidden flex flex-col" 
+        <div class="course-card bg-white rounded-2xl border border-brand-gold/20 shadow-xs hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col" 
+             id="courseCard-{{ course.id }}"
              data-status="{{ course.status | default('current') }}"
              data-title="{{ course.title | lower }}"
              data-category="{{ course.category | lower }}"
              data-language="{{ (course.language or 'Tamil') | lower }}"
-             data-desc="{{ course.description | lower }}">
+             data-desc="{{ (course.description or '') | lower }}">
             <!-- Course Image with Clickable Zoom Overlay -->
             <div class="relative group cursor-pointer overflow-hidden open-poster-btn"
                  data-id="{{ course.id }}"
@@ -165,36 +169,39 @@
                  data-startdate="{{ course.start_date or '' }}"
                  data-price="{{ course.price or 'Free' }}"
                  data-status="{{ course.status | default('current') }}"
+                 data-language="{{ course.language or 'Tamil' }}"
+                 data-desc="{{ course.description or '' }}"
+                 data-content="{{ course.content or '' }}"
                  title="Click to view full poster">
                 <img src="{{ course.image_url }}" 
                      alt="{{ course.title }}" 
-                     class="w-full h-56 object-cover border-b-2 border-gold transition-transform duration-500 group-hover:scale-105"
+                     class="course-card-image w-full h-56 object-cover border-b-2 border-brand-gold transition-transform duration-500 group-hover:scale-105"
                      onerror="this.onerror=null; this.src='/static/img/logo.jpeg';"
                      loading="lazy">
                 <!-- Hover Overlay with 'View Poster' hint -->
-                <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center backdrop-blur-xs">
-                    <span class="inline-flex items-center text-xs font-bold px-3.5 py-2 rounded-xl bg-white/95 text-navy shadow-lg">
-                        <i class="fas fa-search-plus mr-1.5 text-emerald"></i> View Full Poster
+                <div class="absolute inset-0 bg-brand-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center backdrop-blur-xs">
+                    <span class="inline-flex items-center text-xs font-bold px-3.5 py-2 rounded-xl bg-white/95 text-brand-dark shadow-lg">
+                        <i class="fas fa-search-plus mr-1.5 text-brand-primary"></i> View Full Poster
                     </span>
                 </div>
                 <!-- Price Badge Overlay -->
                 <div class="absolute top-3 left-3 pointer-events-none">
-                    <span class="inline-flex items-center text-xs font-bold px-3 py-1 rounded-lg {% if course.price and course.price.strip().lower() != 'free' %}bg-gold text-dark shadow-md font-semibold{% else %}bg-dark/80 text-white backdrop-blur-sm border border-gold/30 shadow{% endif %}">
+                    <span class="course-card-price-badge inline-flex items-center text-xs font-bold px-3 py-1 rounded-lg {% if course.price and course.price.strip().lower() != 'free' %}bg-brand-gold text-brand-dark shadow-md font-semibold{% else %}bg-brand-dark/85 text-white backdrop-blur-sm border border-brand-gold/30 shadow{% endif %}">
                         <i class="fas fa-tag mr-1.5 text-xs"></i> {{ course.price or 'Free' }}
                     </span>
                 </div>
                 <!-- Status Badge Overlay -->
                 <div class="absolute top-3 right-3 pointer-events-none">
                     {% if course.status == 'past' %}
-                    <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-lg bg-dark/85 text-gray-200 backdrop-blur-sm shadow border border-white/10">
+                    <span class="course-card-status-badge inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-lg bg-brand-dark/85 text-gray-200 backdrop-blur-sm shadow border border-white/10">
                         <i class="fas fa-check-circle mr-1.5 text-gray-400"></i> Completed
                     </span>
                     {% elif course.status == 'upcoming' %}
-                    <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-lg bg-amber-500 text-white shadow">
+                    <span class="course-card-status-badge inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-lg bg-amber-500 text-white shadow">
                         <i class="fas fa-clock mr-1.5"></i> Upcoming
                     </span>
                     {% else %}
-                    <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald text-white shadow">
+                    <span class="course-card-status-badge inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-lg bg-brand-primary text-white shadow">
                         <i class="fas fa-play-circle mr-1.5"></i> Ongoing
                     </span>
                     {% endif %}
@@ -204,15 +211,15 @@
             <div class="p-6 flex flex-col flex-grow">
                 <div class="flex items-center justify-between mb-3">
                     <div class="flex items-center gap-1.5 flex-wrap">
-                        <span class="inline-block bg-navy/10 text-navy text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-md">
+                        <span class="course-card-category-badge inline-block bg-brand-deep/10 text-brand-deep text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-md border border-brand-deep/15">
                             {{ course.category }}
                         </span>
-                        <span class="inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-md {% if 'english' in (course.language or '')|lower and 'tamil' in (course.language or '')|lower %}bg-purple-100 text-purple-800 border border-purple-200{% elif 'english' in (course.language or '')|lower %}bg-blue-100 text-blue-800 border border-blue-200{% else %}bg-emerald/10 text-emerald border border-emerald/20{% endif %}">
+                        <span class="course-card-language-badge inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-md {% if 'english' in (course.language or '')|lower and 'tamil' in (course.language or '')|lower %}bg-purple-100 text-purple-800 border border-purple-200{% elif 'english' in (course.language or '')|lower %}bg-blue-100 text-blue-800 border border-blue-200{% else %}bg-brand-deep/5 text-brand-deep border border-brand-deep/15{% endif %}">
                             <i class="fas fa-language mr-1 text-[9px]"></i> {{ course.language or 'Tamil' }}
                         </span>
                     </div>
                     <button type="button" 
-                            class="open-poster-btn text-xs font-semibold text-emerald hover:text-teal-800 bg-emerald/10 hover:bg-emerald/20 px-2.5 py-1 rounded-md transition-colors flex items-center cursor-pointer"
+                            class="open-poster-btn text-xs font-semibold text-brand-primary hover:text-brand-deep bg-brand-primary/10 hover:bg-brand-primary/20 px-2.5 py-1 rounded-md transition-colors flex items-center cursor-pointer border border-brand-primary/20"
                             data-id="{{ course.id }}"
                             data-poster="{{ course.image_url }}" 
                             data-title="{{ course.title }}" 
@@ -220,48 +227,71 @@
                             data-startdate="{{ course.start_date or '' }}"
                             data-price="{{ course.price or 'Free' }}"
                             data-status="{{ course.status | default('current') }}"
+                            data-language="{{ course.language or 'Tamil' }}"
+                            data-desc="{{ course.description or '' }}"
+                            data-content="{{ course.content or '' }}"
                             title="View promotional poster">
                         <i class="fas fa-image mr-1.5"></i> Poster
                     </button>
                 </div>
 
-                <h3 class="text-xl font-bold tracking-tight text-navy mb-2 leading-snug">
-                    <a href="/viewer/{{ course.id }}" class="hover:text-emerald transition-colors" title="View Full Course Syllabus & Details">
+                <h3 class="text-xl font-bold tracking-tight text-brand-dark mb-2 leading-snug">
+                    <a href="/viewer/{{ course.id }}" class="course-card-title-link hover:text-brand-primary transition-colors" title="View Full Course Syllabus & Details">
                         {{ course.title }}
                     </a>
                 </h3>
-                <p class="text-gray-600 mb-5 flex-grow text-sm leading-relaxed">{{ course.description }}</p>
+                <p class="course-card-desc text-gray-600 mb-5 flex-grow text-sm leading-relaxed">{{ course.description }}</p>
                 
                 <!-- Schedule & Price Labels -->
                 <div class="flex flex-wrap items-center gap-2 mb-5">
                     {% if course.start_date %}
-                    <span class="text-xs text-gray-600 font-medium bg-gray-100 px-3 py-1.5 rounded-lg inline-flex items-center">
-                        <i class="far fa-calendar-alt mr-1.5 text-emerald"></i> {{ course.start_date }}
+                    <span class="course-card-date text-xs text-gray-600 font-medium bg-gray-100 px-3 py-1.5 rounded-lg inline-flex items-center">
+                        <i class="far fa-calendar-alt mr-1.5 text-brand-primary"></i> {{ course.start_date }}
                     </span>
                     {% endif %}
-                    <span class="text-xs font-bold px-3 py-1.5 rounded-lg inline-flex items-center {% if course.price and course.price.strip().lower() != 'free' %}bg-amber-100 text-amber-900 border border-amber-200{% else %}bg-emerald/10 text-emerald border border-emerald/20{% endif %}">
-                        <i class="fas fa-tag mr-1.5"></i> Fee: {{ course.price or 'Free' }}
+                    <span class="course-card-fee text-xs font-bold px-3 py-1.5 rounded-lg inline-flex items-center {% if course.price and course.price.strip().lower() != 'free' %}bg-brand-gold/15 text-brand-dark border border-brand-gold/30{% else %}bg-brand-deep/5 text-brand-deep border border-brand-deep/20{% endif %}">
+                        <i class="fas fa-tag mr-1.5 text-brand-gold"></i> Fee: {{ course.price or 'Free' }}
                     </span>
                 </div>
                 
                 <!-- Action Buttons based on Status -->
                 {% if course.status == 'past' %}
-                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-colors shadow-sm flex items-center justify-center cursor-pointer text-sm">
+                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-colors shadow-xs flex items-center justify-center cursor-pointer text-sm">
                     <i class="fab fa-youtube mr-2 text-lg"></i> Watch on YouTube
                 </a>
                 {% else %}
                 <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22%20(Fee%3A%20{{ (course.price or 'Free') | urlencode }}).%20Please%20share%20the%20details." 
                    target="_blank" 
-                   class="enroll-btn w-full bg-emerald hover:bg-teal-700 text-white font-bold py-3 rounded-xl transition-colors shadow-sm flex items-center justify-center cursor-pointer text-sm" 
+                   class="enroll-btn w-full bg-brand-primary hover:bg-brand-deep text-white font-bold py-3 rounded-xl transition-colors shadow-xs flex items-center justify-center cursor-pointer text-sm" 
                    data-id="{{ course.id }}" 
                    data-title="{{ course.title }}">
                     <i class="fab fa-whatsapp mr-2 text-lg"></i> Enroll Now via WhatsApp
                 </a>
                 {% endif %}
 
-                <button class="delete-course-btn admin-only hidden w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 mt-3 rounded-xl transition-colors shadow-sm text-sm" data-id="{{ course.id }}">
-                    <i class="fas fa-trash-alt mr-2"></i> Delete Course
-                </button>
+                <!-- Admin Action Row (Visible only to authenticated administrators) -->
+                <div class="admin-only hidden pt-3 mt-3 border-t border-gray-100 flex items-center gap-2">
+                    <button type="button" 
+                            class="edit-course-btn flex-1 bg-brand-deep hover:bg-brand-primary text-brand-gold hover:text-white font-bold py-2 px-3 rounded-xl transition-all shadow-xs text-xs flex items-center justify-center cursor-pointer border border-brand-gold/40"
+                            data-id="{{ course.id }}"
+                            data-title="{{ course.title }}"
+                            data-category="{{ course.category }}"
+                            data-status="{{ course.status | default('current') }}"
+                            data-language="{{ course.language or 'Tamil' }}"
+                            data-price="{{ course.price or 'Free' }}"
+                            data-startdate="{{ course.start_date or '' }}"
+                            data-desc="{{ course.description or '' }}"
+                            data-content="{{ course.content or '' }}"
+                            data-poster="{{ course.image_url }}">
+                        <i class="fas fa-edit mr-1.5 text-brand-gold"></i> Edit Poster & Details
+                    </button>
+                    <button type="button" 
+                            class="delete-course-btn flex-shrink-0 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 hover:border-red-600 font-bold py-2 px-3 rounded-xl transition-all shadow-xs text-xs flex items-center justify-center cursor-pointer" 
+                            data-id="{{ course.id }}"
+                            title="Delete Course">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
             </div>
         </div>
         {% else %}
@@ -276,7 +306,7 @@
         <div id="noCoursesFiltered" class="hidden col-span-full text-center py-16 bg-white rounded-xl border-2 border-dashed border-gray-200">
             <i class="fas fa-search text-3xl text-gray-300 mb-3"></i>
             <h3 class="text-lg font-bold text-gray-600">No courses found in this category.</h3>
-            <p class="text-gray-400 text-sm mt-1">Select "All Courses" to view everything.</p>
+            <p class="text-gray-400 text-sm mt-1">Select "All Disciplines" to view all active programs.</p>
         </div>
     </div>
 </div>
@@ -287,14 +317,22 @@
     
     <div class="relative max-w-2xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-gray-200 z-10">
         <!-- Modal Header -->
-        <div class="flex items-center justify-between px-6 py-4 bg-navy text-white border-b-2 border-gold flex-shrink-0">
+        <div class="flex items-center justify-between px-6 py-4 bg-brand-deep text-white border-b-2 border-brand-gold flex-shrink-0">
             <div class="flex items-center space-x-3 overflow-hidden">
-                <span id="posterModalCategory" class="inline-block bg-emerald text-white text-xs font-bold uppercase tracking-wider py-0.5 px-2.5 rounded-full flex-shrink-0">Category</span>
+                <span id="posterModalCategory" class="inline-block bg-brand-primary text-white text-xs font-bold uppercase tracking-wider py-0.5 px-2.5 rounded-full flex-shrink-0">Category</span>
                 <h3 id="posterModalTitle" class="text-lg sm:text-xl font-bold tracking-tight truncate">Course Poster</h3>
             </div>
-            <button type="button" id="closePosterModal" class="text-gray-300 hover:text-white text-2xl leading-none p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer ml-4" title="Close">
-                <i class="fas fa-times"></i>
-            </button>
+            <div class="flex items-center gap-3">
+                <button type="button" 
+                        id="posterModalEditBtn" 
+                        class="admin-only hidden text-xs font-bold px-3 py-1.5 rounded-lg bg-brand-gold/20 hover:bg-brand-gold text-brand-gold hover:text-brand-dark border border-brand-gold/40 transition-all flex items-center cursor-pointer"
+                        title="Edit this course poster and details">
+                    <i class="fas fa-edit mr-1.5"></i> Edit Poster & Details
+                </button>
+                <button type="button" id="closePosterModal" class="text-gray-300 hover:text-white text-2xl leading-none p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer" title="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Poster Image Container -->
@@ -303,15 +341,15 @@
         </div>
 
         <!-- Modal Footer -->
-        <div class="px-6 py-4 bg-sand border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3 flex-shrink-0">
+        <div class="px-6 py-4 bg-brand-ivory border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3 flex-shrink-0">
             <div class="text-xs sm:text-sm text-gray-600 flex flex-wrap items-center gap-3">
                 <span id="posterModalDate" class="hidden font-medium bg-gray-100 px-2.5 py-1 rounded-md">
-                    <i class="far fa-calendar-alt mr-1 text-emerald"></i> <span id="posterModalDateText"></span>
+                    <i class="far fa-calendar-alt mr-1 text-brand-primary"></i> <span id="posterModalDateText"></span>
                 </span>
-                <span id="posterModalPrice" class="font-bold bg-emerald/10 text-emerald border border-emerald/20 px-2.5 py-1 rounded-md inline-flex items-center">
-                    <i class="fas fa-tag mr-1 text-emerald"></i> <span id="posterModalPriceText">Free</span>
+                <span id="posterModalPrice" class="font-bold bg-brand-deep/5 text-brand-deep border border-brand-deep/20 px-2.5 py-1 rounded-md inline-flex items-center">
+                    <i class="fas fa-tag mr-1 text-brand-gold"></i> <span id="posterModalPriceText">Free</span>
                 </span>
-                <a id="posterModalFullLink" href="" target="_blank" class="text-navy hover:text-emerald font-semibold hover:underline inline-flex items-center">
+                <a id="posterModalFullLink" href="" target="_blank" class="text-brand-dark hover:text-brand-primary font-semibold hover:underline inline-flex items-center">
                     <i class="fas fa-external-link-alt mr-1"></i> Full Resolution
                 </a>
             </div>
@@ -319,6 +357,153 @@
                 <!-- Dynamic WhatsApp Enroll or YouTube button -->
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Unified Course & Poster Edit Modal (Admin Only) -->
+<div id="editCourseModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="editCourseModalTitle">
+    <div id="editCourseModalBackdrop" class="fixed inset-0 cursor-pointer" aria-hidden="true"></div>
+    
+    <div class="relative max-w-2xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] border border-brand-gold/30 z-10">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between px-6 py-4 bg-brand-deep text-white border-b-2 border-brand-gold flex-shrink-0">
+            <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-lg bg-brand-gold/20 flex items-center justify-center text-brand-gold">
+                    <i class="fas fa-edit text-sm"></i>
+                </div>
+                <div>
+                    <h3 id="editCourseModalTitle" class="text-base sm:text-lg font-bold tracking-tight">Edit Course & Poster</h3>
+                    <p class="text-[11px] text-gray-300">Update promotional poster, schedule, syllabus, and course metadata</p>
+                </div>
+            </div>
+            <button type="button" id="closeEditCourseModal" class="text-gray-300 hover:text-white text-2xl leading-none p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer" title="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Edit Form -->
+        <form id="editCourseForm" class="p-6 overflow-y-auto flex-grow space-y-5 text-sm">
+            <input type="hidden" id="editCourseId" name="course_id">
+
+            <!-- Poster Replacement Dropzone -->
+            <div class="bg-gray-50 rounded-2xl p-4 border border-gray-200">
+                <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-2">
+                    <i class="fas fa-image mr-1 text-brand-gold"></i> Promotional Poster
+                </label>
+                <div class="flex flex-col sm:flex-row items-center gap-4">
+                    <div class="flex-shrink-0">
+                        <img id="editPosterPreview" src="" alt="Current Poster" class="h-28 w-24 object-cover rounded-xl border border-brand-gold/40 shadow-xs bg-gray-200">
+                    </div>
+                    <div class="flex-grow w-full">
+                        <label for="editCourseImage" class="block w-full border-2 border-dashed border-gray-300 hover:border-brand-primary rounded-xl p-3 text-center cursor-pointer transition-colors bg-white">
+                            <i class="fas fa-cloud-upload-alt text-brand-primary text-xl mb-1"></i>
+                            <div class="text-xs font-semibold text-brand-dark" id="editCourseImageName">Click or drop to replace poster</div>
+                            <div class="text-[11px] text-gray-400 mt-0.5">JPG, PNG, or WebP (max 5MB). Leave empty to keep existing poster.</div>
+                            <input type="file" id="editCourseImage" name="image" accept="image/jpeg,image/png,image/webp" class="hidden">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Title & Category Row -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="editCourseTitle" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">
+                        Course Title <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="editCourseTitle" name="title" required 
+                           class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary bg-gray-50/50">
+                </div>
+                <div>
+                    <label for="editCourseCategory" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">
+                        Discipline / Category
+                    </label>
+                    <input type="text" id="editCourseCategory" name="category" list="categoryOptions"
+                           class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary bg-gray-50/50"
+                           placeholder="e.g. Tafseer, Tajweed, Fiqh...">
+                    <datalist id="categoryOptions">
+                        <option value="Tafseer">
+                        <option value="Tajweed & Qira'at">
+                        <option value="Hadith & Sunnah">
+                        <option value="Arabic Language">
+                        <option value="Quran & Hifz">
+                        <option value="Fiqh & Shariah">
+                        <option value="Seerah & History">
+                        <option value="Tazkiyah & Adab">
+                        <option value="Aqeedah">
+                    </datalist>
+                </div>
+            </div>
+
+            <!-- Status, Medium & Price Row -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label for="editCourseStatus" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">
+                        Status
+                    </label>
+                    <select id="editCourseStatus" name="status" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary bg-gray-50/50">
+                        <option value="current">Ongoing</option>
+                        <option value="upcoming">Upcoming</option>
+                        <option value="past">Completed</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="editCourseLanguage" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">
+                        Medium / Language
+                    </label>
+                    <select id="editCourseLanguage" name="language" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary bg-gray-50/50">
+                        <option value="Tamil">Tamil (தமிழ்)</option>
+                        <option value="English">English</option>
+                        <option value="Bilingual">Bilingual (Tamil & English)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="editCoursePrice" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">
+                        Fee / Price
+                    </label>
+                    <input type="text" id="editCoursePrice" name="price" placeholder="Free or ₹500" 
+                           class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary bg-gray-50/50">
+                </div>
+            </div>
+
+            <!-- Schedule / Start Date -->
+            <div>
+                <label for="editCourseStartDate" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">
+                    Schedule / Start Date
+                </label>
+                <input type="text" id="editCourseStartDate" name="start_date" placeholder="e.g. Weekly Sundays 8:00 PM IST or Starting 15th Nov" 
+                       class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary bg-gray-50/50">
+            </div>
+
+            <!-- Description -->
+            <div>
+                <label for="editCourseDesc" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">
+                    Course Description
+                </label>
+                <textarea id="editCourseDesc" name="description" rows="3" 
+                          class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary bg-gray-50/50 leading-relaxed"></textarea>
+            </div>
+
+            <!-- Syllabus / Content -->
+            <div>
+                <label for="editCourseContent" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">
+                    Syllabus / Curriculum Outline
+                </label>
+                <textarea id="editCourseContent" name="content" rows="4" placeholder="Enter syllabus modules, key topics, or lesson schedule..." 
+                          class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary bg-gray-50/50 leading-relaxed"></textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
+                <button type="button" id="cancelEditCourseBtn" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-100 font-semibold text-xs transition-colors cursor-pointer">
+                    Cancel
+                </button>
+                <button type="submit" id="saveEditCourseBtn" class="px-6 py-2.5 rounded-xl bg-brand-deep hover:bg-brand-primary text-brand-gold hover:text-white font-bold text-xs transition-all shadow-sm flex items-center gap-2 border border-brand-gold/40 cursor-pointer">
+                    <i class="fas fa-save"></i>
+                    <span>Save Changes</span>
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -358,7 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const language = (card.getAttribute('data-language') || '').toLowerCase();
             const desc = (card.getAttribute('data-desc') || '').toLowerCase();
 
-            // Category match (all or contains substring like 'tafseer', 'tajweed', etc.)
+            // Category match (all or contains substring)
             const categoryMatch = (currentCategory === 'all') || category.includes(currentCategory);
 
             // Language / Medium match
@@ -375,7 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Status match
             const statusMatch = (currentStatus === 'all') || (status === currentStatus);
-            // Search query match (including language keywords)
+            // Search query match
             const searchMatch = !searchQuery || title.includes(searchQuery) || category.includes(searchQuery) || language.includes(searchQuery) || desc.includes(searchQuery);
 
             if (categoryMatch && languageMatch && statusMatch && searchMatch) {
@@ -401,19 +586,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function syncCategoryUI(selectedCategory) {
         currentCategory = selectedCategory.toLowerCase();
         
-        // Update pills
         categoryPills.forEach(p => {
             const pillCat = (p.getAttribute('data-category') || 'all').toLowerCase();
             if (pillCat === currentCategory) {
-                p.className = 'category-pill active flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all';
-                // Scroll pill into view smoothly if in scrollable track
+                p.className = 'category-pill active flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-brand-deep text-brand-gold border border-brand-gold/40 shadow-xs cursor-pointer transition-all';
                 p.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
             } else {
-                p.className = 'category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all';
+                p.className = 'category-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer transition-all';
             }
         });
 
-        // Update mobile select
         if (mobileCategorySelect) {
             mobileCategorySelect.value = currentCategory;
         }
@@ -429,14 +611,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Mobile Select Change
     if (mobileCategorySelect) {
         mobileCategorySelect.addEventListener('change', (e) => {
             syncCategoryUI(e.target.value);
         });
     }
 
-    // Parse URL Query Parameter (e.g. /courses?category=tafseer&language=tamil)
+    // Parse URL Query Parameter
     const urlParams = new URLSearchParams(window.location.search);
     const initialCategoryParam = (urlParams.get('category') || '').toLowerCase().trim();
     if (initialCategoryParam && initialCategoryParam !== 'all') {
@@ -449,9 +630,9 @@ document.addEventListener('DOMContentLoaded', () => {
         languagePills.forEach(p => {
             const l = (p.getAttribute('data-language') || 'all').toLowerCase();
             if (l === currentLanguage) {
-                p.className = 'language-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all';
+                p.className = 'language-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-brand-deep text-brand-gold border border-brand-gold/40 shadow-xs cursor-pointer transition-all';
             } else {
-                p.className = 'language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all';
+                p.className = 'language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer transition-all';
             }
         });
         applyFilters();
@@ -462,9 +643,9 @@ document.addEventListener('DOMContentLoaded', () => {
         pill.addEventListener('click', () => {
             currentLanguage = (pill.getAttribute('data-language') || 'all').toLowerCase();
             languagePills.forEach(p => {
-                p.className = 'language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all';
+                p.className = 'language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer transition-all';
             });
-            pill.className = 'language-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all';
+            pill.className = 'language-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-brand-deep text-brand-gold border border-brand-gold/40 shadow-xs cursor-pointer transition-all';
             applyFilters();
         });
     });
@@ -475,9 +656,9 @@ document.addEventListener('DOMContentLoaded', () => {
             currentStatus = (tab.getAttribute('data-status') || 'all').toLowerCase();
 
             statusTabs.forEach(t => {
-                t.className = 'status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer';
+                t.className = 'status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer';
             });
-            tab.className = 'status-tab px-3 py-1.5 rounded-lg font-semibold text-xs transition-all bg-[#04272c] text-white shadow-xs cursor-pointer border border-gold/30';
+            tab.className = 'status-tab px-3 py-1.5 rounded-lg font-semibold text-xs transition-all bg-brand-deep text-brand-gold shadow-xs cursor-pointer border border-brand-gold/40';
 
             applyFilters();
         });
@@ -494,17 +675,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             statusTabs.forEach((t, idx) => {
                 if (idx === 0) {
-                    t.className = 'status-tab px-3 py-1.5 rounded-lg font-semibold text-xs transition-all bg-[#04272c] text-white shadow-xs cursor-pointer border border-gold/30';
+                    t.className = 'status-tab px-3 py-1.5 rounded-lg font-semibold text-xs transition-all bg-brand-deep text-brand-gold shadow-xs cursor-pointer border border-brand-gold/40';
                 } else {
-                    t.className = 'status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer';
+                    t.className = 'status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer';
                 }
             });
 
             languagePills.forEach((p, idx) => {
                 if (idx === 0) {
-                    p.className = 'language-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#04272c] text-white border border-gold/30 shadow-xs cursor-pointer transition-all';
+                    p.className = 'language-pill active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-brand-deep text-brand-gold border border-brand-gold/40 shadow-xs cursor-pointer transition-all';
                 } else {
-                    p.className = 'language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200 cursor-pointer transition-all';
+                    p.className = 'language-pill px-3.5 py-1.5 rounded-xl text-xs font-medium bg-gray-50 text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200 cursor-pointer transition-all';
                 }
             });
 
@@ -566,9 +747,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const posterModalPriceText = document.getElementById('posterModalPriceText');
     const posterModalFullLink = document.getElementById('posterModalFullLink');
     const posterModalAction = document.getElementById('posterModalAction');
+    const posterModalEditBtn = document.getElementById('posterModalEditBtn');
+
+    let activePosterCourseData = null;
 
     function openPoster(data) {
         if (!posterModal) return;
+        activePosterCourseData = data;
         posterModalImage.src = data.poster || '';
         posterModalTitle.textContent = data.title || 'Course Poster';
         posterModalCategory.textContent = data.category || 'Course';
@@ -588,7 +773,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Action button in footer
         if (data.status === 'past') {
             posterModalAction.innerHTML = `
-                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-5 rounded-lg transition-colors text-sm shadow">
+                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-5 rounded-lg transition-colors text-sm shadow cursor-pointer">
                     <i class="fab fa-youtube mr-2 text-lg"></i> Watch on YouTube
                 </a>
             `;
@@ -597,7 +782,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const encodedFee = encodeURIComponent(data.price || 'Free');
             const waUrl = `https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22${encodedTitle}%22%20(Fee%3A%20${encodedFee}).%20Please%20share%20the%20details.`;
             posterModalAction.innerHTML = `
-                <a href="${waUrl}" target="_blank" class="enroll-btn w-full sm:w-auto inline-flex items-center justify-center bg-emerald hover:bg-green-600 text-white font-bold py-2.5 px-5 rounded-lg transition-colors text-sm shadow cursor-pointer" data-id="${data.id || ''}" data-title="${data.title || ''}">
+                <a href="${waUrl}" target="_blank" class="enroll-btn w-full sm:w-auto inline-flex items-center justify-center bg-brand-primary hover:bg-brand-deep text-white font-bold py-2.5 px-5 rounded-lg transition-colors text-sm shadow cursor-pointer" data-id="${data.id || ''}" data-title="${data.title || ''}">
                     <i class="fab fa-whatsapp mr-2 text-lg"></i> Enroll via WhatsApp
                 </a>
             `;
@@ -611,6 +796,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!posterModal) return;
         posterModal.classList.add('hidden');
         posterModalImage.src = '';
+        activePosterCourseData = null;
         document.body.style.overflow = '';
     }
 
@@ -624,7 +810,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: trigger.getAttribute('data-category'),
                 startdate: trigger.getAttribute('data-startdate'),
                 price: trigger.getAttribute('data-price') || 'Free',
-                status: trigger.getAttribute('data-status')
+                status: trigger.getAttribute('data-status'),
+                language: trigger.getAttribute('data-language'),
+                desc: trigger.getAttribute('data-desc'),
+                content: trigger.getAttribute('data-content')
             });
         });
     });
@@ -632,9 +821,173 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closePosterModalBtn) closePosterModalBtn.addEventListener('click', closePoster);
     if (posterModalBackdrop) posterModalBackdrop.addEventListener('click', closePoster);
 
+    // Unified Course & Poster Edit Modal Logic
+    const editModal = document.getElementById('editCourseModal');
+    const editModalBackdrop = document.getElementById('editCourseModalBackdrop');
+    const closeEditModalBtn = document.getElementById('closeEditCourseModal');
+    const cancelEditBtn = document.getElementById('cancelEditCourseBtn');
+    const editForm = document.getElementById('editCourseForm');
+    const editCourseImage = document.getElementById('editCourseImage');
+    const editPosterPreview = document.getElementById('editPosterPreview');
+    const editCourseImageName = document.getElementById('editCourseImageName');
+
+    function openEditModal(data) {
+        if (!editModal) return;
+        document.getElementById('editCourseId').value = data.id || '';
+        document.getElementById('editCourseTitle').value = data.title || '';
+        document.getElementById('editCourseCategory').value = data.category || '';
+        document.getElementById('editCourseStatus').value = data.status || 'current';
+        document.getElementById('editCourseLanguage').value = data.language || 'Tamil';
+        document.getElementById('editCoursePrice').value = data.price || '';
+        document.getElementById('editCourseStartDate').value = data.startdate || '';
+        document.getElementById('editCourseDesc').value = data.desc || '';
+        document.getElementById('editCourseContent').value = data.content || '';
+
+        if (editPosterPreview) {
+            editPosterPreview.src = data.poster || '/static/img/logo.jpeg';
+        }
+        if (editCourseImage) {
+            editCourseImage.value = '';
+        }
+        if (editCourseImageName) {
+            editCourseImageName.textContent = 'Click or drop to replace poster';
+        }
+
+        editModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeEditModal() {
+        if (!editModal) return;
+        editModal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    if (closeEditModalBtn) closeEditModalBtn.addEventListener('click', closeEditModal);
+    if (cancelEditBtn) cancelEditBtn.addEventListener('click', closeEditModal);
+    if (editModalBackdrop) editModalBackdrop.addEventListener('click', closeEditModal);
+
+    // Edit poster file select preview
+    if (editCourseImage) {
+        editCourseImage.addEventListener('change', () => {
+            const file = editCourseImage.files[0];
+            if (file) {
+                editCourseImageName.textContent = file.name;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (editPosterPreview) editPosterPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Attach click handler to card edit buttons
+    document.querySelectorAll('.edit-course-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openEditModal({
+                id: btn.getAttribute('data-id'),
+                title: btn.getAttribute('data-title'),
+                category: btn.getAttribute('data-category'),
+                status: btn.getAttribute('data-status'),
+                language: btn.getAttribute('data-language'),
+                price: btn.getAttribute('data-price'),
+                startdate: btn.getAttribute('data-startdate'),
+                desc: btn.getAttribute('data-desc'),
+                content: btn.getAttribute('data-content'),
+                poster: btn.getAttribute('data-poster')
+            });
+        });
+    });
+
+    // Poster lightbox "Edit Poster & Details" button
+    if (posterModalEditBtn) {
+        posterModalEditBtn.addEventListener('click', () => {
+            if (activePosterCourseData) {
+                closePoster();
+                openEditModal(activePosterCourseData);
+            }
+        });
+    }
+
+    // Form Submit Handler -> PUT /api/courses/{course_id}
+    if (editForm) {
+        editForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const token = localStorage.getItem('token');
+            if (!token) {
+                if (window.showToast) window.showToast('Please sign in as administrator to edit courses.', 'warning');
+                return;
+            }
+
+            const courseId = document.getElementById('editCourseId').value;
+            if (!courseId) {
+                if (window.showToast) window.showToast('Invalid course ID.', 'error');
+                return;
+            }
+
+            const submitBtn = document.getElementById('saveEditCourseBtn');
+            const originalBtnHTML = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Saving...</span>';
+
+            try {
+                const formData = new FormData();
+                formData.append('title', document.getElementById('editCourseTitle').value.trim());
+                formData.append('category', document.getElementById('editCourseCategory').value.trim());
+                formData.append('status', document.getElementById('editCourseStatus').value);
+                formData.append('language', document.getElementById('editCourseLanguage').value);
+                formData.append('price', document.getElementById('editCoursePrice').value.trim());
+                formData.append('start_date', document.getElementById('editCourseStartDate').value.trim());
+                formData.append('description', document.getElementById('editCourseDesc').value.trim());
+                formData.append('content', document.getElementById('editCourseContent').value.trim());
+
+                if (editCourseImage.files && editCourseImage.files[0]) {
+                    formData.append('image', editCourseImage.files[0]);
+                }
+
+                const res = await fetch(`/api/courses/${courseId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                const result = await res.json();
+                if (!res.ok) {
+                    throw new Error(result.detail || 'Failed to update course.');
+                }
+
+                if (window.showToast) {
+                    window.showToast('Course and promotional poster updated successfully!', 'success');
+                }
+                closeEditModal();
+
+                // Refresh the page smoothly to reload server-rendered Jinja cards with updated data
+                setTimeout(() => window.location.reload(), 600);
+            } catch (err) {
+                console.error(err);
+                if (window.showToast) {
+                    window.showToast(err.message || 'Error updating course.', 'error');
+                }
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnHTML;
+            }
+        });
+    }
+
+    // Escape hotkey to close modals
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && posterModal && !posterModal.classList.contains('hidden')) {
-            closePoster();
+        if (e.key === 'Escape') {
+            if (editModal && !editModal.classList.contains('hidden')) {
+                closeEditModal();
+            } else if (posterModal && !posterModal.classList.contains('hidden')) {
+                closePoster();
+            }
         }
     });
 });

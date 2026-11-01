@@ -285,6 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Synchronize Auth State Across Elements
     const userProfilePill = document.getElementById('userProfilePill');
     const userMonogramAvatar = document.getElementById('userMonogramAvatar');
+    const adminOnlyEls = document.querySelectorAll('.admin-only');
 
     if (token) {
         loginBtns.forEach(btn => btn.classList.add('hidden'));
@@ -293,22 +294,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (userProfilePill && userMonogramAvatar) {
             userProfilePill.classList.remove('hidden');
             userProfilePill.classList.add('flex');
-            userMonogramAvatar.textContent = window.getUnicodeInitial(userName || userRole || 'S');
-            if (userName) userMonogramAvatar.title = userName;
+            userMonogramAvatar.textContent = window.getUnicodeInitial(localStorage.getItem('userName') || userRole || 'S');
+            if (localStorage.getItem('userName')) userMonogramAvatar.title = localStorage.getItem('userName');
         }
 
         if (userRole === 'admin') {
             adminBtns.forEach(btn => btn.classList.remove('hidden'));
             deleteCourseBtns.forEach(btn => btn.classList.remove('hidden'));
+            adminOnlyEls.forEach(el => el.classList.remove('hidden'));
         } else {
             adminBtns.forEach(btn => btn.classList.add('hidden'));
             deleteCourseBtns.forEach(btn => btn.classList.add('hidden'));
+            adminOnlyEls.forEach(el => el.classList.add('hidden'));
         }
     } else {
         loginBtns.forEach(btn => btn.classList.remove('hidden'));
         logoutBtns.forEach(btn => btn.classList.add('hidden'));
         adminBtns.forEach(btn => btn.classList.add('hidden'));
         deleteCourseBtns.forEach(btn => btn.classList.add('hidden'));
+        adminOnlyEls.forEach(el => el.classList.add('hidden'));
         if (userProfilePill) userProfilePill.classList.add('hidden');
     }
 
