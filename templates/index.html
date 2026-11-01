@@ -2,7 +2,7 @@
 
 {% block content %}
 <!-- 1. Scholarly Editorial Hero -->
-<section class="bg-brand-ivory pt-16 pb-20 sm:pt-20 sm:pb-24 border-b border-brand-hairline relative">
+<section class="bg-brand-ivory pt-12 pb-14 sm:pt-16 sm:pb-18 border-b border-brand-hairline relative">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 hero-content">
         <!-- Academy Emblem -->
         <div class="flex justify-center mb-6">
@@ -45,24 +45,31 @@
     </div>
 </section>
 
-<!-- 2. Sacred Knowledge Hadith Ribbon (Muted Sage Surface) -->
-<section class="bg-brand-sage py-8 border-y border-brand-sage">
-    <div class="max-w-4xl mx-auto px-4 text-center">
-        <div class="text-xs uppercase tracking-widest font-semibold text-brand-deep mb-3">
-            Prophetic Guidance · நபிகளாரின் பொன்மொழி
+<!-- 2. Sacred Knowledge Hadith Sanctum (Tonal Muted Sage Surface) -->
+<section class="bg-brand-sage/40 py-12 sm:py-16 border-y border-brand-sage/60 relative overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+        <div class="inline-flex items-center gap-2 mb-4">
+            <span class="h-px w-8 bg-brand-gold/40"></span>
+            <span class="text-xs uppercase tracking-widest font-bold text-brand-deep">
+                Prophetic Guidance · நபிகளாரின் பொன்மொழி
+            </span>
+            <span class="h-px w-8 bg-brand-gold/40"></span>
         </div>
-        <p class="font-arabic text-xl sm:text-2xl md:text-3xl text-brand-ink tracking-wide mb-3 leading-loose">
+        <p class="font-arabic text-2xl sm:text-3xl md:text-4xl text-[#103837] tracking-wide mb-4 leading-[2.3]">
             « مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ »
         </p>
-        <p class="text-xs sm:text-sm text-[#254244] max-w-2xl mx-auto font-normal leading-relaxed font-tamil">
+        <div class="w-12 h-px bg-brand-gold/30 mx-auto mb-4"></div>
+        <p class="text-sm sm:text-base text-[#254244] max-w-2xl mx-auto font-normal leading-relaxed font-tamil mb-3">
             "யார் ஒருவர் மார்க்கக் கல்வியைத் தேடி ஒரு பாதையில் செல்கிறாரோ, அவருக்கு அல்லாஹ் அதன் மூலம் சொர்க்கத்தின் பாதையை எளிதாக்குகிறான்."
-            <span class="text-brand-bronze font-medium ml-1">(ஸஹீஹ் முஸ்லிம்)</span>
         </p>
+        <span class="inline-block text-xs font-semibold text-brand-bronze bg-white px-3 py-1 rounded-full border border-brand-sage/60 shadow-2xs">
+            ஸஹீஹ் முஸ்லிம்
+        </span>
     </div>
 </section>
 
 <!-- 3. Institutional Hallmarks (Architectural 4-Column Ledger on White) -->
-<section class="py-12 bg-white border-b border-brand-hairline">
+<section class="py-10 sm:py-12 bg-white border-b border-brand-hairline">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center divide-y sm:divide-y-0 sm:divide-x divide-brand-hairline">
             <div class="pt-6 sm:pt-0 sm:px-4">
@@ -92,8 +99,8 @@
     </div>
 </section>
 
-<!-- 4. Featured Academic Courses Showcase (Warm Ivory Surface) -->
-<section id="featuredCourses" class="py-16 bg-brand-ivory border-b border-brand-hairline">
+<!-- 4. Featured Academic Courses Showcase (Warm Sand Surface with Defined White Cards) -->
+<section id="featuredCourses" class="py-14 sm:py-16 bg-brand-sand/40 border-b border-brand-hairline">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
             <div>
@@ -105,7 +112,7 @@
                     Structured courses for seekers at every stage—from Quranic recitation fundamentals to deep classical jurisprudence.
                 </p>
             </div>
-            <a href="/courses" class="mt-4 md:mt-0 inline-flex items-center text-sm font-medium text-brand-deep hover:underline transition-colors">
+            <a href="/courses" class="mt-4 md:mt-0 inline-flex items-center text-sm font-semibold text-brand-deep hover:underline transition-colors">
                 Complete {{ courses_count|default(courses|length if courses is defined else 0) }} Course Directory <i class="fas fa-arrow-right ml-2 text-xs"></i>
             </a>
         </div>
@@ -145,16 +152,63 @@
         </div>
 
         {% if courses and courses|length > 0 %}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {% for course in courses[:6] %}
-            <div class="course-card bg-white rounded-xl border border-brand-hairline shadow-editorial hover:border-brand-gold/50 transition-all duration-300 overflow-hidden flex flex-col">
+            <div class="course-card bg-white rounded-xl border border-brand-hairline shadow-[0_2px_8px_-2px_rgba(23,76,75,0.06),0_1px_3px_0_rgba(0,0,0,0.03)] hover:border-brand-gold hover:shadow-[0_8px_20px_-4px_rgba(23,76,75,0.08)] transition-all duration-200 overflow-hidden flex flex-col">
                 <!-- Course Poster with Price & Status Overlays -->
-                <div class="relative overflow-hidden group aspect-[16/10] bg-brand-sand/30">
+                <div class="relative overflow-hidden group aspect-[16/10] bg-brand-sand/30 flex-shrink-0 border-b border-brand-hairline">
+                    {% if course.image_url and course.image_url.strip() %}
                     <img src="{{ course.image_url }}" 
                          alt="{{ course.title }}" 
-                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                         onerror="this.onerror=null; this.src='/static/img/logo.jpeg';"
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                         onerror="this.style.display='none'; if(this.nextElementSibling){this.nextElementSibling.classList.remove('hidden');}"
                          loading="lazy">
+                    <div class="course-poster-fallback hidden w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#F7F4EC] via-[#EFE9DC] to-[#E5DEC9] text-center relative select-none">
+                        <span class="absolute text-5xl font-arabic text-brand-deep/5 pointer-events-none select-none">«சَلْسَبِيلًا»</span>
+                        <div class="w-12 h-12 rounded-xl bg-white/80 border border-brand-gold/30 flex items-center justify-center mb-2 shadow-xs text-brand-deep">
+                            {% set cat = (course.category or '') | lower %}
+                            {% if 'quran' in cat or 'hifz' in cat or 'tilawah' in cat %}
+                                <i class="fas fa-quran text-xl text-brand-deep"></i>
+                            {% elif 'tajweed' in cat %}
+                                <i class="fas fa-book-open text-xl text-brand-deep"></i>
+                            {% elif 'hadith' in cat %}
+                                <i class="fas fa-scroll text-xl text-brand-deep"></i>
+                            {% elif 'arabic' in cat %}
+                                <i class="fas fa-feather-alt text-xl text-brand-deep"></i>
+                            {% elif 'aqeedah' in cat %}
+                                <i class="fas fa-compass text-xl text-brand-deep"></i>
+                            {% elif 'tafseer' in cat %}
+                                <i class="fas fa-book-reader text-xl text-brand-deep"></i>
+                            {% else %}
+                                <i class="fas fa-graduation-cap text-xl text-brand-deep"></i>
+                            {% endif %}
+                        </div>
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-brand-deep/80">{{ course.category }}</span>
+                    </div>
+                    {% else %}
+                    <div class="course-poster-fallback w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#F7F4EC] via-[#EFE9DC] to-[#E5DEC9] text-center relative select-none">
+                        <span class="absolute text-5xl font-arabic text-brand-deep/5 pointer-events-none select-none">«சَلْسَبِيلًا»</span>
+                        <div class="w-12 h-12 rounded-xl bg-white/80 border border-brand-gold/30 flex items-center justify-center mb-2 shadow-xs text-brand-deep">
+                            {% set cat = (course.category or '') | lower %}
+                            {% if 'quran' in cat or 'hifz' in cat or 'tilawah' in cat %}
+                                <i class="fas fa-quran text-xl text-brand-deep"></i>
+                            {% elif 'tajweed' in cat %}
+                                <i class="fas fa-book-open text-xl text-brand-deep"></i>
+                            {% elif 'hadith' in cat %}
+                                <i class="fas fa-scroll text-xl text-brand-deep"></i>
+                            {% elif 'arabic' in cat %}
+                                <i class="fas fa-feather-alt text-xl text-brand-deep"></i>
+                            {% elif 'aqeedah' in cat %}
+                                <i class="fas fa-compass text-xl text-brand-deep"></i>
+                            {% elif 'tafseer' in cat %}
+                                <i class="fas fa-book-reader text-xl text-brand-deep"></i>
+                            {% else %}
+                                <i class="fas fa-graduation-cap text-xl text-brand-deep"></i>
+                            {% endif %}
+                        </div>
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-brand-deep/80">{{ course.category }}</span>
+                    </div>
+                    {% endif %}
 
                     <!-- Price Badge -->
                     <div class="absolute top-3 left-3 pointer-events-none">
@@ -163,19 +217,24 @@
                         </span>
                     </div>
 
-                    <!-- Status Badge -->
+                    <!-- Status Badge (100% Opaque & Accessible with Neutral Fallback) -->
                     <div class="absolute top-3 right-3 pointer-events-none">
-                        {% if course.status == 'past' %}
-                        <span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-md bg-white text-gray-700 border border-gray-300">
-                            Completed
+                        {% set st = (course.status or '') | lower | trim %}
+                        {% if st == 'ongoing' or st == 'current' %}
+                        <span class="badge-status-ongoing inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
+                            Ongoing
                         </span>
-                        {% elif course.status == 'upcoming' %}
-                        <span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-900 border border-amber-300">
+                        {% elif st == 'upcoming' %}
+                        <span class="badge-status-upcoming inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
                             Upcoming
                         </span>
+                        {% elif st == 'completed' or st == 'past' %}
+                        <span class="badge-status-completed inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
+                            Completed
+                        </span>
                         {% else %}
-                        <span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-900 border border-emerald-300">
-                            Ongoing
+                        <span class="badge-status-neutral inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
+                            {{ course.status | capitalize if course.status else 'Program' }}
                         </span>
                         {% endif %}
                     </div>
@@ -210,14 +269,20 @@
                     </p>
 
                     <!-- CTAs based on status -->
-                    {% if course.status == 'past' %}
-                    <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full bg-brand-ivory hover:bg-brand-sand text-brand-ink font-medium py-2.5 rounded-lg transition-colors border border-brand-hairline flex items-center justify-center text-sm">
+                    {% if course.youtube_url %}
+                    <a href="{{ course.youtube_url }}" target="_blank" rel="noopener noreferrer" class="youtube-watch-btn w-full bg-white hover:bg-brand-sand/50 text-brand-ink font-semibold py-2 rounded-lg transition-colors border border-brand-hairline flex items-center justify-center text-xs sm:text-sm mb-2 shadow-2xs">
+                        <i class="fab fa-youtube text-red-600 mr-2 text-base"></i> Watch on YouTube
+                    </a>
+                    {% endif %}
+                    {% set st = (course.status or '') | lower | trim %}
+                    {% if st == 'past' or st == 'completed' %}
+                    <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full bg-brand-ivory hover:bg-brand-sand text-brand-ink font-semibold py-2.5 rounded-lg transition-colors border border-brand-hairline flex items-center justify-center text-sm shadow-xs">
                         <i class="fab fa-youtube text-red-600 mr-2 text-base"></i> Watch Archive
                     </a>
                     {% else %}
                     <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22%20(Fee%3A%20{{ (course.price or 'Free') | urlencode }}).%20Please%20share%20the%20details." 
                        target="_blank" 
-                       class="enroll-btn w-full bg-brand-deep hover:bg-[#123E3D] text-white font-medium py-2.5 rounded-lg transition-colors shadow-xs flex items-center justify-center text-sm cursor-pointer"
+                       class="enroll-btn w-full bg-brand-deep hover:bg-[#123E3D] text-white font-semibold py-2.5 rounded-lg transition-colors shadow-xs flex items-center justify-center text-sm cursor-pointer"
                        data-id="{{ course.id }}"
                        data-title="{{ course.title }}">
                         <i class="fab fa-whatsapp mr-2 text-base"></i> Enroll via WhatsApp
@@ -246,97 +311,150 @@
     </div>
 </section>
 
-<!-- 5. Academic Foundations Progression (Warm Sand Background) -->
-<section class="py-20 bg-brand-sand border-y border-brand-hairline">
+<!-- 5. Academic Foundations Progression (Sticky Two-Column Storytelling on Desktop) -->
+<section id="academicFoundations" class="py-14 sm:py-20 bg-brand-sand border-b border-brand-hairline relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <span class="text-xs font-bold uppercase tracking-widest text-brand-deep block mb-1">
-                Academic Foundations · கல்வித் தூண்கள்
-            </span>
-            <h2 class="font-serif text-3xl sm:text-4xl text-brand-ink">The Four Pillars of Salsabeel</h2>
-            <p class="text-[#3B4E50] max-w-2xl mx-auto text-sm sm:text-base mt-3">
-                Our curriculum reflects the structured progression of classical Islamic academies, grounded in sacred texts and balanced understanding.
-            </p>
-        </div>
+        <div class="flex flex-col lg:flex-row gap-10 lg:gap-14 items-start relative">
+            
+            <!-- Left: Sticky Editorial Header & Academic Path Rail (Desktop Sticky) -->
+            <div class="w-full lg:w-5/12 lg:sticky lg:top-24 lg:self-start">
+                <span class="text-xs font-bold uppercase tracking-widest text-brand-deep block mb-1">
+                    Academic Foundations · கல்வித் தூண்கள்
+                </span>
+                <h2 class="font-serif text-3xl sm:text-4xl text-brand-ink mb-3">The Four Pillars of Salsabeel</h2>
+                <p class="text-[#3B4E50] text-sm sm:text-base leading-relaxed mb-6 max-w-lg">
+                    Our curriculum reflects the structured progression of classical Islamic academies, grounded in sacred texts and balanced understanding.
+                </p>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Pillar I -->
-            <div class="feature-card bg-white rounded-xl border border-brand-hairline shadow-editorial p-6 flex flex-col justify-between hover:border-brand-gold/50 transition-colors">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-xs font-bold uppercase tracking-wider text-brand-bronze">Pillar I</span>
-                        <span class="font-serif text-sm font-semibold text-brand-muted">Stage 1</span>
+                <!-- Desktop Understated Active Progress Rail (Hidden on Mobile/Tablet) -->
+                <nav class="hidden lg:block space-y-2 relative pl-5 border-l-2 border-brand-hairline/80" id="pillarsRail" aria-label="Curriculum Stages">
+                    <button type="button" 
+                            class="pillar-step is-active w-full text-left py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-between group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold" 
+                            data-pillar-target="1">
+                        <div class="flex items-center gap-3">
+                            <span class="pillar-step-num font-mono text-xs font-bold w-6 h-6 rounded-md bg-brand-deep text-brand-gold flex items-center justify-center transition-colors">1</span>
+                            <span class="pillar-step-label text-sm text-brand-deep font-semibold transition-colors">Uloom al-Qur'an & Tajweed</span>
+                        </div>
+                        <span class="pillar-step-indicator w-2 h-2 rounded-full bg-brand-gold transition-opacity opacity-100"></span>
+                    </button>
+                    
+                    <button type="button" 
+                            class="pillar-step w-full text-left py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-between group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold" 
+                            data-pillar-target="2">
+                        <div class="flex items-center gap-3">
+                            <span class="pillar-step-num font-mono text-xs font-semibold w-6 h-6 rounded-md bg-white border border-brand-hairline text-brand-muted flex items-center justify-center transition-colors">2</span>
+                            <span class="pillar-step-label text-sm text-brand-muted font-normal transition-colors">Fiqh & Shari'ah Essentials</span>
+                        </div>
+                        <span class="pillar-step-indicator w-2 h-2 rounded-full bg-brand-gold transition-opacity opacity-0"></span>
+                    </button>
+                    
+                    <button type="button" 
+                            class="pillar-step w-full text-left py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-between group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold" 
+                            data-pillar-target="3">
+                        <div class="flex items-center gap-3">
+                            <span class="pillar-step-num font-mono text-xs font-semibold w-6 h-6 rounded-md bg-white border border-brand-hairline text-brand-muted flex items-center justify-center transition-colors">3</span>
+                            <span class="pillar-step-label text-sm text-brand-muted font-normal transition-colors">Hadith & Prophetic Sunnah</span>
+                        </div>
+                        <span class="pillar-step-indicator w-2 h-2 rounded-full bg-brand-gold transition-opacity opacity-0"></span>
+                    </button>
+                    
+                    <button type="button" 
+                            class="pillar-step w-full text-left py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-between group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold" 
+                            data-pillar-target="4">
+                        <div class="flex items-center gap-3">
+                            <span class="pillar-step-num font-mono text-xs font-semibold w-6 h-6 rounded-md bg-white border border-brand-hairline text-brand-muted flex items-center justify-center transition-colors">4</span>
+                            <span class="pillar-step-label text-sm text-brand-muted font-normal transition-colors">Tazkiyah & Tarbiyah</span>
+                        </div>
+                        <span class="pillar-step-indicator w-2 h-2 rounded-full bg-brand-gold transition-opacity opacity-0"></span>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Right: Sequential Pillar Cards Stack -->
+            <div class="w-full lg:w-7/12 space-y-6 sm:space-y-8" id="pillarsCardsContainer">
+                <!-- Pillar I -->
+                <article class="pillar-card bg-white rounded-xl border border-brand-hairline border-t-4 border-t-brand-deep shadow-xs p-6 sm:p-7 hover:border-brand-gold/60 transition-all duration-200" 
+                         id="pillar-card-1" 
+                         data-pillar-id="1">
+                    <div class="flex items-center justify-between mb-3 text-xs">
+                        <span class="font-bold uppercase tracking-wider text-brand-bronze bg-brand-sand/50 px-2.5 py-0.5 rounded-md border border-brand-hairline">Stage 1 · Pillar I</span>
+                        <span class="font-serif text-xs font-semibold text-brand-muted">Foundational Science</span>
                     </div>
-                    <h3 class="font-serif text-lg font-bold text-brand-ink mb-1">Uloom al-Qur'an & Tajweed</h3>
+                    <h3 class="font-serif text-xl sm:text-2xl font-bold text-brand-ink mb-1">Uloom al-Qur'an & Tajweed</h3>
                     <p class="text-xs text-brand-deep font-semibold mb-3 font-tamil">குர்ஆன் மற்றும் தஜ்வீத் கலைகள்</p>
-                    <p class="text-[#3B4E50] text-xs sm:text-sm leading-relaxed">
+                    <p class="text-[#3B4E50] text-sm leading-relaxed mb-4">
                         Mastery of articulation points (Makharij), rules of recitation, memorization methods, and classical thematic Tafseer.
                     </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-brand-hairline text-xs text-brand-muted font-medium">
-                    Step-by-Step Pronunciation
-                </div>
-            </div>
-
-            <!-- Pillar II -->
-            <div class="feature-card bg-white rounded-xl border border-brand-hairline shadow-editorial p-6 flex flex-col justify-between hover:border-brand-gold/50 transition-colors">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-xs font-bold uppercase tracking-wider text-brand-bronze">Pillar II</span>
-                        <span class="font-serif text-sm font-semibold text-brand-muted">Stage 2</span>
+                    <div class="pt-3 border-t border-brand-hairline flex items-center justify-between text-xs text-brand-muted">
+                        <span>Step-by-Step Pronunciation</span>
+                        <span class="text-brand-bronze font-medium">Classical Sanad</span>
                     </div>
-                    <h3 class="font-serif text-lg font-bold text-brand-ink mb-1">Fiqh & Shari'ah Essentials</h3>
+                </article>
+
+                <!-- Pillar II -->
+                <article class="pillar-card bg-white rounded-xl border border-brand-hairline border-t-4 border-t-brand-gold shadow-xs p-6 sm:p-7 hover:border-brand-gold/60 transition-all duration-200" 
+                         id="pillar-card-2" 
+                         data-pillar-id="2">
+                    <div class="flex items-center justify-between mb-3 text-xs">
+                        <span class="font-bold uppercase tracking-wider text-brand-bronze bg-brand-sand/50 px-2.5 py-0.5 rounded-md border border-brand-hairline">Stage 2 · Pillar II</span>
+                        <span class="font-serif text-xs font-semibold text-brand-muted">Practical Worship</span>
+                    </div>
+                    <h3 class="font-serif text-xl sm:text-2xl font-bold text-brand-ink mb-1">Fiqh & Shari'ah Essentials</h3>
                     <p class="text-xs text-brand-deep font-semibold mb-3 font-tamil">நடைமுறை ஃபிக்ஹ் சட்டங்கள்</p>
-                    <p class="text-[#3B4E50] text-xs sm:text-sm leading-relaxed">
+                    <p class="text-[#3B4E50] text-sm leading-relaxed mb-4">
                         Practical jurisprudence for daily worship (Taharah, Salah, Zakah, Sawm), marital life, and contemporary ethical transactions.
                     </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-brand-hairline text-xs text-brand-muted font-medium">
-                    Real-life Applications
-                </div>
-            </div>
-
-            <!-- Pillar III -->
-            <div class="feature-card bg-white rounded-xl border border-brand-hairline shadow-editorial p-6 flex flex-col justify-between hover:border-brand-gold/50 transition-colors">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-xs font-bold uppercase tracking-wider text-brand-bronze">Pillar III</span>
-                        <span class="font-serif text-sm font-semibold text-brand-muted">Stage 3</span>
+                    <div class="pt-3 border-t border-brand-hairline flex items-center justify-between text-xs text-brand-muted">
+                        <span>Real-life Applications</span>
+                        <span class="text-brand-bronze font-medium">Clear Evidence</span>
                     </div>
-                    <h3 class="font-serif text-lg font-bold text-brand-ink mb-1">Hadith & Prophetic Sunnah</h3>
+                </article>
+
+                <!-- Pillar III -->
+                <article class="pillar-card bg-white rounded-xl border border-brand-hairline border-t-4 border-t-brand-deep shadow-xs p-6 sm:p-7 hover:border-brand-gold/60 transition-all duration-200" 
+                         id="pillar-card-3" 
+                         data-pillar-id="3">
+                    <div class="flex items-center justify-between mb-3 text-xs">
+                        <span class="font-bold uppercase tracking-wider text-brand-bronze bg-brand-sand/50 px-2.5 py-0.5 rounded-md border border-brand-hairline">Stage 3 · Pillar III</span>
+                        <span class="font-serif text-xs font-semibold text-brand-muted">Prophetic Heritage</span>
+                    </div>
+                    <h3 class="font-serif text-xl sm:text-2xl font-bold text-brand-ink mb-1">Hadith & Prophetic Sunnah</h3>
                     <p class="text-xs text-brand-deep font-semibold mb-3 font-tamil">ஹதீஸ் & சுன்னாஹ் ஆய்வுகள்</p>
-                    <p class="text-[#3B4E50] text-xs sm:text-sm leading-relaxed">
+                    <p class="text-[#3B4E50] text-sm leading-relaxed mb-4">
                         Study of pivotal prophetic traditions, understanding chains of narrators (Isnad), and embodying the character of Rasulullah ﷺ.
                     </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-brand-hairline text-xs text-brand-muted font-medium">
-                    Authentic Sources
-                </div>
-            </div>
-
-            <!-- Pillar IV -->
-            <div class="feature-card bg-white rounded-xl border border-brand-hairline shadow-editorial p-6 flex flex-col justify-between hover:border-brand-gold/50 transition-colors">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-xs font-bold uppercase tracking-wider text-brand-bronze">Pillar IV</span>
-                        <span class="font-serif text-sm font-semibold text-brand-muted">Stage 4</span>
+                    <div class="pt-3 border-t border-brand-hairline flex items-center justify-between text-xs text-brand-muted">
+                        <span>Authentic Sources</span>
+                        <span class="text-brand-bronze font-medium">Noble Character</span>
                     </div>
-                    <h3 class="font-serif text-lg font-bold text-brand-ink mb-1">Tazkiyah & Tarbiyah</h3>
+                </article>
+
+                <!-- Pillar IV -->
+                <article class="pillar-card bg-white rounded-xl border border-brand-hairline border-t-4 border-t-brand-gold shadow-xs p-6 sm:p-7 hover:border-brand-gold/60 transition-all duration-200" 
+                         id="pillar-card-4" 
+                         data-pillar-id="4">
+                    <div class="flex items-center justify-between mb-3 text-xs">
+                        <span class="font-bold uppercase tracking-wider text-brand-bronze bg-brand-sand/50 px-2.5 py-0.5 rounded-md border border-brand-hairline">Stage 4 · Pillar IV</span>
+                        <span class="font-serif text-xs font-semibold text-brand-muted">Spiritual Purification</span>
+                    </div>
+                    <h3 class="font-serif text-xl sm:text-2xl font-bold text-brand-ink mb-1">Tazkiyah & Tarbiyah</h3>
                     <p class="text-xs text-brand-deep font-semibold mb-3 font-tamil">ஆன்ம சுத்தி & நற்பண்புகள்</p>
-                    <p class="text-[#3B4E50] text-xs sm:text-sm leading-relaxed">
+                    <p class="text-[#3B4E50] text-sm leading-relaxed mb-4">
                         Purification of the spiritual heart, developing sincere devotion (Ikhlas), overcoming spiritual illnesses, and family guidance.
                     </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-brand-hairline text-xs text-brand-muted font-medium">
-                    Character Cultivation
-                </div>
+                    <div class="pt-3 border-t border-brand-hairline flex items-center justify-between text-xs text-brand-muted">
+                        <span>Character Cultivation</span>
+                        <span class="text-brand-bronze font-medium">Inner Peace</span>
+                    </div>
+                </article>
             </div>
+
         </div>
     </div>
 </section>
 
-<!-- 6. Frequently Asked Questions (White Surface) -->
-<section class="py-16 bg-white border-b border-brand-hairline">
+<!-- 6. Frequently Asked Questions (Warm Ivory Surface with White Accordion Cards) -->
+<section class="py-14 sm:py-16 bg-brand-ivory border-b border-brand-hairline">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
         <div class="text-center mb-10">
             <span class="text-xs font-semibold uppercase tracking-widest text-brand-bronze block mb-1">
@@ -347,46 +465,94 @@
 
         <div class="space-y-3" id="faqAccordion">
             <!-- FAQ Item 1 -->
-            <div class="bg-brand-ivory rounded-lg border border-brand-hairline overflow-hidden shadow-xs">
-                <button type="button" class="faq-toggle w-full px-5 py-4 text-left flex justify-between items-center text-brand-ink font-medium text-base cursor-pointer hover:text-brand-deep transition-colors">
+            <div class="faq-item bg-white rounded-lg border border-brand-hairline overflow-hidden shadow-2xs hover:border-brand-gold/40 transition-colors">
+                <button type="button" 
+                        id="faq-btn-1"
+                        aria-expanded="false" 
+                        aria-controls="faq-answer-1"
+                        class="faq-toggle w-full px-5 py-4 text-left flex justify-between items-center text-brand-ink font-medium text-base cursor-pointer hover:text-brand-deep transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold">
                     <span>What language is used for course instruction?</span>
-                    <i class="fas fa-chevron-down text-xs text-brand-muted transition-transform duration-300"></i>
+                    <i class="fas fa-chevron-down text-xs text-brand-muted transition-transform duration-200 pointer-events-none" aria-hidden="true"></i>
                 </button>
-                <div class="faq-content hidden px-5 pb-4 text-[#3B4E50] text-sm leading-relaxed border-t border-brand-hairline pt-3">
-                    Classes are conducted predominantly in <strong>Tamil</strong>, with Arabic terms explained clearly. English terminology is also referenced where beneficial, ensuring students from India, Sri Lanka, Malaysia, and the Western diaspora follow effortlessly.
+                <div id="faq-answer-1" 
+                     role="region" 
+                     aria-labelledby="faq-btn-1"
+                     class="faq-answer-wrapper"
+                     hidden>
+                    <div class="faq-answer-inner">
+                        <div class="px-5 pb-4 text-[#3B4E50] text-sm leading-relaxed border-t border-brand-hairline pt-3">
+                            Classes are conducted predominantly in <strong>Tamil</strong>, with Arabic terms explained clearly. English terminology is also referenced where beneficial, ensuring students from India, Sri Lanka, Malaysia, and the Western diaspora follow effortlessly.
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- FAQ Item 2 -->
-            <div class="bg-brand-ivory rounded-lg border border-brand-hairline overflow-hidden shadow-xs">
-                <button type="button" class="faq-toggle w-full px-5 py-4 text-left flex justify-between items-center text-brand-ink font-medium text-base cursor-pointer hover:text-brand-deep transition-colors">
+            <div class="faq-item bg-white rounded-lg border border-brand-hairline overflow-hidden shadow-2xs hover:border-brand-gold/40 transition-colors">
+                <button type="button" 
+                        id="faq-btn-2"
+                        aria-expanded="false" 
+                        aria-controls="faq-answer-2"
+                        class="faq-toggle w-full px-5 py-4 text-left flex justify-between items-center text-brand-ink font-medium text-base cursor-pointer hover:text-brand-deep transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold">
                     <span>Are class recordings available if I miss a live session?</span>
-                    <i class="fas fa-chevron-down text-xs text-brand-muted transition-transform duration-300"></i>
+                    <i class="fas fa-chevron-down text-xs text-brand-muted transition-transform duration-200 pointer-events-none" aria-hidden="true"></i>
                 </button>
-                <div class="faq-content hidden px-5 pb-4 text-[#3B4E50] text-sm leading-relaxed border-t border-brand-hairline pt-3">
-                    Yes. Enrolled students receive recorded lectures, course notes, and supplementary reading material so you can review at your own pace and revisit complex topics anytime.
+                <div id="faq-answer-2" 
+                     role="region" 
+                     aria-labelledby="faq-btn-2"
+                     class="faq-answer-wrapper"
+                     hidden>
+                    <div class="faq-answer-inner">
+                        <div class="px-5 pb-4 text-[#3B4E50] text-sm leading-relaxed border-t border-brand-hairline pt-3">
+                            Yes. Enrolled students receive recorded lectures, course notes, and supplementary reading material so you can review at your own pace and revisit complex topics anytime.
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- FAQ Item 3 -->
-            <div class="bg-brand-ivory rounded-lg border border-brand-hairline overflow-hidden shadow-xs">
-                <button type="button" class="faq-toggle w-full px-5 py-4 text-left flex justify-between items-center text-brand-ink font-medium text-base cursor-pointer hover:text-brand-deep transition-colors">
+            <div class="faq-item bg-white rounded-lg border border-brand-hairline overflow-hidden shadow-2xs hover:border-brand-gold/40 transition-colors">
+                <button type="button" 
+                        id="faq-btn-3"
+                        aria-expanded="false" 
+                        aria-controls="faq-answer-3"
+                        class="faq-toggle w-full px-5 py-4 text-left flex justify-between items-center text-brand-ink font-medium text-base cursor-pointer hover:text-brand-deep transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold">
                     <span>Are there dedicated programs for sisters?</span>
-                    <i class="fas fa-chevron-down text-xs text-brand-muted transition-transform duration-300"></i>
+                    <i class="fas fa-chevron-down text-xs text-brand-muted transition-transform duration-200 pointer-events-none" aria-hidden="true"></i>
                 </button>
-                <div class="faq-content hidden px-5 pb-4 text-[#3B4E50] text-sm leading-relaxed border-t border-brand-hairline pt-3">
-                    Absolutely. Salsabeel Academy is led by dedicated female scholars (including Founder & Director Hazira Umma) and offers specialized sisters' batches, comfortable learning circles, and timings suitable for homemakers and working professionals.
+                <div id="faq-answer-3" 
+                     role="region" 
+                     aria-labelledby="faq-btn-3"
+                     class="faq-answer-wrapper"
+                     hidden>
+                    <div class="faq-answer-inner">
+                        <div class="px-5 pb-4 text-[#3B4E50] text-sm leading-relaxed border-t border-brand-hairline pt-3">
+                            Absolutely. Salsabeel Academy is led by dedicated female scholars (including Founder & Director Hazira Umma) and offers specialized sisters' batches, comfortable learning circles, and timings suitable for homemakers and working professionals.
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- FAQ Item 4 -->
-            <div class="bg-brand-ivory rounded-lg border border-brand-hairline overflow-hidden shadow-xs">
-                <button type="button" class="faq-toggle w-full px-5 py-4 text-left flex justify-between items-center text-brand-ink font-medium text-base cursor-pointer hover:text-brand-deep transition-colors">
+            <div class="faq-item bg-white rounded-lg border border-brand-hairline overflow-hidden shadow-2xs hover:border-brand-gold/40 transition-colors">
+                <button type="button" 
+                        id="faq-btn-4"
+                        aria-expanded="false" 
+                        aria-controls="faq-answer-4"
+                        class="faq-toggle w-full px-5 py-4 text-left flex justify-between items-center text-brand-ink font-medium text-base cursor-pointer hover:text-brand-deep transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold">
                     <span>How do I enroll in a course?</span>
-                    <i class="fas fa-chevron-down text-xs text-brand-muted transition-transform duration-300"></i>
+                    <i class="fas fa-chevron-down text-xs text-brand-muted transition-transform duration-200 pointer-events-none" aria-hidden="true"></i>
                 </button>
-                <div class="faq-content hidden px-5 pb-4 text-[#3B4E50] text-sm leading-relaxed border-t border-brand-hairline pt-3">
-                    Simply click the <strong>"Enroll via WhatsApp"</strong> button on any active course card, or message our Admissions desk at <strong>+91 99405 23013</strong>. Our administrative team will share batch timings, admission links, and syllabus details.
+                <div id="faq-answer-4" 
+                     role="region" 
+                     aria-labelledby="faq-btn-4"
+                     class="faq-answer-wrapper"
+                     hidden>
+                    <div class="faq-answer-inner">
+                        <div class="px-5 pb-4 text-[#3B4E50] text-sm leading-relaxed border-t border-brand-hairline pt-3">
+                            Simply click the <strong>"Enroll via WhatsApp"</strong> button on any active course card, or message our Admissions desk at <strong>+91 99405 23013</strong>. Our administrative team will share batch timings, admission links, and syllabus details.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -394,75 +560,26 @@
 </section>
 
 <!-- 7. Seeker Community Anchor CTA (Deep Teal) -->
-<section class="py-16 bg-brand-deep text-white text-center border-t border-brand-hairline">
+<section class="py-14 sm:py-16 bg-brand-deep text-white text-center border-t border-brand-hairline">
     <div class="max-w-3xl mx-auto px-4">
         <span class="text-xs font-semibold uppercase tracking-widest text-brand-gold-light block mb-2">
             Join Our Seeker Community
         </span>
-        <h2 class="font-serif text-3xl sm:text-4xl text-white mb-4">
-            Stay Connected with Salsabeel Academy
-        </h2>
-        <p class="text-gray-200 text-sm sm:text-base max-w-xl mx-auto font-normal leading-relaxed mb-8">
-            Receive weekly Hadith reflections, course schedule announcements, and live Q&A webinar reminders by joining our official channels.
+        <h2 class="font-serif text-3xl sm:text-4xl text-white mb-4">Stay Connected to Sacred Knowledge</h2>
+        <p class="text-gray-300 text-sm sm:text-base mb-8 max-w-xl mx-auto leading-relaxed">
+            Receive course notifications, daily beneficial reminders, and live session updates directly via our official channels.
         </p>
-        
-        <div class="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 flex-wrap">
-            <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center text-sm shadow-xs">
-                <i class="fab fa-whatsapp mr-2 text-lg"></i> WhatsApp Channel
+        <div class="flex flex-wrap justify-center gap-3">
+            <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" rel="noopener noreferrer" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 px-5 rounded-lg transition-colors inline-flex items-center text-sm shadow-xs">
+                <i class="fab fa-whatsapp mr-2 text-base"></i> WhatsApp Community
             </a>
-            <a href="https://www.instagram.com/salsabeel_academy_quran?igsi=b3h0Ym9yc3FmYXZ5&utm_source=qr" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center text-sm border border-white/20">
-                <i class="fab fa-instagram mr-2 text-lg"></i> Follow on Instagram
+            <a href="https://www.instagram.com/salsabeel_academy_quran?igsi=b3h0Ym9yc3FmYXZ5&utm_source=qr" target="_blank" rel="noopener noreferrer" class="bg-white/10 hover:bg-white/20 text-white font-medium py-2.5 px-5 rounded-lg transition-colors inline-flex items-center text-sm border border-white/20">
+                <i class="fab fa-instagram mr-2 text-base text-pink-400"></i> Instagram
             </a>
-            <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center text-sm border border-white/20">
-                <i class="fab fa-youtube text-red-400 mr-2 text-lg"></i> YouTube Lectures
+            <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" rel="noopener noreferrer" class="bg-white/10 hover:bg-white/20 text-white font-medium py-2.5 px-5 rounded-lg transition-colors inline-flex items-center text-sm border border-white/20">
+                <i class="fab fa-youtube mr-2 text-base text-red-400"></i> YouTube
             </a>
         </div>
     </div>
 </section>
-
-<!-- Motion One Scroll Reveals & FAQ Handler -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    // FAQ Accordion Interaction
-    document.querySelectorAll('.faq-toggle').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const content = btn.nextElementSibling;
-            const icon = btn.querySelector('i');
-            const isHidden = content.classList.contains('hidden');
-
-            // Close other FAQs
-            document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
-            document.querySelectorAll('.faq-toggle i').forEach(ic => ic.classList.remove('rotate-180'));
-
-            if (isHidden) {
-                content.classList.remove('hidden');
-                icon.classList.add('rotate-180');
-            }
-        });
-    });
-
-    // Staggered Hero Entrance
-    if (window.Motion) {
-        const { animate, stagger, inView } = window.Motion;
-
-        const heroItems = document.querySelectorAll('.hero-content > *');
-        if (heroItems.length > 0) {
-            animate(heroItems, 
-                { opacity: [0, 1], y: [16, 0] }, 
-                { delay: stagger(0.06), duration: 0.5, easing: [0.16, 1, 0.3, 1] }
-            );
-        }
-
-        const featureCards = document.querySelectorAll('.feature-card, .course-card');
-        featureCards.forEach((card, idx) => {
-            inView(card, () => {
-                animate(card, 
-                    { opacity: [0, 1], y: [16, 0] }, 
-                    { delay: (idx % 3) * 0.06, duration: 0.45, easing: [0.16, 1, 0.3, 1] }
-                );
-            });
-        });
-    }
-});
-</script>
 {% endblock %}

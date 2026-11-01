@@ -46,84 +46,92 @@
     <!-- ============================================================== -->
     <!-- PREMIER STICKY TOP NAVBAR (Luminous Modern Academic)            -->
     <!-- ============================================================== -->
+    {% set current_path = (request.url.path.rstrip('/') if request.url.path != '/' else '/') if request is defined else '/' %}
+    {% set nav_active_section = 'home' if current_path in ['/', '/index.html']
+        else 'courses' if (current_path == '/courses' or current_path.startswith('/courses/') or current_path.startswith('/viewer/') or current_path.startswith('/course/'))
+        else 'about' if (current_path == '/about' or current_path.startswith('/about/'))
+        else 'admissions' if (current_path == '/admissions' or current_path.startswith('/admissions/'))
+        else 'updates' if (current_path == '/updates' or current_path.startswith('/updates/'))
+        else 'admin' if (current_path == '/admin' or current_path.startswith('/admin/'))
+        else '' %}
     <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-brand-border shadow-xs transition-all duration-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <div class="max-w-7xl mx-auto px-4 sm:px-4 md:px-4 lg:px-6 xl:px-8 h-20 flex items-center justify-between">
             
             <!-- Left: Brand Logo & Scholarly Institutional Title -->
-            <a href="/" class="flex items-center space-x-3.5 group flex-shrink-0">
-                <img src="/static/img/logo.jpeg" alt="Salsabeel Emblem" class="h-11 w-11 rounded-full border border-brand-border object-cover shadow-xs transition-transform group-hover:scale-105">
+            <a href="/" class="flex items-center space-x-2 lg:space-x-3.5 group flex-shrink-0" aria-label="Salsabeel Academy Home">
+                <img src="/static/img/logo.jpeg" alt="Salsabeel Emblem" class="h-9 w-9 sm:h-11 sm:w-11 rounded-full border border-brand-border object-cover shadow-xs transition-transform group-hover:scale-105">
                 <div class="flex flex-col justify-center">
-                    <span class="font-serif font-bold text-xl leading-tight text-brand-ink tracking-tight">
+                    <span class="font-serif font-bold text-base sm:text-xl leading-tight text-brand-ink tracking-tight">
                         Salsabeel <span class="text-brand-primary font-medium">Academy</span>
                     </span>
-                    <span class="text-xs uppercase tracking-widest text-brand-ink-muted font-medium font-sans">Sacred Islamic Sciences</span>
+                    <span class="hidden lg:block text-[10px] sm:text-xs uppercase tracking-widest text-brand-ink-muted font-medium font-sans">Sacred Islamic Sciences</span>
                 </div>
             </a>
 
-            <!-- Center: Desktop Navigation Links -->
-            <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
-                <a href="/" class="top-nav-link text-brand-ink-muted hover:text-brand-ink hover:bg-gray-100/80 px-3.5 py-2 rounded-xl text-sm font-medium transition-colors" data-page="/">
+            <!-- Center: Desktop Navigation Links (Responsive md: 768px+ Single-Line) -->
+            <nav class="hidden md:flex items-center space-x-0.5 lg:space-x-1 xl:space-x-1.5 flex-shrink-0" aria-label="Main Navigation">
+                <a href="/" class="top-nav-link whitespace-nowrap px-1.5 lg:px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-xs xl:text-sm font-medium transition-colors {{ 'active text-brand-deep font-semibold' if nav_active_section == 'home' else 'text-brand-ink-muted hover:text-brand-deep hover:bg-gray-100/80' }}" data-nav="home" {% if nav_active_section == 'home' %}aria-current="page"{% endif %}>
                     <span>Home</span>
                 </a>
-                <a href="/courses" class="top-nav-link text-brand-ink-muted hover:text-brand-ink hover:bg-gray-100/80 px-3.5 py-2 rounded-xl text-sm font-medium transition-colors" data-page="/courses">
+                <a href="/courses" class="top-nav-link whitespace-nowrap px-1.5 lg:px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-xs xl:text-sm font-medium transition-colors {{ 'active text-brand-deep font-semibold' if nav_active_section == 'courses' else 'text-brand-ink-muted hover:text-brand-deep hover:bg-gray-100/80' }}" data-nav="courses" {% if nav_active_section == 'courses' %}aria-current="page"{% endif %}>
                     <span>Courses</span>
-                    <span class="courses-count-badge ml-1.5 text-[11px] font-semibold bg-brand-deep/5 text-brand-deep border border-brand-deep/15 px-2 py-0.5 rounded-md font-sans">{% set total_courses = courses_count|default(courses|length if courses is defined else 0) %}{{ total_courses }} Program{{ 's' if total_courses != 1 else '' }}</span>
+                    <span class="courses-count-badge ml-1 xl:ml-1.5 text-[10px] xl:text-[11px] font-semibold bg-brand-deep/5 text-brand-deep border border-brand-deep/15 px-1 xl:px-2 py-0.5 rounded-md font-sans">{% set total_courses = courses_count|default(courses|length if courses is defined else 0) %}{{ total_courses }}<span class="hidden xl:inline"> Program{{ 's' if total_courses != 1 else '' }}</span></span>
                 </a>
-                <a href="/about" class="top-nav-link text-brand-ink-muted hover:text-brand-ink hover:bg-gray-100/80 px-3.5 py-2 rounded-xl text-sm font-medium transition-colors" data-page="/about">
+                <a href="/about" class="top-nav-link whitespace-nowrap px-1.5 lg:px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-xs xl:text-sm font-medium transition-colors {{ 'active text-brand-deep font-semibold' if nav_active_section == 'about' else 'text-brand-ink-muted hover:text-brand-deep hover:bg-gray-100/80' }}" data-nav="about" {% if nav_active_section == 'about' %}aria-current="page"{% endif %}>
                     <span>About Us</span>
                 </a>
-                <a href="https://wa.me/919940523013" target="_blank" class="top-nav-link text-brand-primary hover:text-brand-deep hover:bg-brand-deep/5 px-3 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center">
-                    <i class="fab fa-whatsapp mr-1.5 text-sm"></i>
+                <a href="https://wa.me/919940523013" target="_blank" rel="noopener noreferrer" class="top-nav-link whitespace-nowrap px-1.5 lg:px-2.5 xl:px-3 py-1.5 xl:py-2 rounded-xl text-xs xl:text-sm font-semibold transition-colors flex items-center {{ 'active text-brand-deep' if nav_active_section == 'admissions' else 'text-brand-primary hover:text-brand-deep hover:bg-brand-deep/5' }}" data-nav="admissions" {% if nav_active_section == 'admissions' %}aria-current="page"{% endif %}>
+                    <i class="fab fa-whatsapp mr-1 xl:mr-1.5 text-xs xl:text-sm text-emerald-600"></i>
                     <span>Admissions</span>
                 </a>
-                <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="top-nav-link text-brand-ink-muted hover:text-brand-ink hover:bg-gray-100/80 px-3 py-2 rounded-xl text-sm font-medium transition-colors">
+                <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" rel="noopener noreferrer" class="top-nav-link whitespace-nowrap px-1.5 lg:px-2.5 xl:px-3 py-1.5 xl:py-2 rounded-xl text-xs xl:text-sm font-medium transition-colors {{ 'active text-brand-deep font-semibold' if nav_active_section == 'updates' else 'text-brand-ink-muted hover:text-brand-deep hover:bg-gray-100/80' }}" data-nav="updates" {% if nav_active_section == 'updates' %}aria-current="page"{% endif %}>
                     <span>Updates</span>
                 </a>
             </nav>
 
-            <!-- Right: Search, Member Gift, Auth & Mobile Menu Toggle -->
-            <div class="flex items-center space-x-2.5 sm:space-x-3">
-                <!-- Search Hotkey Pill -->
-                <a href="/courses" class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gray-50 hover:bg-gray-100 text-brand-ink-muted hover:text-brand-ink border border-brand-border text-xs transition-colors" title="Quick Search">
+            <!-- Right: Search, Member Gift, Auth & Mobile Menu Toggle (Unified h-9 Height) -->
+            <div class="flex items-center space-x-1 sm:space-x-1.5 lg:space-x-2 xl:space-x-2.5 flex-shrink-0">
+                <!-- Search Hotkey Pill (visible on xl: 1280px+) -->
+                <a href="/courses" class="hidden xl:inline-flex items-center gap-2 h-9 px-3 rounded-xl bg-gray-50 hover:bg-gray-100 text-brand-ink-muted hover:text-brand-deep border border-brand-border text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60" title="Quick Search">
                     <i class="fas fa-search text-brand-ink-muted text-xs"></i>
                     <span class="text-xs font-medium">Search</span>
                     <kbd class="px-1.5 py-0.5 rounded bg-white border border-brand-border text-[10px] font-mono text-gray-500">/</kbd>
                 </a>
 
                 <!-- Member Gift Button (Always visible; triggers gift modal) -->
-                <button type="button" id="memberGiftNavBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-bronze/10 hover:bg-brand-bronze/15 border border-brand-bronze/30 text-brand-bronze text-xs font-semibold transition-all cursor-pointer shadow-xs" title="Member Gift: Rasmul Mushaf">
+                <button type="button" id="memberGiftNavBtn" class="inline-flex items-center gap-1.5 h-9 px-2.5 lg:px-3 rounded-xl bg-brand-bronze/10 hover:bg-brand-bronze/15 border border-brand-bronze/30 text-brand-bronze text-xs font-semibold transition-all cursor-pointer shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60" title="Member Gift: Rasmul Mushaf">
                     <i class="fas fa-gift text-brand-bronze"></i>
-                    <span class="hidden sm:inline">Member Gift</span>
+                    <span class="hidden lg:inline">Member Gift</span>
                 </button>
 
                 <!-- Sign In Button (Guest Only) -->
-                <button type="button" id="topLoginBtn" class="inline-flex items-center px-4 py-2 rounded-xl border border-brand-ink text-brand-ink hover:bg-brand-ink hover:text-white font-semibold text-xs tracking-wide transition-all shadow-xs cursor-pointer">
-                    <i class="far fa-user mr-1.5 text-xs"></i>
-                    <span>Sign In</span>
+                <button type="button" id="topLoginBtn" class="inline-flex items-center justify-center h-9 px-2.5 lg:px-3.5 rounded-xl border border-brand-ink text-brand-ink hover:bg-brand-ink hover:text-white font-semibold text-xs tracking-wide transition-all shadow-xs cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60" aria-label="Sign In">
+                    <i class="far fa-user lg:mr-1.5 text-xs"></i>
+                    <span class="hidden lg:inline">Sign In</span>
                 </button>
 
                 <!-- Admin Dashboard (Admin Only) -->
-                <a href="/admin" id="topAdminBtn" class="hidden inline-flex items-center px-3.5 py-2 rounded-xl bg-brand-deep hover:bg-brand-primary text-brand-gold-light font-semibold text-xs tracking-wide transition-all shadow-xs border border-brand-gold/30">
+                <a href="/admin" id="topAdminBtn" class="hidden inline-flex items-center justify-center h-9 px-2.5 lg:px-3.5 rounded-xl bg-brand-deep hover:bg-brand-primary text-brand-gold-light font-semibold text-xs tracking-wide transition-all shadow-xs border border-brand-gold/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60 {{ 'ring-2 ring-brand-gold ring-offset-1' if nav_active_section == 'admin' else '' }}">
                     <i class="fas fa-shield-alt mr-1.5 text-brand-gold-light"></i>
                     <span>Dashboard</span>
                 </a>
 
                 <!-- User Monogram Avatar Pill (Logged In) -->
-                <div id="userProfilePill" class="hidden items-center gap-2">
-                    <div id="userMonogramAvatar" class="w-8 h-8 rounded-lg bg-brand-deep border border-brand-gold/40 flex items-center justify-center text-xs font-bold text-brand-gold-light select-none">
+                <div id="userProfilePill" class="hidden items-center">
+                    <div id="userMonogramAvatar" class="h-9 w-9 rounded-xl bg-brand-deep border border-brand-gold/40 flex items-center justify-center text-xs font-bold text-brand-gold-light select-none shadow-xs">
                         ST
                     </div>
                 </div>
 
                 <!-- Sign Out (Logged In User) -->
-                <button type="button" id="topLogoutBtn" class="hidden inline-flex items-center px-3 py-2 rounded-xl border border-red-300 text-red-600 hover:bg-red-50 font-medium text-xs tracking-wide transition-all cursor-pointer" title="Sign Out">
-                    <i class="fas fa-sign-out-alt mr-1"></i>
-                    <span class="hidden sm:inline">Sign Out</span>
+                <button type="button" id="topLogoutBtn" class="hidden inline-flex items-center justify-center h-9 px-2.5 lg:px-3 rounded-xl border border-red-300 text-red-600 hover:bg-red-50 font-medium text-xs tracking-wide transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400" title="Sign Out">
+                    <i class="fas fa-sign-out-alt lg:mr-1"></i>
+                    <span class="hidden lg:inline">Sign Out</span>
                 </button>
 
-                <!-- Mobile Hamburger Button -->
-                <button type="button" id="mobileDrawerOpenBtn" class="md:hidden text-brand-ink hover:text-brand-primary p-2 rounded-lg cursor-pointer focus:outline-none" aria-label="Open mobile navigation menu">
-                    <i class="fas fa-bars text-xl"></i>
+                <!-- Mobile Hamburger Button (Visible on mobile < 768px, hidden on md: 768px+) -->
+                <button type="button" id="mobileDrawerOpenBtn" class="md:hidden h-9 w-9 inline-flex items-center justify-center text-brand-ink hover:text-brand-primary hover:bg-gray-100/80 rounded-xl cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60 transition-colors" aria-label="Open mobile navigation menu" aria-expanded="false" aria-controls="mobileDrawer">
+                    <i class="fas fa-bars text-lg"></i>
                 </button>
             </div>
         </div>
@@ -144,18 +152,18 @@
                         <span class="text-xs text-brand-gold-light uppercase tracking-widest">Islamic Sciences</span>
                     </div>
                 </div>
-                <button type="button" id="mobileDrawerCloseBtn" class="text-gray-400 hover:text-white p-2 text-lg cursor-pointer">
+                <button type="button" id="mobileDrawerCloseBtn" class="text-gray-400 hover:text-white p-2 text-lg cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold rounded-lg" aria-label="Close navigation menu">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
 
             <!-- Drawer Nav Links -->
-            <nav class="py-5 space-y-2">
-                <a href="/" class="mobile-nav-link flex items-center px-3.5 py-2.5 rounded-xl text-gray-200 hover:text-brand-gold hover:bg-white/10 transition-colors">
+            <nav class="py-5 space-y-2" aria-label="Mobile Navigation">
+                <a href="/" class="mobile-nav-link flex items-center px-3.5 py-2.5 rounded-xl transition-colors {{ 'active' if nav_active_section == 'home' else 'text-gray-200 hover:text-brand-gold hover:bg-white/10' }}" data-nav="home" {% if nav_active_section == 'home' %}aria-current="page"{% endif %}>
                     <i class="fas fa-home w-6 text-brand-gold"></i>
                     <span class="font-medium text-sm">Home</span>
                 </a>
-                <a href="/courses" class="mobile-nav-link flex items-center justify-between px-3.5 py-2.5 rounded-xl text-gray-200 hover:text-brand-gold hover:bg-white/10 transition-colors">
+                <a href="/courses" class="mobile-nav-link flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-colors {{ 'active' if nav_active_section == 'courses' else 'text-gray-200 hover:text-brand-gold hover:bg-white/10' }}" data-nav="courses" {% if nav_active_section == 'courses' %}aria-current="page"{% endif %}>
                     <span class="flex items-center">
                         <i class="fas fa-book-open w-6 text-brand-gold"></i>
                         <span class="font-medium text-sm">All Courses</span>
@@ -164,7 +172,7 @@
                 </a>
 
                 <!-- Member Gift Drawer Link -->
-                <button type="button" id="mobileDrawerGiftBtn" class="w-full text-left flex items-center justify-between px-3.5 py-2.5 rounded-xl text-brand-gold bg-brand-gold/10 hover:bg-brand-gold/20 border border-brand-gold/30 transition-colors">
+                <button type="button" id="mobileDrawerGiftBtn" class="w-full text-left flex items-center justify-between px-3.5 py-2.5 rounded-xl text-brand-gold bg-brand-gold/10 hover:bg-brand-gold/20 border border-brand-gold/30 transition-colors cursor-pointer">
                     <span class="flex items-center">
                         <i class="fas fa-gift w-6 text-brand-gold"></i>
                         <span class="font-semibold text-sm">Member Gift</span>
@@ -172,22 +180,22 @@
                     <span class="text-xs uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-brand-gold/20 text-brand-gold">Rasmul Mushaf</span>
                 </button>
 
-                <a href="/about" class="mobile-nav-link flex items-center px-3.5 py-2.5 rounded-xl text-gray-200 hover:text-brand-gold hover:bg-white/10 transition-colors">
+                <a href="/about" class="mobile-nav-link flex items-center px-3.5 py-2.5 rounded-xl transition-colors {{ 'active' if nav_active_section == 'about' else 'text-gray-200 hover:text-brand-gold hover:bg-white/10' }}" data-nav="about" {% if nav_active_section == 'about' %}aria-current="page"{% endif %}>
                     <i class="fas fa-landmark w-6 text-brand-gold"></i>
                     <span class="font-medium text-sm">About Us</span>
                 </a>
 
                 <div class="pt-3 pb-2 border-t border-white/10 space-y-2">
-                    <a href="https://wa.me/919940523013" target="_blank" class="flex items-center px-3.5 py-2 rounded-xl text-emerald-300 hover:bg-emerald/10 text-sm font-medium">
+                    <a href="https://wa.me/919940523013" target="_blank" rel="noopener noreferrer" class="mobile-nav-link flex items-center px-3.5 py-2 rounded-xl transition-colors {{ 'active' if nav_active_section == 'admissions' else 'text-emerald-300 hover:bg-emerald/10' }}" data-nav="admissions" {% if nav_active_section == 'admissions' %}aria-current="page"{% endif %}>
                         <i class="fab fa-whatsapp w-6 text-emerald-400 text-base"></i> Admissions: +91 99405 23013
                     </a>
-                    <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="flex items-center px-3.5 py-2 rounded-xl text-green-300 hover:bg-white/10 text-sm font-medium">
+                    <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" rel="noopener noreferrer" class="mobile-nav-link flex items-center px-3.5 py-2 rounded-xl transition-colors {{ 'active' if nav_active_section == 'updates' else 'text-green-300 hover:bg-white/10' }}" data-nav="updates" {% if nav_active_section == 'updates' %}aria-current="page"{% endif %}>
                         <i class="fas fa-bullhorn w-6 text-green-400 text-base"></i> WhatsApp Channel
                     </a>
-                    <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="flex items-center px-3.5 py-2 rounded-xl text-red-300 hover:bg-white/10 text-sm font-medium">
+                    <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" rel="noopener noreferrer" class="flex items-center px-3.5 py-2 rounded-xl text-red-300 hover:bg-white/10 text-sm font-medium">
                         <i class="fab fa-youtube w-6 text-red-400 text-base"></i> YouTube Channel
                     </a>
-                    <a href="https://www.instagram.com/salsabeel_academy_quran?igsi=b3h0Ym9yc3FmYXZ5&utm_source=qr" target="_blank" class="flex items-center px-3.5 py-2 rounded-xl text-pink-300 hover:bg-white/10 text-sm font-medium">
+                    <a href="https://www.instagram.com/salsabeel_academy_quran?igsi=b3h0Ym9yc3FmYXZ5&utm_source=qr" target="_blank" rel="noopener noreferrer" class="flex items-center px-3.5 py-2 rounded-xl text-pink-300 hover:bg-white/10 text-sm font-medium">
                         <i class="fab fa-instagram w-6 text-pink-400 text-base"></i> Instagram Page
                     </a>
                 </div>
@@ -451,7 +459,7 @@
         </div>
     </div>
 
-    <!-- Custom JS (v6.0 cache bust) -->
-    <script src="/static/js/main.js?v=6.0"></script>
+    <!-- Custom JS (v6.1 cache bust) -->
+    <script src="/static/js/main.js?v=6.1"></script>
 </body>
 </html>

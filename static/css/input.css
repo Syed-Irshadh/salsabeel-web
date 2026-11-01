@@ -121,3 +121,164 @@
   box-shadow: 0 14px 30px -6px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
+
+/* ============================================================== */
+/* Header Navigation & Active Indicators (Editorial Scholarly)   */
+/* ============================================================== */
+.top-nav-link {
+  position: relative;
+  color: #3B4E50;
+  font-weight: 500;
+  transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+}
+.top-nav-link:hover {
+  color: #174C4B;
+}
+.top-nav-link.active {
+  color: #174C4B !important;
+  font-weight: 600 !important;
+}
+.top-nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0.625rem;
+  right: 0.625rem;
+  height: 2px;
+  background-color: #B78A43;
+  border-radius: 9999px;
+}
+
+/* Mobile Drawer Active Navigation Indicator */
+.mobile-nav-link {
+  position: relative;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.mobile-nav-link.active {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-left: 3px solid #B78A43 !important;
+  padding-left: 0.875rem !important;
+}
+
+/* Reduced Motion Preference Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .top-nav-link,
+  .mobile-nav-link,
+  #mobileDrawer,
+  #mobileDrawerBackdrop,
+  .course-card,
+  .pillar-card,
+  .pillar-step,
+  .faq-answer-wrapper {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* ============================================================== */
+/* Course Status Badges - 100% Opaque & Accessible (WCAG AAA/AA)   */
+/* ============================================================== */
+.badge-status-ongoing {
+  background-color: #DCE9E6 !important;
+  color: #174C4B !important;
+  border: 1px solid #A9C5C0 !important;
+  font-weight: 600 !important;
+}
+
+.badge-status-upcoming {
+  background-color: #F6E9C9 !important;
+  color: #76521C !important;
+  border: 1px solid #D4BC8B !important;
+  font-weight: 600 !important;
+}
+
+.badge-status-completed {
+  background-color: #E9E7E1 !important;
+  color: #55534E !important;
+  border: 1px solid #D1CEC7 !important;
+  font-weight: 600 !important;
+}
+
+.badge-status-neutral {
+  background-color: #F0EFEB !important;
+  color: #55534E !important;
+  border: 1px solid #D8D3C5 !important;
+  font-weight: 600 !important;
+}
+
+/* ============================================================== */
+/* Snappy Desktop Hover Transitions (180ms, Non-Blocking)        */
+/* ============================================================== */
+
+.course-card {
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .course-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px -4px rgba(23, 76, 75, 0.08), 0 3px 6px -2px rgba(0, 0, 0, 0.02);
+    border-color: #B78A43 !important;
+  }
+}
+
+/* ============================================================== */
+/* FAQ Smooth Disclosure (CSS Grid 220ms, Zero-Jank)             */
+/* ============================================================== */
+.faq-answer-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faq-answer-wrapper.is-open {
+  grid-template-rows: 1fr;
+}
+
+.faq-answer-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ============================================================== */
+/* Sticky Four Pillars Storytelling & Understated Active Rail     */
+/* ============================================================== */
+.pillar-card {
+  transition: border-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pillar-card:hover {
+    border-color: #B78A43;
+    box-shadow: 0 8px 20px -4px rgba(23, 76, 75, 0.08), 0 3px 6px -2px rgba(0, 0, 0, 0.02);
+  }
+}
+
+.pillar-step {
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.pillar-step.is-active {
+  background-color: rgba(220, 233, 230, 0.6);
+}
+
+.pillar-step.is-active .pillar-step-num {
+  background-color: #174C4B !important;
+  color: #B78A43 !important;
+  border-color: #174C4B !important;
+}
+
+.pillar-step.is-active .pillar-step-label {
+  color: #174C4B !important;
+  font-weight: 600 !important;
+}
+
+.pillar-step.is-active .pillar-step-indicator {
+  opacity: 1 !important;
+}

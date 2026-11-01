@@ -15,6 +15,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from dotenv import load_dotenv
 import unicodedata
+from urllib.parse import urlparse, parse_qs
 
 import io
 from typing import Optional
@@ -608,6 +609,136 @@ async def get_courses_count_api():
     """Returns dynamic real-time count of total available courses."""
     return {"count": get_total_courses_count()}
 
+PERMITTED_YOUTUBE_HOSTS = {
+    "youtube.com",
+    "www.youtube.com",
+    "m.youtube.com",
+    "youtu.be"
+}
+
+def validate_youtube_url(url: Optional[str]) -> Optional[str]:
+    """
+    Hardened server-side YouTube URL validator:
+    - Returns None if input is empty or None.
+    - Rejects userinfo / '@' tricks.
+    - Handles explicit HTTP/HTTPS schemes case-insensitively.
+    - Scheme-less URLs: only prepends https:// if input starts with an approved host prefix:
+      ('youtube.com/', 'www.youtube.com/', 'm.youtube.com/', 'youtu.be/').
+      Otherwise requires an explicit http:// or https:// scheme.
+    - Rejects unexpected ports (permits standard 80, 443, or omitted port only).
+    - Validates exact hostname against PERMITTED_YOUTUBE_HOSTS (no substring match).
+    - Validates path structures (rejects malformed encoding, null bytes, double slashes).
+    - For youtube.com / www.youtube.com / m.youtube.com:
+      - /watch requires valid 'v=VIDEO_ID' query parameter (len >= 3, no slashes/spaces).
+      - /playlist requires valid 'list=PLAYLIST_ID' query parameter (len >= 3, no slashes/spaces).
+      - /embed/, /live/, /shorts/ require EXACTLY one valid video ID segment (no extra subpaths).
+    - For youtu.be: requires EXACTLY one valid video ID segment (no extra subpaths).
+    - Raises HTTP 400 on malformed, unsafe, or unsupported URLs.
+    """
+    if url is None:
+        return None
+    clean = url.strip()
+    if not clean:
+        return None
+
+    # Reject userinfo / '@' tricks
+    if "@" in clean:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid URL format. Userinfo or '@' is not permitted in YouTube URLs."
+        )
+
+    # Reject null bytes or dangerous characters
+    if "\x00" in clean or "%00" in clean.lower():
+        raise HTTPException(status_code=400, detail="Malformed URL: invalid characters detected.")
+
+    # Scheme-less URL handling: verify exact approved prefix before prepending https://
+    clean_lower = clean.lower()
+    if not clean_lower.startswith(("http://", "https://")):
+        approved_prefixes = ("youtube.com/", "www.youtube.com/", "m.youtube.com/", "youtu.be/")
+        if any(clean_lower.startswith(p) for p in approved_prefixes):
+            clean = "https://" + clean
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid URL format. URL must start with https:// and belong to an approved YouTube domain."
+            )
+
+    try:
+        parsed = urlparse(clean)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Malformed URL: {e}")
+
+    # Case-insensitive scheme check
+    scheme = (parsed.scheme or "").lower()
+    if scheme not in ("http", "https"):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsafe URL scheme '{parsed.scheme}'. Only http and https are permitted."
+        )
+
+    # Reject unexpected ports
+    if parsed.port not in (None, 80, 443):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid port '{parsed.port}'. Non-standard ports are not permitted for YouTube URLs."
+        )
+
+    # Exact hostname validation
+    hostname = (parsed.hostname or "").lower()
+    if hostname not in PERMITTED_YOUTUBE_HOSTS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid YouTube domain '{hostname}'. Allowed domains are youtube.com, www.youtube.com, m.youtube.com, and youtu.be."
+        )
+
+    # Reject double slashes or backslashes in path
+    raw_path = parsed.path
+    if "//" in raw_path or "\\" in raw_path:
+        raise HTTPException(status_code=400, detail="Malformed URL path structure.")
+
+    path_trimmed = raw_path.rstrip("/")
+    query_params = parse_qs(parsed.query)
+
+    if hostname in ("youtube.com", "www.youtube.com", "m.youtube.com"):
+        if path_trimmed == "/watch":
+            v_id = query_params.get("v", [""])[0].strip()
+            if not v_id or len(v_id) < 3 or "/" in v_id or " " in v_id:
+                raise HTTPException(status_code=400, detail="YouTube watch URL must contain a valid 'v=VIDEO_ID' query parameter.")
+        elif path_trimmed == "/playlist":
+            list_id = query_params.get("list", [""])[0].strip()
+            if not list_id or len(list_id) < 3 or "/" in list_id or " " in list_id:
+                raise HTTPException(status_code=400, detail="YouTube playlist URL must contain a valid 'list=PLAYLIST_ID' query parameter.")
+        elif any(path_trimmed.startswith(prefix) for prefix in ("/embed/", "/live/", "/shorts/")):
+            # Path segments must be exactly 2 non-empty parts: [('embed'|'live'|'shorts'), 'VIDEO_ID']
+            parts = [p for p in path_trimmed.split("/") if p]
+            if len(parts) != 2:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Invalid YouTube {parts[0]} URL format. Exactly one video ID segment is permitted."
+                )
+            video_id = parts[1]
+            if len(video_id) < 3 or "/" in video_id or " " in video_id:
+                raise HTTPException(status_code=400, detail="Invalid video ID in YouTube URL.")
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="YouTube URL must be a '/watch?v=...', '/playlist?list=...', or valid '/embed/', '/live/', or '/shorts/' link."
+            )
+    elif hostname == "youtu.be":
+        # youtu.be must contain exactly one video ID segment: ['VIDEO_ID']
+        parts = [p for p in path_trimmed.split("/") if p]
+        if len(parts) != 1:
+            raise HTTPException(
+                status_code=400,
+                detail="youtu.be shortlink must include exactly one single-segment video ID (e.g. https://youtu.be/VIDEO_ID)."
+            )
+        video_id = parts[0]
+        if len(video_id) < 3 or "/" in video_id or " " in video_id:
+            raise HTTPException(status_code=400, detail="Invalid video ID in youtu.be shortlink.")
+
+    return clean
+
 @app.post("/api/courses")
 async def create_course(
     title: str = Form(...),
@@ -616,10 +747,11 @@ async def create_course(
     content: str = Form(...),
     price: str = Form("Free"),
     start_date: str = Form(""),
-    status: str = Form("current"),
+    status: str = Form("upcoming"),
     language: str = Form("Tamil"),
     image: Optional[UploadFile] = File(None),
     image_url: Optional[str] = Form(None),
+    youtube_url: Optional[str] = Form(None),
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(auth.get_current_user)
 ):
@@ -635,10 +767,14 @@ async def create_course(
     else:
         raise HTTPException(status_code=400, detail="Cover image is required.")
     
-    effective_status = (status or "current").strip().lower()
+    effective_status = (status or "upcoming").strip().lower()
     if effective_status not in ["current", "upcoming", "past"]:
-        effective_status = determine_course_status(start_date or "", fallback_status="current")
+        effective_status = determine_course_status(start_date or "", fallback_status="upcoming")
         
+    validated_youtube = None
+    if youtube_url is not None and youtube_url.strip():
+        validated_youtube = validate_youtube_url(youtube_url)
+
     db_course = models.Course(
         title=title.strip(),
         description=description.strip(),
@@ -648,7 +784,8 @@ async def create_course(
         start_date=start_date.strip() if start_date else None,
         status=effective_status,
         language=(language or "Tamil").strip(),
-        image_url=final_image_url
+        image_url=final_image_url,
+        youtube_url=validated_youtube
     )
     db.add(db_course)
     db.commit()
@@ -659,6 +796,7 @@ async def create_course(
 @app.put("/api/courses/{course_id}")
 async def update_course(
     course_id: int,
+    request: Request,
     title: Optional[str] = Form(None),
     description: Optional[str] = Form(None),
     category: Optional[str] = Form(None),
@@ -669,6 +807,7 @@ async def update_course(
     language: Optional[str] = Form(None),
     image: Optional[UploadFile] = File(None),
     image_url: Optional[str] = Form(None),
+    youtube_url: Optional[str] = Form(None),
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(auth.get_current_user)
 ):
@@ -712,6 +851,26 @@ async def update_course(
     if language is not None and language.strip():
         course.language = language.strip()
 
+    # YouTube URL Update Contract Enforcement
+    # Inspect raw form payload to distinguish omitted from explicitly empty
+    form_data = await request.form()
+    if "youtube_url" in form_data:
+        raw_val = form_data.get("youtube_url")
+        if isinstance(raw_val, str) and not raw_val.strip():
+            # Explicit empty string: clear saved URL
+            course.youtube_url = None
+        elif isinstance(raw_val, str) and raw_val.strip():
+            # Valid non-empty string: validate and replace
+            course.youtube_url = validate_youtube_url(raw_val)
+        elif raw_val is None:
+            course.youtube_url = None
+    elif youtube_url is not None:
+        if not youtube_url.strip():
+            course.youtube_url = None
+        else:
+            course.youtube_url = validate_youtube_url(youtube_url)
+    # If youtube_url is omitted from both form_data and parameter: PRESERVE existing saved URL
+
     db.commit()
     db.refresh(course)
     _cached_course_count["count"] = None
@@ -725,6 +884,7 @@ async def update_course(
             "status": course.status,
             "price": course.price,
             "image_url": course.image_url,
+            "youtube_url": course.youtube_url,
             "language": course.language,
             "start_date": course.start_date,
             "description": course.description,
@@ -814,6 +974,26 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
     
     access_token = auth.create_access_token(data={"sub": user.email})
     return {"access_token": access_token, "token_type": "bearer", "role": user.role, "user_id": user.id, "name": user.name or ""}
+
+@app.get("/api/auth/status")
+async def get_auth_status(
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    """
+    Authoritative backend authentication verification.
+    Reuses existing auth.get_current_user dependency.
+    Returns 200 OK with authenticated user profile.
+    FastAPI returns 401 Unauthorized automatically if token is invalid or missing.
+    """
+    return {
+        "authenticated": True,
+        "user": {
+            "id": current_user.id,
+            "email": current_user.email,
+            "role": current_user.role,
+            "name": current_user.name
+        }
+    }
 
 class ForgotPasswordRequest(BaseModel):
     email: str

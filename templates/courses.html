@@ -17,7 +17,7 @@
     </div>
 
     <!-- Live Search & Multi-Level Filtering Control Hub (Muted Sage Surface) -->
-    <div class="bg-brand-sage rounded-2xl border border-brand-sage shadow-editorial p-5 sm:p-6 mb-10">
+    <div class="bg-brand-sage/40 rounded-2xl border border-brand-sage/60 shadow-editorial p-5 sm:p-6 mb-10">
         <!-- Search Input -->
         <div class="relative flex items-center mb-6">
             <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-brand-deep">
@@ -128,13 +128,13 @@
                 <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-semibold text-xs transition-all bg-brand-deep text-white shadow-xs cursor-pointer" data-status="all">
                     All Batches
                 </button>
-                <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer" data-status="current">
+                <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer" data-status="ongoing">
                     Ongoing
                 </button>
                 <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-white text-brand-ink hover:bg-amber-50 hover:text-amber-900 border border-brand-sage cursor-pointer" data-status="upcoming">
                     Upcoming
                 </button>
-                <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-white text-brand-ink hover:bg-gray-100 hover:text-gray-900 border border-brand-sage cursor-pointer" data-status="past">
+                <button type="button" class="status-tab px-3 py-1.5 rounded-lg font-medium text-xs transition-all bg-white text-brand-ink hover:bg-gray-100 hover:text-gray-900 border border-brand-sage cursor-pointer" data-status="completed">
                     Completed
                 </button>
             </div>
@@ -157,17 +157,17 @@
         </div>
     </div>
     
-    <!-- Courses Directory Container (Grid by default, switchable to List) -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="coursesContainer">
+    <!-- Courses Directory Container (Grid by default, switchable to List; Responsive: <640 1col, 640-1023 2col, >=1024 3col) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8" id="coursesContainer">
         {% for course in courses %}
-        <div class="course-card bg-white rounded-xl border-2 border-brand-hairline shadow-editorial hover:border-brand-gold/60 transition-all duration-300 overflow-hidden flex flex-col" 
+        <div class="course-card bg-white rounded-xl border border-brand-hairline shadow-[0_2px_8px_-2px_rgba(23,76,75,0.06),0_1px_3px_0_rgba(0,0,0,0.03)] hover:border-brand-gold hover:shadow-[0_8px_20px_-4px_rgba(23,76,75,0.08)] transition-all duration-200 overflow-hidden flex flex-col" 
              id="courseCard-{{ course.id }}"
-             data-status="{{ course.status | default('current') }}"
+             data-status="{{ course.status | default('upcoming') }}"
              data-title="{{ course.title | lower }}"
              data-category="{{ course.category | lower }}"
              data-language="{{ (course.language or 'Tamil') | lower }}"
              data-desc="{{ (course.description or '') | lower }}">
-            <!-- Course Image with Clickable Zoom Overlay -->
+            <!-- Course Image with Clickable Zoom Overlay & Branded Fallback -->
             <div class="relative group cursor-pointer overflow-hidden open-poster-btn aspect-[16/10] bg-brand-sand/30 flex-shrink-0"
                  data-id="{{ course.id }}"
                  data-poster="{{ course.image_url }}"
@@ -175,20 +175,68 @@
                  data-category="{{ course.category }}"
                  data-startdate="{{ course.start_date or '' }}"
                  data-price="{{ course.price or 'Free' }}"
-                 data-status="{{ course.status | default('current') }}"
+                 data-status="{{ course.status | default('upcoming') }}"
                  data-language="{{ course.language or 'Tamil' }}"
                  data-desc="{{ course.description or '' }}"
                  data-content="{{ course.content or '' }}"
+                 data-youtube-url="{{ course.youtube_url or '' }}"
                  title="Click to view full poster">
+                {% if course.image_url and course.image_url.strip() %}
                 <img src="{{ course.image_url }}" 
                      alt="{{ course.title }}" 
-                     class="course-card-image w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                     onerror="this.onerror=null; this.src='/static/img/logo.jpeg';"
+                     class="course-card-image w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                     onerror="this.style.display='none'; if(this.nextElementSibling){this.nextElementSibling.classList.remove('hidden');}"
                      loading="lazy">
+                <div class="course-poster-fallback hidden w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#F7F4EC] via-[#EFE9DC] to-[#E5DEC9] text-center border-b border-brand-hairline relative select-none">
+                    <span class="absolute text-5xl font-arabic text-brand-deep/5 pointer-events-none select-none">«سَلْسَبِيلًا»</span>
+                    <div class="w-12 h-12 rounded-xl bg-white/80 border border-brand-gold/30 flex items-center justify-center mb-2 shadow-xs text-brand-deep">
+                        {% set cat = (course.category or '') | lower %}
+                        {% if 'quran' in cat or 'hifz' in cat or 'tilawah' in cat %}
+                            <i class="fas fa-quran text-xl text-brand-deep"></i>
+                        {% elif 'tajweed' in cat %}
+                            <i class="fas fa-book-open text-xl text-brand-deep"></i>
+                        {% elif 'hadith' in cat %}
+                            <i class="fas fa-scroll text-xl text-brand-deep"></i>
+                        {% elif 'arabic' in cat %}
+                            <i class="fas fa-feather-alt text-xl text-brand-deep"></i>
+                        {% elif 'aqeedah' in cat %}
+                            <i class="fas fa-compass text-xl text-brand-deep"></i>
+                        {% elif 'tafseer' in cat %}
+                            <i class="fas fa-book-reader text-xl text-brand-deep"></i>
+                        {% else %}
+                            <i class="fas fa-graduation-cap text-xl text-brand-deep"></i>
+                        {% endif %}
+                    </div>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-brand-deep/80">{{ course.category }}</span>
+                </div>
+                {% else %}
+                <div class="course-poster-fallback w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#F7F4EC] via-[#EFE9DC] to-[#E5DEC9] text-center border-b border-brand-hairline relative select-none">
+                    <span class="absolute text-5xl font-arabic text-brand-deep/5 pointer-events-none select-none">«سَلْسَبِيلًا»</span>
+                    <div class="w-12 h-12 rounded-xl bg-white/80 border border-brand-gold/30 flex items-center justify-center mb-2 shadow-xs text-brand-deep">
+                        {% set cat = (course.category or '') | lower %}
+                        {% if 'quran' in cat or 'hifz' in cat or 'tilawah' in cat %}
+                            <i class="fas fa-quran text-xl text-brand-deep"></i>
+                        {% elif 'tajweed' in cat %}
+                            <i class="fas fa-book-open text-xl text-brand-deep"></i>
+                        {% elif 'hadith' in cat %}
+                            <i class="fas fa-scroll text-xl text-brand-deep"></i>
+                        {% elif 'arabic' in cat %}
+                            <i class="fas fa-feather-alt text-xl text-brand-deep"></i>
+                        {% elif 'aqeedah' in cat %}
+                            <i class="fas fa-compass text-xl text-brand-deep"></i>
+                        {% elif 'tafseer' in cat %}
+                            <i class="fas fa-book-reader text-xl text-brand-deep"></i>
+                        {% else %}
+                            <i class="fas fa-graduation-cap text-xl text-brand-deep"></i>
+                        {% endif %}
+                    </div>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-brand-deep/80">{{ course.category }}</span>
+                </div>
+                {% endif %}
                 <!-- Hover Overlay with 'View Poster' hint -->
                 <div class="absolute inset-0 bg-brand-deep/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center backdrop-blur-xs">
                     <span class="inline-flex items-center text-xs font-medium px-3 py-1.5 rounded-lg bg-white text-brand-ink shadow-md">
-                        <i class="fas fa-search-plus mr-1.5 text-brand-deep"></i> View Poster
+                        <i class="fas fa-search-plus mr-1.5 text-brand-deep"></i> View Details
                     </span>
                 </div>
                 <!-- Price Badge Overlay -->
@@ -197,19 +245,24 @@
                         {{ course.price or 'Free' }}
                     </span>
                 </div>
-                <!-- Status Badge Overlay -->
+                <!-- Status Badge Overlay (100% Opaque & Accessible with Neutral Fallback) -->
                 <div class="absolute top-3 right-3 pointer-events-none">
-                    {% if course.status == 'past' %}
-                    <span class="course-card-status-badge inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">
-                        Completed
+                    {% set st = (course.status or '') | lower | trim %}
+                    {% if st == 'ongoing' or st == 'current' %}
+                    <span class="course-card-status-badge badge-status-ongoing inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
+                        Ongoing
                     </span>
-                    {% elif course.status == 'upcoming' %}
-                    <span class="course-card-status-badge inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-900 border border-amber-300 shadow-xs">
+                    {% elif st == 'upcoming' %}
+                    <span class="course-card-status-badge badge-status-upcoming inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
                         Upcoming
                     </span>
+                    {% elif st == 'completed' or st == 'past' %}
+                    <span class="course-card-status-badge badge-status-completed inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
+                        Completed
+                    </span>
                     {% else %}
-                    <span class="course-card-status-badge inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-900 border border-emerald-300 shadow-xs">
-                        Ongoing
+                    <span class="course-card-status-badge badge-status-neutral inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
+                        {{ course.status | capitalize if course.status else 'Program' }}
                     </span>
                     {% endif %}
                 </div>
@@ -234,10 +287,11 @@
                             data-category="{{ course.category }}"
                             data-startdate="{{ course.start_date or '' }}"
                             data-price="{{ course.price or 'Free' }}"
-                            data-status="{{ course.status | default('current') }}"
+                            data-status="{{ course.status | default('upcoming') }}"
                             data-language="{{ course.language or 'Tamil' }}"
                             data-desc="{{ course.description or '' }}"
                             data-content="{{ course.content or '' }}"
+                            data-youtube-url="{{ course.youtube_url or '' }}"
                             title="View promotional poster">
                         <i class="fas fa-image mr-1 text-brand-deep"></i> Poster
                     </button>
@@ -263,8 +317,14 @@
                 </div>
                 
                 <!-- Action Buttons based on Status -->
-                {% if course.status == 'past' %}
-                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full bg-brand-ivory hover:bg-brand-sand text-brand-ink font-medium py-2.5 rounded-lg transition-colors border border-brand-hairline flex items-center justify-center text-sm">
+                {% if course.youtube_url %}
+                <a href="{{ course.youtube_url }}" target="_blank" rel="noopener noreferrer" class="youtube-watch-btn w-full bg-red-50 hover:bg-red-100 text-red-700 font-medium py-2 rounded-lg transition-colors border border-red-200 flex items-center justify-center text-xs sm:text-sm mb-2 shadow-2xs">
+                    <i class="fab fa-youtube text-red-600 mr-2 text-base"></i> Watch on YouTube
+                </a>
+                {% endif %}
+                {% set st = (course.status or '') | lower | trim %}
+                {% if st == 'past' or st == 'completed' %}
+                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full bg-brand-ivory hover:bg-brand-sand text-brand-ink font-semibold py-2.5 rounded-lg transition-colors border border-brand-hairline flex items-center justify-center text-sm shadow-xs">
                     <i class="fab fa-youtube text-red-600 mr-2 text-base"></i> Watch Archive
                 </a>
                 {% else %}
@@ -284,13 +344,14 @@
                             data-id="{{ course.id }}"
                             data-title="{{ course.title }}"
                             data-category="{{ course.category }}"
-                            data-status="{{ course.status | default('current') }}"
+                            data-status="{{ course.status | default('upcoming') }}"
                             data-language="{{ course.language or 'Tamil' }}"
                             data-price="{{ course.price or 'Free' }}"
                             data-startdate="{{ course.start_date or '' }}"
                             data-desc="{{ course.description or '' }}"
                             data-content="{{ course.content or '' }}"
-                            data-poster="{{ course.image_url }}">
+                            data-poster="{{ course.image_url }}"
+                            data-youtube-url="{{ course.youtube_url or '' }}">
                         <i class="fas fa-edit mr-1.5 text-brand-deep"></i> Edit Poster & Details
                     </button>
                     <button type="button" 
@@ -478,6 +539,21 @@
                        class="w-full px-3.5 py-2.5 rounded-lg border border-brand-hairline text-sm focus:outline-none focus:ring-1 focus:ring-brand-deep focus:border-brand-deep bg-white">
             </div>
 
+            <!-- YouTube Video / Playlist URL -->
+            <div>
+                <label for="editCourseYoutubeUrl" class="block text-xs font-semibold uppercase tracking-wider text-brand-ink mb-1.5 flex items-center justify-between">
+                    <span>YouTube Video / Playlist URL</span>
+                    <span class="text-xs font-normal text-brand-muted normal-case">(Optional)</span>
+                </label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-red-500">
+                        <i class="fab fa-youtube"></i>
+                    </span>
+                    <input type="url" id="editCourseYoutubeUrl" name="youtube_url" placeholder="https://www.youtube.com/playlist?list=..." 
+                           class="w-full pl-10 pr-3.5 py-2.5 rounded-lg border border-brand-hairline text-sm focus:outline-none focus:ring-1 focus:ring-brand-deep focus:border-brand-deep bg-white">
+                </div>
+            </div>
+
             <!-- Description -->
             <div>
                 <label for="editCourseDesc" class="block text-xs font-semibold uppercase tracking-wider text-brand-ink mb-1.5">
@@ -609,7 +685,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Status match
-            const statusMatch = (currentStatus === 'all') || (status === currentStatus);
+            let statusMatch = false;
+            if (currentStatus === 'all') {
+                statusMatch = true;
+            } else if (currentStatus === 'ongoing' || currentStatus === 'current') {
+                statusMatch = (status === 'ongoing' || status === 'current');
+            } else if (currentStatus === 'upcoming') {
+                statusMatch = (status === 'upcoming');
+            } else if (currentStatus === 'completed' || currentStatus === 'past') {
+                statusMatch = (status === 'completed' || status === 'past');
+            } else {
+                statusMatch = (status === currentStatus);
+            }
             // Search query match
             const searchMatch = !searchQuery || title.includes(searchQuery) || category.includes(searchQuery) || language.includes(searchQuery) || desc.includes(searchQuery);
 
@@ -853,7 +940,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 status: trigger.getAttribute('data-status'),
                 language: trigger.getAttribute('data-language'),
                 desc: trigger.getAttribute('data-desc'),
-                content: trigger.getAttribute('data-content')
+                content: trigger.getAttribute('data-content'),
+                youtube_url: trigger.getAttribute('data-youtube-url')
             });
         });
     });
@@ -880,6 +968,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('editCourseLanguage').value = data.language || 'Tamil';
         document.getElementById('editCoursePrice').value = data.price || '';
         document.getElementById('editCourseStartDate').value = data.startdate || '';
+        document.getElementById('editCourseYoutubeUrl').value = data.youtube_url || '';
         document.getElementById('editCourseDesc').value = data.desc || '';
         document.getElementById('editCourseContent').value = data.content || '';
 
@@ -935,6 +1024,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 language: btn.getAttribute('data-language'),
                 price: btn.getAttribute('data-price'),
                 startdate: btn.getAttribute('data-startdate'),
+                youtube_url: btn.getAttribute('data-youtube-url'),
                 desc: btn.getAttribute('data-desc'),
                 content: btn.getAttribute('data-content'),
                 poster: btn.getAttribute('data-poster')
@@ -981,6 +1071,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.append('language', document.getElementById('editCourseLanguage').value);
                 formData.append('price', document.getElementById('editCoursePrice').value.trim());
                 formData.append('start_date', document.getElementById('editCourseStartDate').value.trim());
+                formData.append('youtube_url', document.getElementById('editCourseYoutubeUrl').value.trim());
                 formData.append('description', document.getElementById('editCourseDesc').value.trim());
                 formData.append('content', document.getElementById('editCourseContent').value.trim());
 

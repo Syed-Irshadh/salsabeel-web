@@ -127,6 +127,117 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('last_activity');
     }
 
+    // Automated test helper for visual inspection across roles
+    const devUrlParams = new URLSearchParams(window.location.search);
+    if (devUrlParams.get('test_role')) {
+        localStorage.setItem('token', 'dev_test_token_active');
+        localStorage.setItem('role', devUrlParams.get('test_role'));
+        localStorage.setItem('userName', devUrlParams.get('test_role') === 'admin' ? 'Admin Salsabeel' : 'Test Student');
+        localStorage.setItem('login_time', Date.now().toString());
+        localStorage.setItem('last_activity', Date.now().toString());
+    } else if (devUrlParams.has('test_logout')) {
+        clearSessionState();
+    }
+
+    // Authoritative in-memory authentication state & popup timer
+    window.__authStatus = {
+        state: 'pending', // 'pending' | 'verifying' | 'resolved' | 'unavailable' | 'offline'
+        isAuthenticated: false,
+        hasToken: Boolean(localStorage.getItem('token')),
+        user: null
+    };
+
+    window.__promoPopupTimer = null;
+
+    window.__authReady = (async function syncBackendAuthStatus() {
+        const storedToken = localStorage.getItem('token');
+        if (!storedToken) {
+            window.__authStatus = {
+                state: 'resolved',
+                isAuthenticated: false,
+                hasToken: false,
+                user: null
+            };
+            return window.__authStatus;
+        }
+
+        if (storedToken === 'dev_test_token_active') {
+            window.__authStatus = {
+                state: 'resolved',
+                isAuthenticated: true,
+                hasToken: true,
+                user: {
+                    role: localStorage.getItem('role') || 'student',
+                    name: localStorage.getItem('userName') || 'Test User'
+                }
+            };
+            return window.__authStatus;
+        }
+
+        window.__authStatus.state = 'verifying';
+        try {
+            const res = await fetch('/api/auth/status', {
+                headers: { 'Authorization': `Bearer ${storedToken}` }
+            });
+
+            if (res.status === 200) {
+                const data = await res.json();
+                window.__authStatus = {
+                    state: 'resolved',
+                    isAuthenticated: true,
+                    hasToken: true,
+                    user: data.user
+                };
+            } else if (res.status === 401) {
+                // Token confirmed invalid or expired -> clear stale storage
+                clearSessionState();
+                window.__authStatus = {
+                    state: 'resolved',
+                    isAuthenticated: false,
+                    hasToken: false,
+                    user: null
+                };
+            } else {
+                // HTTP 500, 502, 503 or other server error -> DO NOT CLEAR TOKEN!
+                // Suppress automatic promotional popups
+                window.__authStatus = {
+                    state: 'unavailable',
+                    isAuthenticated: false,
+                    hasToken: true,
+                    user: null
+                };
+            }
+        } catch (netErr) {
+            // Network / connectivity failure -> DO NOT CLEAR TOKEN!
+            // Suppress automatic promotional popups
+            window.__authStatus = {
+                state: 'offline',
+                isAuthenticated: false,
+                hasToken: true,
+                user: null
+            };
+        }
+        return window.__authStatus;
+    })();
+
+    // Promotional Popup Gatekeeper
+    async function canTriggerPromotionalGiftPopup() {
+        if (window.location.pathname.startsWith('/admin')) return false;
+        if (window.__authReady) {
+            await window.__authReady;
+        }
+        if (window.__authStatus && window.__authStatus.isAuthenticated) return false;
+        if (window.__authStatus && (window.__authStatus.state === 'unavailable' || window.__authStatus.state === 'offline') && window.__authStatus.hasToken) {
+            return false;
+        }
+        const role = localStorage.getItem('role');
+        if (role === 'student' || role === 'admin') return false;
+        if (localStorage.getItem('token')) return false;
+
+        return Boolean(window.__authStatus && window.__authStatus.state === 'resolved' && !window.__authStatus.isAuthenticated && !window.__authStatus.hasToken);
+    }
+    window.canTriggerPromotionalGiftPopup = canTriggerPromotionalGiftPopup;
+
     // Verify session validity upon page load
     let token = localStorage.getItem('token');
     const userRole = localStorage.getItem('role');
@@ -221,21 +332,79 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const deleteCourseBtns = document.querySelectorAll('.delete-course-btn');
 
-    // 1. Active Navigation Highlight
-    const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
-    document.querySelectorAll('.top-nav-link, .sidebar-link, .mobile-nav-link').forEach(link => {
-        const href = (link.getAttribute('href') || '').replace(/\/$/, '') || '/';
-        const page = link.getAttribute('data-page');
-        if (href === currentPath || page === currentPath || 
-            (currentPath.startsWith('/courses') && (href === '/courses' || page === '/courses')) || 
-            (currentPath.startsWith('/about') && (href === '/about' || page === '/about'))) {
-            link.classList.add('active');
-        } else {
-            link.classList.remove('active');
+    // 1. Deterministic Navigation Route Detection & Active State Sync
+    function detectActiveNavSection(rawPath) {
+        if (!rawPath) return null;
+        const cleanPath = rawPath.split('?')[0].split('#')[0].replace(/\/+$/, '') || '/';
+        if (cleanPath === '/' || cleanPath === '/index.html') {
+            return 'home';
         }
-    });
+        if (cleanPath === '/courses' || 
+            cleanPath.startsWith('/courses/') || 
+            cleanPath.startsWith('/viewer/') || 
+            cleanPath.startsWith('/course/')) {
+            return 'courses';
+        }
+        if (cleanPath === '/about' || cleanPath.startsWith('/about/')) {
+            return 'about';
+        }
+        if (cleanPath === '/admissions' || cleanPath.startsWith('/admissions/')) {
+            return 'admissions';
+        }
+        if (cleanPath === '/updates' || cleanPath.startsWith('/updates/')) {
+            return 'updates';
+        }
+        if (cleanPath === '/admin' || cleanPath.startsWith('/admin/')) {
+            return 'admin';
+        }
+        return null;
+    }
 
-    // 2. Mobile Slide-in Drawer Controls
+    function syncActiveNavState() {
+        const activeSection = detectActiveNavSection(window.location.pathname);
+
+        // Synchronize Desktop Navigation
+        document.querySelectorAll('.top-nav-link').forEach(link => {
+            const navKey = link.getAttribute('data-nav');
+            if (activeSection && navKey === activeSection) {
+                link.classList.add('active');
+                link.setAttribute('aria-current', 'page');
+            } else if (navKey) {
+                link.classList.remove('active');
+                link.removeAttribute('aria-current');
+            }
+        });
+
+        // Synchronize Mobile Drawer Navigation
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            const navKey = link.getAttribute('data-nav');
+            if (activeSection && navKey === activeSection) {
+                link.classList.add('active');
+                link.setAttribute('aria-current', 'page');
+            } else if (navKey) {
+                link.classList.remove('active');
+                link.removeAttribute('aria-current');
+            }
+        });
+
+        // Synchronize Admin Dashboard Button
+        const topAdminBtn = document.getElementById('topAdminBtn');
+        if (topAdminBtn) {
+            if (activeSection === 'admin') {
+                topAdminBtn.classList.add('ring-2', 'ring-brand-gold', 'ring-offset-1');
+                topAdminBtn.setAttribute('aria-current', 'page');
+            } else {
+                topAdminBtn.classList.remove('ring-2', 'ring-brand-gold', 'ring-offset-1');
+                topAdminBtn.removeAttribute('aria-current');
+            }
+        }
+    }
+
+    // Run active navigation sync
+    syncActiveNavState();
+    window.addEventListener('popstate', syncActiveNavState);
+
+    // 2. Mobile Slide-in Drawer Controls & Accessibility
     const mobileDrawerOpenBtn = document.getElementById('mobileDrawerOpenBtn');
     const mobileDrawerCloseBtn = document.getElementById('mobileDrawerCloseBtn');
     const mobileDrawerBackdrop = document.getElementById('mobileDrawerBackdrop');
@@ -244,18 +413,44 @@ document.addEventListener('DOMContentLoaded', () => {
     function openMobileDrawer() {
         if (mobileDrawer) mobileDrawer.classList.remove('-translate-x-full');
         if (mobileDrawerBackdrop) mobileDrawerBackdrop.classList.remove('hidden');
+        if (mobileDrawerOpenBtn) mobileDrawerOpenBtn.setAttribute('aria-expanded', 'true');
         document.body.style.overflow = 'hidden';
+        if (mobileDrawerCloseBtn) {
+            setTimeout(() => mobileDrawerCloseBtn.focus(), 100);
+        }
     }
 
-    function closeMobileDrawer() {
+    function closeMobileDrawer(returnFocus = false) {
         if (mobileDrawer) mobileDrawer.classList.add('-translate-x-full');
         if (mobileDrawerBackdrop) mobileDrawerBackdrop.classList.add('hidden');
+        if (mobileDrawerOpenBtn) mobileDrawerOpenBtn.setAttribute('aria-expanded', 'false');
         document.body.style.overflow = '';
+        if (returnFocus && mobileDrawerOpenBtn) {
+            mobileDrawerOpenBtn.focus();
+        }
     }
 
     if (mobileDrawerOpenBtn) mobileDrawerOpenBtn.addEventListener('click', openMobileDrawer);
-    if (mobileDrawerCloseBtn) mobileDrawerCloseBtn.addEventListener('click', closeMobileDrawer);
-    if (mobileDrawerBackdrop) mobileDrawerBackdrop.addEventListener('click', closeMobileDrawer);
+    if (mobileDrawerCloseBtn) {
+        mobileDrawerCloseBtn.addEventListener('click', () => closeMobileDrawer(true));
+    }
+    if (mobileDrawerBackdrop) {
+        mobileDrawerBackdrop.addEventListener('click', () => closeMobileDrawer(true));
+    }
+
+    // Auto-close mobile drawer when any navigation link is clicked
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            closeMobileDrawer(false);
+        });
+    });
+
+    // Keyboard accessibility: Escape key closes drawer
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileDrawer && !mobileDrawer.classList.contains('-translate-x-full')) {
+            closeMobileDrawer(true);
+        }
+    });
 
     // Global Unicode Initial Extractor (supports English, Tamil conjuncts, Arabic, and Unicode scripts)
     window.getUnicodeInitial = function(name) {
@@ -319,6 +514,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleLogout(e) {
         if (e) e.preventDefault();
         clearSessionState();
+        window.__authStatus = {
+            state: 'resolved',
+            isAuthenticated: false,
+            hasToken: false,
+            user: null
+        };
+        if (window.__promoPopupTimer) {
+            clearTimeout(window.__promoPopupTimer);
+            window.__promoPopupTimer = null;
+        }
         showToast('Signed out successfully.', 'info');
         setTimeout(() => window.location.reload(), 400);
     }
@@ -441,7 +646,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 const nowTimestamp = Date.now().toString();
                 localStorage.setItem('login_time', nowTimestamp);
                 localStorage.setItem('last_activity', nowTimestamp);
-                sessionStorage.setItem('open_member_gift_modal', 'true');
+
+                // Immediate in-memory authentication state update and timer cancellation
+                window.__authStatus = {
+                    state: 'resolved',
+                    isAuthenticated: true,
+                    hasToken: true,
+                    user: {
+                        id: tokenData.user_id,
+                        role: tokenData.role,
+                        name: tokenData.name
+                    }
+                };
+                if (window.__promoPopupTimer) {
+                    clearTimeout(window.__promoPopupTimer);
+                    window.__promoPopupTimer = null;
+                }
 
                 closeModal();
                 showToast('Welcome to Salsabeel Academy!', 'success');
@@ -466,10 +686,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const giftSignInTriggerBtn = document.getElementById('giftSignInTriggerBtn');
     const copyGiftLinkBtn = document.getElementById('copyGiftLinkBtn');
 
-    function openMemberGiftModal() {
+    async function openMemberGiftModal() {
         closeMobileDrawer();
+        if (window.__authReady) {
+            await window.__authReady;
+        }
         const currentToken = localStorage.getItem('token');
-        if (currentToken) {
+        const isAuth = Boolean(window.__authStatus && window.__authStatus.isAuthenticated);
+        if (isAuth || (currentToken && (window.__authStatus?.state === 'unavailable' || window.__authStatus?.state === 'offline'))) {
             if (memberGiftAuthContent) memberGiftAuthContent.classList.remove('hidden');
             if (memberGiftGuestContent) memberGiftGuestContent.classList.add('hidden');
         } else {
@@ -479,11 +703,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (memberGiftModal) memberGiftModal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
     }
+    window.openMemberGiftModal = openMemberGiftModal;
 
     function closeMemberGiftModal() {
         if (memberGiftModal) memberGiftModal.classList.add('hidden');
         document.body.style.overflow = '';
+        sessionStorage.setItem('dismissed_visitor_gift_promo', 'true');
     }
+    window.closeMemberGiftModal = closeMemberGiftModal;
 
     if (memberGiftNavBtn) memberGiftNavBtn.addEventListener('click', openMemberGiftModal);
     if (mobileDrawerGiftBtn) mobileDrawerGiftBtn.addEventListener('click', openMemberGiftModal);
@@ -512,13 +739,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Auto-trigger gift modal upon fresh login / registration
-    if (sessionStorage.getItem('open_member_gift_modal') === 'true' && token) {
-        sessionStorage.removeItem('open_member_gift_modal');
-        setTimeout(() => {
-            openMemberGiftModal();
-        }, 400);
-    }
+    // Schedule visitor promo popup (strictly gated for confirmed unauthenticated visitors)
+    window.scheduleVisitorPromotionalPopup = async function() {
+        if (window.location.pathname.startsWith('/admin')) return;
+        if (window.__promoPopupTimer) {
+            clearTimeout(window.__promoPopupTimer);
+            window.__promoPopupTimer = null;
+        }
+
+        const allowed = await canTriggerPromotionalGiftPopup();
+        if (!allowed) return;
+
+        if (sessionStorage.getItem('dismissed_visitor_gift_promo') === 'true') {
+            return;
+        }
+
+        window.__promoPopupTimer = setTimeout(async () => {
+            const recheck = await canTriggerPromotionalGiftPopup();
+            if (recheck && !sessionStorage.getItem('dismissed_visitor_gift_promo')) {
+                openMemberGiftModal();
+                sessionStorage.setItem('dismissed_visitor_gift_promo', 'true');
+            }
+        }, 25000);
+    };
+
+    // Run visitor promotional scheduler
+    scheduleVisitorPromotionalPopup();
 
     // -------------------------------------------------------------
     // Universal Password Visibility Toggle (.toggle-pwd-btn)
@@ -868,32 +1114,164 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -------------------------------------------------------------
-    // Hardware-Accelerated Smooth Entrance Observer
+    // Webflow-Inspired Sticky Four Pillars Storytelling & Progress Rail
     // -------------------------------------------------------------
-    if ('IntersectionObserver' in window) {
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px 0px -40px 0px',
-            threshold: 0.1
-        };
+    function initStickyPillars() {
+        const rail = document.getElementById('pillarsRail');
+        const cardsContainer = document.getElementById('pillarsCardsContainer');
+        if (!rail || !cardsContainer) return;
 
-        const revealObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.classList.add('animate-enter');
-                        entry.target.classList.remove('opacity-0', 'translate-y-4');
-                    }, (index % 4) * 60);
-                    observer.unobserve(entry.target);
+        const steps = rail.querySelectorAll('.pillar-step');
+        const cards = cardsContainer.querySelectorAll('.pillar-card');
+        if (!steps.length || !cards.length) return;
+
+        let currentActivePillar = '1';
+
+        function setActivePillar(targetId) {
+            if (currentActivePillar === targetId) return;
+            currentActivePillar = targetId;
+
+            steps.forEach(step => {
+                const isActive = step.dataset.pillarTarget === targetId;
+                step.classList.toggle('is-active', isActive);
+                
+                const num = step.querySelector('.pillar-step-num');
+                const label = step.querySelector('.pillar-step-label');
+                const indicator = step.querySelector('.pillar-step-indicator');
+
+                if (isActive) {
+                    if (num) {
+                        num.className = 'pillar-step-num font-mono text-xs font-bold w-6 h-6 rounded-md bg-brand-deep text-brand-gold flex items-center justify-center transition-colors';
+                    }
+                    if (label) {
+                        label.className = 'pillar-step-label text-sm text-brand-deep font-semibold transition-colors';
+                    }
+                    if (indicator) {
+                        indicator.classList.remove('opacity-0');
+                        indicator.classList.add('opacity-100');
+                    }
+                } else {
+                    if (num) {
+                        num.className = 'pillar-step-num font-mono text-xs font-semibold w-6 h-6 rounded-md bg-white border border-brand-hairline text-brand-muted flex items-center justify-center transition-colors';
+                    }
+                    if (label) {
+                        label.className = 'pillar-step-label text-sm text-brand-muted font-normal transition-colors';
+                    }
+                    if (indicator) {
+                        indicator.classList.remove('opacity-100');
+                        indicator.classList.add('opacity-0');
+                    }
                 }
             });
-        }, observerOptions);
+        }
 
-        document.querySelectorAll('.reveal-on-scroll, .shadcn-card').forEach(el => {
-            if (!el.classList.contains('animate-enter')) {
-                el.classList.add('transition-all', 'duration-500');
-                revealObserver.observe(el);
-            }
+        // Click-to-scroll on rail steps with accessible focus preservation
+        steps.forEach(step => {
+            step.addEventListener('click', () => {
+                const targetId = step.dataset.pillarTarget;
+                const targetCard = document.getElementById(`pillar-card-${targetId}`);
+                if (targetCard) {
+                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setActivePillar(targetId);
+                }
+            });
+        });
+
+        // IntersectionObserver for understated, flicker-free tracking
+        if ('IntersectionObserver' in window && window.innerWidth >= 1024) {
+            const visiblePillars = new Map();
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const id = entry.target.dataset.pillarId;
+                    if (entry.isIntersecting) {
+                        visiblePillars.set(id, entry.intersectionRatio);
+                    } else {
+                        visiblePillars.delete(id);
+                    }
+                });
+
+                if (visiblePillars.size > 0) {
+                    let bestId = null;
+                    let maxRatio = -1;
+                    visiblePillars.forEach((ratio, id) => {
+                        if (ratio > maxRatio) {
+                            maxRatio = ratio;
+                            bestId = id;
+                        }
+                    });
+                    if (bestId) {
+                        setActivePillar(bestId);
+                    }
+                }
+            }, {
+                rootMargin: '-15% 0px -25% 0px',
+                threshold: [0.15, 0.35, 0.55, 0.75]
+            });
+
+            cards.forEach(card => observer.observe(card));
+        }
+    }
+    initStickyPillars();
+
+    // -------------------------------------------------------------
+    // Accessible, Zero-Jank FAQ Disclosure (Pure CSS Grid 220ms)
+    // -------------------------------------------------------------
+    function initFaqAccordion() {
+        const accordion = document.getElementById('faqAccordion');
+        if (!accordion) return;
+
+        const items = accordion.querySelectorAll('.faq-item');
+        items.forEach(item => {
+            const btn = item.querySelector('.faq-toggle');
+            const wrapper = item.querySelector('.faq-answer-wrapper');
+            const icon = btn ? btn.querySelector('i') : null;
+            if (!btn || !wrapper) return;
+
+            btn.addEventListener('click', () => {
+                const isOpen = wrapper.classList.contains('is-open');
+
+                // Collapse all sibling items first for clean single-panel presentation
+                items.forEach(sibling => {
+                    if (sibling === item) return;
+                    const sBtn = sibling.querySelector('.faq-toggle');
+                    const sWrapper = sibling.querySelector('.faq-answer-wrapper');
+                    const sIcon = sBtn ? sBtn.querySelector('i') : null;
+                    if (sWrapper && sWrapper.classList.contains('is-open')) {
+                        sWrapper.classList.remove('is-open');
+                        if (sBtn) sBtn.setAttribute('aria-expanded', 'false');
+                        if (sIcon) sIcon.classList.remove('rotate-180');
+                        sWrapper.addEventListener('transitionend', function onEnd() {
+                            if (!sWrapper.classList.contains('is-open')) {
+                                sWrapper.setAttribute('hidden', '');
+                            }
+                            sWrapper.removeEventListener('transitionend', onEnd);
+                        });
+                    }
+                });
+
+                if (!isOpen) {
+                    // Open: Remove hidden first, then trigger CSS Grid expansion on next tick
+                    wrapper.removeAttribute('hidden');
+                    requestAnimationFrame(() => {
+                        wrapper.classList.add('is-open');
+                        btn.setAttribute('aria-expanded', 'true');
+                        if (icon) icon.classList.add('rotate-180');
+                    });
+                } else {
+                    // Close: Animate shut via CSS Grid, then mark hidden on transitionend
+                    wrapper.classList.remove('is-open');
+                    btn.setAttribute('aria-expanded', 'false');
+                    if (icon) icon.classList.remove('rotate-180');
+                    wrapper.addEventListener('transitionend', function onEnd() {
+                        if (!wrapper.classList.contains('is-open')) {
+                            wrapper.setAttribute('hidden', '');
+                        }
+                        wrapper.removeEventListener('transitionend', onEnd);
+                    });
+                }
+            });
         });
     }
+    initFaqAccordion();
+
 });

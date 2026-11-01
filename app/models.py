@@ -22,9 +22,10 @@ class Course(Base):
     image_url = Column(String(500))
     content = Column(Text)
     start_date = Column(String(100), nullable=True)
-    status = Column(String(50), default="current")  # current, upcoming, past
+    status = Column(String(50), default="upcoming")  # upcoming, ongoing, completed
     price = Column(String(50), default="Free", nullable=True)
     language = Column(String(100), default="Tamil", nullable=True)
+    youtube_url = Column(String(500), nullable=True)
     enrollments = relationship("Enrollment", back_populates="course")
     recordings = relationship("CourseRecording", back_populates="course", cascade="all, delete-orphan")
 

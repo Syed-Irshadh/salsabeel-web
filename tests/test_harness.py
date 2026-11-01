@@ -24,7 +24,8 @@ from sqlalchemy.pool import StaticPool
 from PIL import Image
 
 from app import models, database, auth
-from app.main import app, process_and_store_image, get_main_admin
+from app.main import app, process_and_store_image, get_main_admin, validate_youtube_url
+from fastapi import HTTPException
 
 # -----------------------------------------------------------------------------
 # 1. Isolated In-Memory SQLite Testing Setup
@@ -379,6 +380,289 @@ def test_server_side_member_resource_security():
     assert "classroom.google.com" in res_data["classroom_url"]
     assert res_data["eligible"] is True
 
+def test_header_navigation_and_active_indicators():
+    # 1. Homepage (/)
+    r_home = client.get("/")
+    assert r_home.status_code == 200
+    home_html = r_home.text
+    assert 'data-nav="home"' in home_html
+    assert 'data-nav="home" aria-current="page"' in home_html
+    assert 'data-nav="courses" aria-current="page"' not in home_html
+
+    # 2. Courses Directory (/courses)
+    r_courses = client.get("/courses")
+    assert r_courses.status_code == 200
+    courses_html = r_courses.text
+    assert 'data-nav="courses"' in courses_html
+    assert 'data-nav="courses" aria-current="page"' in courses_html
+    assert 'data-nav="home" aria-current="page"' not in courses_html
+
+    # 3. Query Parameter Resilience (/courses?status=ongoing&category=Tajweed)
+    r_query = client.get("/courses?status=ongoing&category=Tajweed")
+    assert r_query.status_code == 200
+    query_html = r_query.text
+    assert 'data-nav="courses" aria-current="page"' in query_html
+    assert 'data-nav="home" aria-current="page"' not in query_html
+
+    # 4. Course Viewer Page (/viewer/{id})
+    r_viewer = client.get("/viewer/1")
+    if r_viewer.status_code == 200:
+        viewer_html = r_viewer.text
+        assert 'data-nav="courses" aria-current="page"' in viewer_html
+        assert 'data-nav="home" aria-current="page"' not in viewer_html
+
+    # 5. About Page (/about)
+    r_about = client.get("/about")
+    assert r_about.status_code == 200
+    about_html = r_about.text
+    assert 'data-nav="about"' in about_html
+    assert 'data-nav="about" aria-current="page"' in about_html
+    assert 'data-nav="home" aria-current="page"' not in about_html
+    assert 'data-nav="courses" aria-current="page"' not in about_html
+
+    # 6. Admin Page (/admin) - never highlights Home or Courses
+    r_admin = client.get("/admin")
+    assert r_admin.status_code == 200
+    admin_html = r_admin.text
+    assert 'data-nav="home" aria-current="page"' not in admin_html
+    assert 'data-nav="courses" aria-current="page"' not in admin_html
+    assert 'data-nav="about" aria-current="page"' not in admin_html
+
+def test_youtube_url_validator_matrix():
+    # 1. Valid URLs
+    valid_cases = [
+        ("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "https://www.youtube.com/watch?v=dQw4w9WgXcQ"),
+        ("https://m.youtube.com/watch?v=dQw4w9WgXcQ", "https://m.youtube.com/watch?v=dQw4w9WgXcQ"),
+        ("https://youtube.com/playlist?list=PL1234567890", "https://youtube.com/playlist?list=PL1234567890"),
+        ("https://www.youtube.com/embed/dQw4w9WgXcQ", "https://www.youtube.com/embed/dQw4w9WgXcQ"),
+        ("https://www.youtube.com/live/dQw4w9WgXcQ", "https://www.youtube.com/live/dQw4w9WgXcQ"),
+        ("https://www.youtube.com/shorts/dQw4w9WgXcQ", "https://www.youtube.com/shorts/dQw4w9WgXcQ"),
+        ("https://youtu.be/dQw4w9WgXcQ", "https://youtu.be/dQw4w9WgXcQ"),
+        ("youtube.com/watch?v=dQw4w9WgXcQ", "https://youtube.com/watch?v=dQw4w9WgXcQ"),
+        ("HTTPS://YOUTUBE.COM/watch?v=dQw4w9WgXcQ", "HTTPS://YOUTUBE.COM/watch?v=dQw4w9WgXcQ"),
+    ]
+    for inp, expected in valid_cases:
+        res = validate_youtube_url(inp)
+        assert res == expected, f"Failed for valid input {inp}: got {res}, expected {expected}"
+
+    # None and empty return None
+    assert validate_youtube_url(None) is None
+    assert validate_youtube_url("") is None
+    assert validate_youtube_url("   ") is None
+
+    # 2. Rejection Cases (Must raise HTTPException 400)
+    invalid_cases = [
+        "https://user@youtube.com/watch?v=dQw4w9WgXcQ", # userinfo
+        "https://youtube.com:8080/watch?v=dQw4w9WgXcQ", # non-standard port
+        "https://attacker-youtube.com/watch?v=dQw4w9WgXcQ", # bad domain
+        "https://vimeo.com/123456", # unsupported domain
+        "ftp://youtube.com/watch?v=dQw4w9WgXcQ", # bad scheme
+        "https://youtube.com//watch?v=dQw4w9WgXcQ", # double slashes
+        "https://youtube.com/watch\\v=dQw4w9WgXcQ", # backslash
+        "https://youtube.com/watch", # missing v param
+        "https://youtube.com/watch?v=", # empty v param
+        "https://youtube.com/playlist", # missing list param
+        "https://youtube.com/playlist?list=", # empty list param
+        "https://youtube.com/embed/id1/extra", # extra subpath
+        "https://youtu.be/id1/extra", # extra subpath
+        "https://youtu.be/", # missing video id
+        "https://youtube.com/watch?v=123\x00abc", # null byte
+    ]
+    for bad_url in invalid_cases:
+        try:
+            validate_youtube_url(bad_url)
+            assert False, f"Expected validation error for invalid URL: {bad_url}"
+        except HTTPException as e:
+            assert e.status_code == 400, f"Expected 400 for {bad_url}, got {e.status_code}"
+
+def test_course_status_default_and_youtube_contracts():
+    db = TestingSessionLocal()
+    admin_email = "admin_course_test@salsabeelacademy.com"
+    existing = db.query(models.User).filter(models.User.email == admin_email).first()
+    if not existing:
+        admin_user = models.User(
+            email=admin_email,
+            hashed_password=auth.get_password_hash("AdminPass123!"),
+            name="Admin Test",
+            role="admin"
+        )
+        db.add(admin_user)
+        db.commit()
+    db.close()
+
+    r_login = client.post("/api/token", data={"username": admin_email, "password": "AdminPass123!"})
+    assert r_login.status_code == 200
+    token = r_login.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    img = Image.new("RGB", (100, 100), color="blue")
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG")
+    buf.seek(0)
+
+    # Course A: Status omitted -> MUST default to 'upcoming'
+    r_create_a = client.post(
+        "/api/courses",
+        headers=headers,
+        data={
+            "title": "Default Status Course",
+            "description": "Testing upcoming default",
+            "category": "Fiqh",
+            "content": "Syllabus outline",
+            "price": "Free",
+            "language": "Tamil",
+            "status": "", # empty -> defaults to 'upcoming'
+            "youtube_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        },
+        files={"image": ("poster_a.jpg", buf, "image/jpeg")}
+    )
+    assert r_create_a.status_code == 200, f"Create course failed: {r_create_a.text}"
+    course_a = r_create_a.json()
+    course_id = course_a["id"]
+    assert course_a["status"] == "upcoming", f"Expected default status 'upcoming', got {course_a['status']}"
+    assert course_a["youtube_url"] == "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+
+    # Test 3-part update contract in PUT /api/courses/{id}
+    # Part 1: Update with valid non-empty URL -> replaces existing
+    r_up_1 = client.put(
+        f"/api/courses/{course_id}",
+        headers=headers,
+        data={"youtube_url": "https://youtu.be/updatedVideo123"}
+    )
+    assert r_up_1.status_code == 200
+    data_1 = r_up_1.json()["course"]
+    assert data_1["youtube_url"] == "https://youtu.be/updatedVideo123"
+
+    # Part 2: Update with omitted field (no youtube_url in form) -> PRESERVES existing
+    r_up_2 = client.put(
+        f"/api/courses/{course_id}",
+        headers=headers,
+        data={"title": "Updated Title Only"}
+    )
+    assert r_up_2.status_code == 200
+    data_2 = r_up_2.json()["course"]
+    assert data_2["title"] == "Updated Title Only"
+    assert data_2["youtube_url"] == "https://youtu.be/updatedVideo123", "Omitted youtube_url must be preserved"
+
+    # Part 3: Update with explicit empty string -> CLEARS URL to None
+    r_up_3 = client.put(
+        f"/api/courses/{course_id}",
+        headers=headers,
+        data={"youtube_url": ""}
+    )
+    assert r_up_3.status_code == 200
+    data_3 = r_up_3.json()["course"]
+    assert data_3["youtube_url"] is None, "Empty string must clear youtube_url to None"
+
+    # Part 4: Reject invalid YouTube URL with 400
+    r_up_bad = client.put(
+        f"/api/courses/{course_id}",
+        headers=headers,
+        data={"youtube_url": "https://unauthorized-domain.com/video"}
+    )
+    assert r_up_bad.status_code == 400
+
+def test_auth_status_endpoint():
+    # 1. Unauthenticated request -> 401
+    r_anon = client.get("/api/auth/status")
+    assert r_anon.status_code == 401
+
+    # 2. Bad token -> 401
+    r_bad = client.get("/api/auth/status", headers={"Authorization": "Bearer invalid_token_xyz"})
+    assert r_bad.status_code == 401
+
+    # 3. Valid authenticated request -> 200
+    db = TestingSessionLocal()
+    student_email = "auth_status_student@example.com"
+    existing = db.query(models.User).filter(models.User.email == student_email).first()
+    if not existing:
+        student = models.User(
+            email=student_email,
+            hashed_password=auth.get_password_hash("StudentPass123!"),
+            name="Auth Status Student",
+            role="student"
+        )
+        db.add(student)
+        db.commit()
+    db.close()
+
+    r_login = client.post("/api/token", data={"username": student_email, "password": "StudentPass123!"})
+    assert r_login.status_code == 200
+    token = r_login.json()["access_token"]
+
+    r_auth = client.get("/api/auth/status", headers={"Authorization": f"Bearer {token}"})
+    assert r_auth.status_code == 200
+    data = r_auth.json()
+    assert data["authenticated"] is True
+    assert data["user"]["email"] == student_email
+    assert data["user"]["role"] == "student"
+    assert data["user"]["name"] == "Auth Status Student"
+
+def test_public_html_rendering_youtube_button():
+    db = TestingSessionLocal()
+    c_with = db.query(models.Course).filter(models.Course.youtube_url == "https://www.youtube.com/playlist?list=PL12345").first()
+    if not c_with:
+        c_with = models.Course(
+            title="Dedicated YouTube Playlist Course",
+            description="Course with YouTube link",
+            category="Tafseer",
+            content="Content",
+            status="upcoming",
+            price="Free",
+            language="Tamil",
+            image_url="/static/img/logo.jpeg",
+            youtube_url="https://www.youtube.com/playlist?list=PL12345"
+        )
+        db.add(c_with)
+        db.commit()
+        db.refresh(c_with)
+
+    c_without = db.query(models.Course).filter(models.Course.title == "Dedicated No YouTube Course").first()
+    if not c_without:
+        c_without = models.Course(
+            title="Dedicated No YouTube Course",
+            description="Course without YouTube link",
+            category="Hadith",
+            content="Content",
+            status="upcoming",
+            price="Free",
+            language="Tamil",
+            image_url="/static/img/logo.jpeg",
+            youtube_url=None
+        )
+        db.add(c_without)
+        db.commit()
+        db.refresh(c_without)
+    c_with_id = c_with.id
+    c_without_id = c_without.id
+    db.close()
+
+    # 1. Course Directory Page (/courses)
+    r_dir = client.get("/courses")
+    assert r_dir.status_code == 200
+    html_dir = r_dir.text
+    assert "Watch on YouTube" in html_dir
+    assert "https://www.youtube.com/playlist?list=PL12345" in html_dir
+    assert 'target="_blank" rel="noopener noreferrer"' in html_dir
+
+    # 2. Homepage (/)
+    r_home = client.get("/")
+    assert r_home.status_code == 200
+    html_home = r_home.text
+    assert "Watch on YouTube" in html_home
+
+    # 3. Course Viewer (/viewer/{id})
+    r_view_with = client.get(f"/viewer/{c_with_id}")
+    assert r_view_with.status_code == 200
+    html_view_with = r_view_with.text
+    assert "Watch on YouTube" in html_view_with
+    assert "https://www.youtube.com/playlist?list=PL12345" in html_view_with
+
+    r_view_without = client.get(f"/viewer/{c_without_id}")
+    assert r_view_without.status_code == 200
+    html_view_without = r_view_without.text
+    assert "Watch on YouTube" not in html_view_without
+
 # -----------------------------------------------------------------------------
 # Test Cases: PostgreSQL Staging Integration Verification (Read-Only)
 # -----------------------------------------------------------------------------
@@ -436,6 +720,11 @@ if __name__ == "__main__":
     run_test("Unicode initial extraction (Latin, Tamil, Arabic)", test_unicode_initial_extraction)
     run_test("Course update (PUT) with image preservation & RBAC", test_course_update_put_endpoint)
     run_test("Server-side member resource security & eligibility", test_server_side_member_resource_security)
+    run_test("Header navigation and route active indicators", test_header_navigation_and_active_indicators)
+    run_test("YouTube URL validation matrix and security constraints", test_youtube_url_validator_matrix)
+    run_test("Course status upcoming default & 3-part update contract", test_course_status_default_and_youtube_contracts)
+    run_test("Authoritative auth status endpoint (/api/auth/status)", test_auth_status_endpoint)
+    run_test("Public HTML conditional rendering of YouTube button", test_public_html_rendering_youtube_button)
 
     print("\n--- Phase 2: PostgreSQL Staging Integration Check (Read-Only) ---")
     run_test("Supabase PostgreSQL read-only connectivity and schema", test_postgresql_staging_integration_readonly)

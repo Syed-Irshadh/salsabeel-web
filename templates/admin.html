@@ -249,13 +249,14 @@
                                     data-id="{{ course.id }}"
                                     data-title="{{ course.title }}"
                                     data-category="{{ course.category }}"
-                                    data-status="{{ course.status | default('current') }}"
+                                    data-status="{{ course.status | default('upcoming') }}"
                                     data-language="{{ course.language or 'Tamil' }}"
                                     data-price="{{ course.price or 'Free' }}"
                                     data-startdate="{{ course.start_date or '' }}"
                                     data-desc="{{ course.description or '' }}"
                                     data-content="{{ course.content or '' }}"
-                                    data-poster="{{ course.image_url }}">
+                                    data-poster="{{ course.image_url }}"
+                                    data-youtube-url="{{ course.youtube_url or '' }}">
                                 <i class="fas fa-edit mr-1"></i> Edit
                             </button>
                         </div>
@@ -314,12 +315,15 @@
                                     </span>
                                 </td>
                                 <td class="px-4 py-3.5 whitespace-nowrap">
-                                    {% if course.status == 'past' %}
-                                    <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700">Completed</span>
-                                    {% elif course.status == 'upcoming' %}
-                                    <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800">Upcoming</span>
+                                    {% set st = (course.status or '') | lower | trim %}
+                                    {% if st == 'ongoing' or st == 'current' %}
+                                    <span class="badge-status-ongoing inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">Ongoing</span>
+                                    {% elif st == 'upcoming' %}
+                                    <span class="badge-status-upcoming inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">Upcoming</span>
+                                    {% elif st == 'completed' or st == 'past' %}
+                                    <span class="badge-status-completed inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">Completed</span>
                                     {% else %}
-                                    <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-brand-primary/10 text-brand-primary border border-brand-primary/20">Ongoing</span>
+                                    <span class="badge-status-neutral inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">{{ course.status | capitalize if course.status else 'Program' }}</span>
                                     {% endif %}
                                 </td>
                                 <td class="px-4 py-3.5 whitespace-nowrap text-xs text-gray-600">
@@ -333,13 +337,14 @@
                                                 data-id="{{ course.id }}"
                                                 data-title="{{ course.title }}"
                                                 data-category="{{ course.category }}"
-                                                data-status="{{ course.status | default('current') }}"
+                                                data-status="{{ course.status | default('upcoming') }}"
                                                 data-language="{{ course.language or 'Tamil' }}"
                                                 data-price="{{ course.price or 'Free' }}"
                                                 data-startdate="{{ course.start_date or '' }}"
                                                 data-desc="{{ course.description or '' }}"
                                                 data-content="{{ course.content or '' }}"
-                                                data-poster="{{ course.image_url }}">
+                                                data-poster="{{ course.image_url }}"
+                                                data-youtube-url="{{ course.youtube_url or '' }}">
                                             <i class="fas fa-edit mr-1.5"></i> Edit Poster & Details
                                         </button>
                                         <button type="button" 
@@ -675,14 +680,28 @@
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">Status</label>
                         <select id="status" name="status" class="w-full border border-gray-300 rounded-xl px-3 py-2.5 focus:ring-2 focus:ring-brand-primary focus:border-brand-primary bg-white text-sm">
+                            <option value="upcoming" selected>Future (Upcoming)</option>
                             <option value="current">Current (Ongoing)</option>
-                            <option value="upcoming">Future (Upcoming)</option>
                             <option value="past">Past (Completed)</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">Course Fee</label>
                         <input type="text" id="price" name="price" value="Free" placeholder="e.g. Free or ₹500" class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-brand-primary focus:border-brand-primary text-sm bg-gray-50/50">
+                    </div>
+                </div>
+                
+                <!-- YouTube Video / Playlist URL -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5 flex items-center justify-between">
+                        <span>YouTube Video / Playlist URL</span>
+                        <span class="text-xs font-normal text-gray-500 normal-case">(Optional)</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-red-500">
+                            <i class="fab fa-youtube"></i>
+                        </span>
+                        <input type="url" id="addCourseYoutubeUrl" name="youtube_url" placeholder="https://www.youtube.com/playlist?list=..." class="w-full border border-gray-300 rounded-xl pl-10 pr-3.5 py-2.5 focus:ring-2 focus:ring-brand-primary focus:border-brand-primary text-sm bg-gray-50/50">
                     </div>
                 </div>
                 
@@ -796,6 +815,19 @@
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">Schedule / Date</label>
                 <input type="text" id="adminEditStartDate" placeholder="Weekly schedule..." class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-brand-primary">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1 flex items-center justify-between">
+                    <span>YouTube Video / Playlist URL</span>
+                    <span class="text-xs font-normal text-gray-500 normal-case">(Optional)</span>
+                </label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-red-500">
+                        <i class="fab fa-youtube"></i>
+                    </span>
+                    <input type="url" id="adminEditYoutubeUrl" name="youtube_url" placeholder="https://www.youtube.com/playlist?list=..." class="w-full pl-9 pr-3 py-2 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-brand-primary">
+                </div>
             </div>
 
             <div>
@@ -1183,6 +1215,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('adminEditLanguage').value = data.language || 'Tamil';
         document.getElementById('adminEditPrice').value = data.price || '';
         document.getElementById('adminEditStartDate').value = data.startdate || '';
+        document.getElementById('adminEditYoutubeUrl').value = data.youtube_url || '';
         document.getElementById('adminEditDesc').value = data.desc || '';
         document.getElementById('adminEditContent').value = data.content || '';
 
@@ -1230,6 +1263,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 language: btn.getAttribute('data-language'),
                 price: btn.getAttribute('data-price'),
                 startdate: btn.getAttribute('data-startdate'),
+                youtube_url: btn.getAttribute('data-youtube-url'),
                 desc: btn.getAttribute('data-desc'),
                 content: btn.getAttribute('data-content'),
                 poster: btn.getAttribute('data-poster')
@@ -1255,6 +1289,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 formData.append('language', document.getElementById('adminEditLanguage').value);
                 formData.append('price', document.getElementById('adminEditPrice').value.trim());
                 formData.append('start_date', document.getElementById('adminEditStartDate').value.trim());
+                formData.append('youtube_url', document.getElementById('adminEditYoutubeUrl').value.trim());
                 formData.append('description', document.getElementById('adminEditDesc').value.trim());
                 formData.append('content', document.getElementById('adminEditContent').value.trim());
 
@@ -1391,13 +1426,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         filtered.forEach(e => {
             const initial = window.getUnicodeInitial ? window.getUnicodeInitial(e.student_name || e.student_email || 'S') : 'S';
+            const st = (e.course_status || '').toLowerCase().trim();
             let statusBadge = '';
-            if (e.course_status === 'past') {
-                statusBadge = '<span class="text-[10px] font-semibold bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Completed</span>';
-            } else if (e.course_status === 'upcoming') {
-                statusBadge = '<span class="text-[10px] font-semibold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Upcoming</span>';
+            if (st === 'ongoing' || st === 'current') {
+                statusBadge = '<span class="badge-status-ongoing text-[10px] font-semibold px-2 py-0.5 rounded-full">Ongoing</span>';
+            } else if (st === 'upcoming') {
+                statusBadge = '<span class="badge-status-upcoming text-[10px] font-semibold px-2 py-0.5 rounded-full">Upcoming</span>';
+            } else if (st === 'completed' || st === 'past') {
+                statusBadge = '<span class="badge-status-completed text-[10px] font-semibold px-2 py-0.5 rounded-full">Completed</span>';
             } else {
-                statusBadge = '<span class="text-[10px] font-semibold bg-brand-primary/10 text-brand-primary px-2 py-0.5 rounded-full">Ongoing</span>';
+                statusBadge = `<span class="badge-status-neutral text-[10px] font-semibold px-2 py-0.5 rounded-full">${e.course_status || 'Program'}</span>`;
             }
 
             enrollmentsTableBody.innerHTML += `

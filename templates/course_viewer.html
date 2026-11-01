@@ -25,17 +25,22 @@
                 <span class="inline-flex items-center text-xs font-semibold py-1 px-3 rounded-md bg-white text-brand-ink shadow-xs">
                     Fee: {{ course.price or 'Free' }}
                 </span>
-                {% if course.status == 'past' %}
-                <span class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-md bg-white/10 text-gray-300 border border-white/10">
-                    Completed Batch
+                {% set st = (course.status or '') | lower | trim %}
+                {% if st == 'ongoing' or st == 'current' %}
+                <span class="badge-status-ongoing inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
+                    Ongoing
                 </span>
-                {% elif course.status == 'upcoming' %}
-                <span class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-md bg-amber-500 text-white shadow-xs">
-                    Upcoming Program
+                {% elif st == 'upcoming' %}
+                <span class="badge-status-upcoming inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
+                    Upcoming
+                </span>
+                {% elif st == 'completed' or st == 'past' %}
+                <span class="badge-status-completed inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
+                    Completed
                 </span>
                 {% else %}
-                <span class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-md bg-emerald-600 text-white shadow-xs">
-                    Active Batch
+                <span class="badge-status-neutral inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
+                    {{ course.status | capitalize if course.status else 'Program' }}
                 </span>
                 {% endif %}
             </div>
@@ -156,6 +161,11 @@
                     </div>
 
                     <div class="space-y-3 mb-6">
+                        {% if course.youtube_url %}
+                        <a href="{{ course.youtube_url }}" target="_blank" rel="noopener noreferrer" class="youtube-watch-btn w-full bg-red-50 hover:bg-red-100 text-red-700 font-medium py-3 px-4 rounded-lg transition-colors border border-red-200 flex items-center justify-center text-sm cursor-pointer shadow-xs">
+                            <i class="fab fa-youtube text-red-600 mr-2 text-lg"></i> Watch on YouTube
+                        </a>
+                        {% endif %}
                         {% if course.status == 'past' %}
                         <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" rel="noopener noreferrer" class="w-full bg-brand-surface hover:bg-gray-200 text-brand-ink font-medium py-3 px-4 rounded-lg transition-colors border border-brand-hairline flex items-center justify-center text-sm cursor-pointer">
                             <i class="fab fa-youtube text-red-600 mr-2 text-lg"></i> Watch Recordings on YouTube
