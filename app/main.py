@@ -4,6 +4,7 @@ import json
 import uuid
 import shutil
 import re
+import time
 import warnings
 import tempfile
 import asyncio
@@ -222,7 +223,35 @@ if not os.path.exists(templates_dir):
         if os.path.exists(candidate):
             templates_dir = candidate
             break
-templates = Jinja2Templates(directory=templates_dir)
+
+_cached_course_count = {"count": None, "timestamp": 0}
+
+def get_total_courses_count() -> int:
+    """Returns total active courses count from database, cached for up to 10 seconds."""
+    now = time.time()
+    if _cached_course_count["count"] is not None and (now - _cached_course_count["timestamp"]) < 10:
+        return _cached_course_count["count"]
+    try:
+        with database.SessionLocal() as db:
+            count = db.query(models.Course).count()
+            _cached_course_count["count"] = count
+            _cached_course_count["timestamp"] = now
+            return count
+    except Exception as e:
+        print(f"Notice: Failed to query courses count: {e}")
+        return _cached_course_count["count"] if _cached_course_count["count"] is not None else 0
+
+def template_context_processor(request: Request) -> dict:
+    """Global template context processor making courses_count universally available in all templates."""
+    return {
+        "courses_count": get_total_courses_count()
+    }
+
+templates = Jinja2Templates(
+    directory=templates_dir,
+    context_processors=[template_context_processor]
+)
+templates.env.globals["get_courses_count"] = get_total_courses_count
 
 # Seed some initial courses if empty
 def seed_courses(db: Session):
@@ -247,28 +276,34 @@ if not os.getenv("VERCEL"):
 async def home(request: Request, db: Session = Depends(database.get_db)):
     try:
         courses = db.query(models.Course).all()
+        _cached_course_count["count"] = len(courses)
+        _cached_course_count["timestamp"] = time.time()
     except Exception as e:
         print(f"Notice: Course query error on /: {e}")
         courses = []
-    return templates.TemplateResponse(request=request, name="index.html", context={"courses": courses})
+    return templates.TemplateResponse(request=request, name="index.html", context={"courses": courses, "courses_count": len(courses)})
 
 @app.get("/courses")
 async def courses_page(request: Request, db: Session = Depends(database.get_db)):
     try:
         courses = db.query(models.Course).all()
+        _cached_course_count["count"] = len(courses)
+        _cached_course_count["timestamp"] = time.time()
     except Exception as e:
         print(f"Notice: Course query error on /courses: {e}")
         courses = []
-    return templates.TemplateResponse(request=request, name="courses.html", context={"courses": courses})
+    return templates.TemplateResponse(request=request, name="courses.html", context={"courses": courses, "courses_count": len(courses)})
 
 @app.get("/about")
 async def about_page(request: Request):
-    return templates.TemplateResponse(request=request, name="about.html")
+    return templates.TemplateResponse(request=request, name="about.html", context={"courses_count": get_total_courses_count()})
 
 @app.get("/admin")
 async def admin_page(request: Request, db: Session = Depends(database.get_db)):
     courses = db.query(models.Course).all()
-    return templates.TemplateResponse(request=request, name="admin.html", context={"courses": courses})
+    _cached_course_count["count"] = len(courses)
+    _cached_course_count["timestamp"] = time.time()
+    return templates.TemplateResponse(request=request, name="admin.html", context={"courses": courses, "courses_count": len(courses)})
 
 @app.get("/api/admin/enrollments")
 async def get_admin_enrollments(
@@ -508,9 +543,14 @@ async def viewer_page(request: Request, course_id: int, db: Session = Depends(da
     course = db.query(models.Course).filter(models.Course.id == course_id).first()
     if not course:
         raise HTTPException(status_code=404, detail="Course not found")
-    return templates.TemplateResponse(request=request, name="course_viewer.html", context={"course": course})
+    return templates.TemplateResponse(request=request, name="course_viewer.html", context={"course": course, "courses_count": get_total_courses_count()})
 
 # API Routes
+@app.get("/api/courses/count")
+async def get_courses_count_api():
+    """Returns dynamic real-time count of total available courses."""
+    return {"count": get_total_courses_count()}
+
 @app.post("/api/courses")
 async def create_course(
     title: str = Form(...),
@@ -556,6 +596,7 @@ async def create_course(
     db.add(db_course)
     db.commit()
     db.refresh(db_course)
+    _cached_course_count["count"] = None
     return db_course
 
 @app.delete("/api/courses/{course_id}")
@@ -597,6 +638,7 @@ async def delete_course(
     db.query(models.CourseRecording).filter(models.CourseRecording.course_id == course_id).delete()
     db.delete(course)
     db.commit()
+    _cached_course_count["count"] = None
     return {"status": "success"}
 
 class UserCreate(BaseModel):

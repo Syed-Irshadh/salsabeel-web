@@ -116,7 +116,7 @@
                 </p>
             </div>
             <a href="/courses" class="mt-4 md:mt-0 inline-flex items-center text-sm font-bold text-navy hover:text-emerald transition-colors">
-                Complete 31 Course Directory <i class="fas fa-arrow-right ml-2 text-xs text-gold"></i>
+                Complete {{ courses_count|default(courses|length if courses is defined else 0) }} Course Directory <i class="fas fa-arrow-right ml-2 text-xs text-gold"></i>
             </a>
         </div>
 
