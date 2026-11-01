@@ -5,59 +5,59 @@
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <!-- Breadcrumb Navigation -->
-    <nav class="flex items-center space-x-2 text-xs text-gray-500 mb-6 font-medium">
+    <nav class="flex items-center space-x-2 text-xs text-brand-muted mb-6 font-medium">
         <a href="/" class="hover:text-brand-primary transition-colors flex items-center">
-            <i class="fas fa-home mr-1.5 text-brand-gold"></i> Home
+            Home
         </a>
         <span>/</span>
         <a href="/courses" class="hover:text-brand-primary transition-colors">Sacred Sciences</a>
         <span>/</span>
-        <span class="text-brand-dark font-semibold truncate max-w-xs sm:max-w-md">{{ course.title }}</span>
+        <span class="text-brand-ink font-semibold truncate max-w-xs sm:max-w-md">{{ course.title }}</span>
     </nav>
 
-    <!-- Course Hero Header (Academic Editorial) -->
-    <div class="bg-mesh-dark rounded-3xl p-6 sm:p-10 mb-8 border border-brand-gold/30 text-white relative overflow-hidden shadow-xl">
+    <!-- Course Hero Header (Contemporary Scholarly Editorial) -->
+    <div class="bg-brand-deep rounded-2xl p-6 sm:p-10 mb-8 border border-brand-hairline text-white relative overflow-hidden">
         <div class="max-w-3xl relative z-10">
             <div class="flex flex-wrap items-center gap-2.5 mb-4">
-                <span class="inline-block bg-white/10 text-white border border-white/20 text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-lg backdrop-blur-xs">
+                <span class="inline-block bg-white/10 text-white border border-white/20 text-xs font-medium uppercase tracking-wider py-1 px-3 rounded-md">
                     {{ course.category }}
                 </span>
-                <span class="inline-flex items-center text-xs font-bold py-1 px-3 rounded-lg {% if course.price and course.price.strip().lower() != 'free' %}bg-gradient-gold text-brand-dark shadow-xs{% else %}bg-brand-primary/40 text-brand-gold-light border border-brand-gold/30{% endif %}">
-                    <i class="fas fa-tag mr-1.5 text-xs"></i> {{ course.price or 'Free' }}
+                <span class="inline-flex items-center text-xs font-semibold py-1 px-3 rounded-md bg-white text-brand-ink shadow-xs">
+                    Fee: {{ course.price or 'Free' }}
                 </span>
                 {% if course.status == 'past' %}
-                <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-white/10 text-gray-300 border border-white/10">
-                    <i class="fas fa-check-circle mr-1.5 text-gray-400"></i> Completed Batch
+                <span class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-md bg-white/10 text-gray-300 border border-white/10">
+                    Completed Batch
                 </span>
                 {% elif course.status == 'upcoming' %}
-                <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-amber-500/90 text-white shadow-xs">
-                    <i class="fas fa-clock mr-1.5"></i> Upcoming Program
+                <span class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-md bg-amber-500 text-white shadow-xs">
+                    Upcoming Program
                 </span>
                 {% else %}
-                <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-brand-primary text-white shadow-xs">
-                    <i class="fas fa-play-circle mr-1.5"></i> Active Batch
+                <span class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-md bg-emerald-600 text-white shadow-xs">
+                    Active Batch
                 </span>
                 {% endif %}
             </div>
 
-            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+            <h1 class="font-serif text-2xl sm:text-4xl font-bold text-white mb-4 leading-tight">
                 {{ course.title }}
             </h1>
 
             {% if course.description %}
-            <p class="text-gray-200 text-sm sm:text-base leading-relaxed font-normal mb-6">
+            <p class="text-gray-200 text-sm sm:text-base leading-relaxed font-sans font-normal mb-6">
                 {{ course.description }}
             </p>
             {% endif %}
 
             <div class="flex flex-wrap items-center gap-4 text-xs text-brand-gold-light font-medium">
                 {% if course.start_date %}
-                <span class="inline-flex items-center bg-black/30 border border-white/10 px-3 py-1.5 rounded-xl">
-                    <i class="far fa-calendar-alt mr-2 text-brand-gold"></i> Schedule: {{ course.start_date }}
+                <span class="inline-flex items-center bg-black/25 border border-white/10 px-3 py-1.5 rounded-lg">
+                    <i class="far fa-calendar-alt mr-2 text-brand-gold-light"></i> Schedule: {{ course.start_date }}
                 </span>
                 {% endif %}
-                <span class="inline-flex items-center bg-black/30 border border-white/10 px-3 py-1.5 rounded-xl">
-                    <i class="fas fa-language mr-2 text-brand-turquoise"></i> Medium: {{ course.language or 'Tamil' }}
+                <span class="inline-flex items-center bg-black/25 border border-white/10 px-3 py-1.5 rounded-lg">
+                    <i class="fas fa-language mr-2 text-brand-gold-light"></i> Medium: {{ course.language or 'Tamil' }}
                 </span>
             </div>
         </div>
@@ -68,72 +68,68 @@
         <!-- Left: Course Poster, Syllabus Content & Recordings -->
         <div class="lg:col-span-2 space-y-8">
             {% if course.image_url %}
-            <div class="bg-white rounded-2xl border border-brand-gold/20 shadow-xs p-4 sm:p-6 overflow-hidden">
-                <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
-                    <h3 class="text-base font-bold text-brand-dark flex items-center">
-                        <i class="fas fa-image text-brand-primary mr-2"></i> Official Program Poster
+            <div class="bg-white rounded-xl border border-brand-hairline shadow-editorial p-4 sm:p-6 overflow-hidden">
+                <div class="flex items-center justify-between mb-4 pb-3 border-b border-brand-hairline">
+                    <h3 class="font-serif text-base font-bold text-brand-ink flex items-center">
+                        Official Program Poster
                     </h3>
-                    <a href="{{ course.image_url }}" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-brand-primary hover:text-brand-deep transition-colors inline-flex items-center">
+                    <a href="{{ course.image_url }}" target="_blank" rel="noopener noreferrer" class="text-xs font-medium text-brand-primary hover:text-brand-deep transition-colors inline-flex items-center">
                         <i class="fas fa-external-link-alt mr-1"></i> Full Resolution
                     </a>
                 </div>
-                <div class="relative group rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center p-2 border border-gray-200">
+                <div class="relative group rounded-lg overflow-hidden bg-brand-surface flex items-center justify-center p-2 border border-brand-hairline">
                     <img src="{{ course.image_url }}" 
                          alt="{{ course.title }} Poster" 
-                         class="max-h-[520px] w-auto max-w-full rounded-lg object-contain transition-transform duration-300 group-hover:scale-[1.01]"
+                         class="max-h-[520px] w-auto max-w-full rounded-md object-contain transition-transform duration-300 group-hover:scale-[1.01]"
                          onerror="this.onerror=null; this.src='/static/img/logo.jpeg';">
                 </div>
             </div>
             {% endif %}
 
             <!-- Syllabus & Detailed Content Card -->
-            <div class="bg-white rounded-2xl border border-brand-gold/20 shadow-xs p-6 sm:p-8">
-                <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-gray-100">
-                    <div class="w-10 h-10 rounded-xl bg-brand-deep/10 text-brand-deep flex items-center justify-center text-lg border border-brand-gold/30">
-                        <i class="fas fa-book-open text-brand-primary"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-xl font-bold tracking-tight text-brand-dark">Curriculum & Detailed Content</h2>
-                        <p class="text-xs text-gray-500">Comprehensive study modules, lesson plan, and subject requirements</p>
-                    </div>
+            <div class="bg-white rounded-xl border border-brand-hairline shadow-editorial p-6 sm:p-8">
+                <div class="mb-6 pb-4 border-b border-brand-hairline">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-brand-bronze block mb-1">
+                        Curriculum Outline
+                    </span>
+                    <h2 class="font-serif text-2xl font-bold text-brand-ink">Syllabus & Detailed Modules</h2>
+                    <p class="text-xs text-brand-muted mt-1">Comprehensive study modules, lesson plan, and subject requirements</p>
                 </div>
 
-                <div class="prose max-w-none text-gray-700 space-y-4 leading-relaxed text-sm sm:text-base">
+                <div class="prose max-w-none text-brand-slate space-y-4 leading-relaxed text-sm sm:text-base font-sans">
                     {{ course.content | replace('\n', '<br>') | safe }}
                 </div>
             </div>
 
             <!-- Course Lecture Recordings (If Available in Database) -->
             {% if course.recordings and course.recordings|length > 0 %}
-            <div class="bg-white rounded-2xl border border-brand-gold/20 shadow-xs p-6 sm:p-8">
-                <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-brand-deep/10 text-brand-deep flex items-center justify-center text-lg border border-brand-gold/30">
-                            <i class="fas fa-video text-brand-primary"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-xl font-bold tracking-tight text-brand-dark">Session Recordings</h2>
-                            <p class="text-xs text-gray-500">Recorded lectures available for enrolled seekers</p>
-                        </div>
+            <div class="bg-white rounded-xl border border-brand-hairline shadow-editorial p-6 sm:p-8">
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-brand-hairline">
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-widest text-brand-bronze block mb-1">
+                            Recorded Archives
+                        </span>
+                        <h2 class="font-serif text-2xl font-bold text-brand-ink">Session Recordings</h2>
+                        <p class="text-xs text-brand-muted mt-1">Recorded lectures available for enrolled seekers</p>
                     </div>
-                    <span class="text-xs font-bold text-brand-primary bg-brand-primary/10 border border-brand-primary/20 px-3 py-1 rounded-full">
+                    <span class="text-xs font-medium text-brand-primary bg-brand-surface border border-brand-hairline px-3 py-1 rounded-md">
                         {{ course.recordings|length }} Recording{% if course.recordings|length > 1 %}s{% endif %}
                     </span>
                 </div>
 
                 <div class="space-y-3">
                     {% for rec in course.recordings %}
-                    <div class="flex items-center justify-between p-3.5 rounded-xl bg-gray-50 hover:bg-brand-deep/5 border border-gray-200 transition-colors">
+                    <div class="flex items-center justify-between p-3.5 rounded-lg bg-brand-surface hover:bg-gray-100 border border-brand-hairline transition-colors">
                         <div class="flex items-center space-x-3 overflow-hidden">
-                            <span class="w-7 h-7 rounded-lg bg-brand-deep text-brand-gold text-xs font-bold flex items-center justify-center flex-shrink-0">
+                            <span class="w-6 h-6 rounded-md bg-brand-deep text-brand-gold-light text-xs font-medium flex items-center justify-center flex-shrink-0">
                                 {{ loop.index }}
                             </span>
-                            <span class="text-sm font-semibold text-brand-dark truncate">
+                            <span class="text-sm font-medium text-brand-ink truncate">
                                 {{ rec.title }}
                             </span>
                         </div>
-                        <a href="{{ rec.youtube_url }}" target="_blank" rel="noopener noreferrer" class="flex-shrink-0 text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors flex items-center border border-red-200">
-                            <i class="fab fa-youtube mr-1.5 text-sm"></i> Watch
+                        <a href="{{ rec.youtube_url }}" target="_blank" rel="noopener noreferrer" class="flex-shrink-0 text-xs font-medium text-red-700 hover:text-red-800 bg-white px-3 py-1.5 rounded-md transition-colors flex items-center border border-brand-hairline">
+                            <i class="fab fa-youtube mr-1.5 text-sm text-red-600"></i> Watch
                         </a>
                     </div>
                     {% endfor %}
@@ -146,32 +142,32 @@
         <div class="lg:col-span-1">
             <div class="sticky top-20 space-y-6">
                 <!-- Registration / Enrollment Box -->
-                <div class="bg-white rounded-2xl border-t-4 border-brand-gold border-x border-b border-gray-200 shadow-md p-6">
-                    <span class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-1">Tuition & Admission</span>
+                <div class="bg-white rounded-xl border border-brand-hairline shadow-editorial p-6">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-brand-bronze block mb-1">Tuition & Admission</span>
                     <div class="flex items-baseline space-x-2 mb-6">
-                        <span class="text-3xl font-extrabold text-brand-dark tracking-tight">
+                        <span class="font-serif text-3xl font-bold text-brand-ink tracking-tight">
                             {{ course.price or 'Free' }}
                         </span>
                         {% if course.price and course.price.strip().lower() != 'free' %}
-                        <span class="text-xs text-gray-500">program fee</span>
+                        <span class="text-xs text-brand-muted">program fee</span>
                         {% else %}
-                        <span class="text-xs text-brand-primary font-semibold">Community Access</span>
+                        <span class="text-xs text-brand-primary font-medium">Community Access</span>
                         {% endif %}
                     </div>
 
                     <div class="space-y-3 mb-6">
                         {% if course.status == 'past' %}
-                        <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" rel="noopener noreferrer" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-xs flex items-center justify-center text-sm cursor-pointer">
-                            <i class="fab fa-youtube mr-2 text-lg"></i> Watch Recordings on YouTube
+                        <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" rel="noopener noreferrer" class="w-full bg-brand-surface hover:bg-gray-200 text-brand-ink font-medium py-3 px-4 rounded-lg transition-colors border border-brand-hairline flex items-center justify-center text-sm cursor-pointer">
+                            <i class="fab fa-youtube text-red-600 mr-2 text-lg"></i> Watch Recordings on YouTube
                         </a>
                         {% else %}
                         <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22%20(Fee%3A%20{{ (course.price or 'Free') | urlencode }}).%20Please%20share%20the%20details." 
                            target="_blank" 
                            rel="noopener noreferrer"
-                           class="enroll-btn w-full bg-brand-primary hover:bg-brand-deep text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-glow-teal flex items-center justify-center text-sm cursor-pointer border border-brand-turquoise/40"
+                           class="enroll-btn w-full bg-brand-deep hover:bg-brand-primary text-white font-medium py-3 px-4 rounded-lg transition-colors shadow-xs flex items-center justify-center text-sm cursor-pointer"
                            data-id="{{ course.id }}"
                            data-title="{{ course.title }}">
-                            <i class="fab fa-whatsapp mr-2 text-lg"></i> Enroll via WhatsApp
+                            <i class="fab fa-whatsapp mr-2 text-base"></i> Enroll via WhatsApp
                         </a>
                         {% endif %}
 
@@ -179,51 +175,51 @@
                         <a href="https://api.whatsapp.com/send?text=Assalamu%20Alaikum%2C%20check%20out%20this%20program%20at%20Salsabeel%20Academy%3A%20{{ course.title | urlencode }}%20-%20https%3A%2F%2Fsalsabeelacademy.com%2Fviewer%2F{{ course.id }}" 
                            target="_blank" 
                            rel="noopener noreferrer"
-                           class="w-full bg-brand-ivory hover:bg-gray-100 text-brand-dark font-semibold py-2.5 px-4 rounded-xl border border-gray-200 transition-colors flex items-center justify-center text-xs cursor-pointer">
+                           class="w-full bg-white hover:bg-brand-surface text-brand-muted hover:text-brand-ink font-medium py-2.5 px-4 rounded-lg border border-brand-hairline transition-colors flex items-center justify-center text-xs cursor-pointer shadow-xs">
                             <i class="fas fa-share-alt mr-2 text-brand-primary"></i> Share with Family & Friends
                         </a>
                     </div>
 
                     <!-- Program Highlights Checklist -->
-                    <div class="pt-5 border-t border-gray-100 space-y-3 text-xs text-gray-600">
+                    <div class="pt-5 border-t border-brand-hairline space-y-3 text-xs text-brand-muted">
                         <div class="flex items-center">
-                            <i class="fas fa-user-graduate w-5 text-brand-primary flex-shrink-0"></i>
+                            <i class="fas fa-check-circle w-5 text-brand-primary flex-shrink-0"></i>
                             <span>Qualified faculty mentorship & guidance</span>
                         </div>
                         <div class="flex items-center">
-                            <i class="fas fa-language w-5 text-brand-primary flex-shrink-0"></i>
+                            <i class="fas fa-check-circle w-5 text-brand-primary flex-shrink-0"></i>
                             <span>Instruction in clear, authentic <strong>Tamil</strong></span>
                         </div>
                         <div class="flex items-center">
-                            <i class="fas fa-video w-5 text-brand-primary flex-shrink-0"></i>
+                            <i class="fas fa-check-circle w-5 text-brand-primary flex-shrink-0"></i>
                             <span>Live interactive sessions & lecture recordings</span>
                         </div>
                         <div class="flex items-center">
-                            <i class="fas fa-certificate w-5 text-brand-gold flex-shrink-0"></i>
+                            <i class="fas fa-check-circle w-5 text-brand-bronze flex-shrink-0"></i>
                             <span>Certificate of Program Completion</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Faculty Profile Card (Generated Unicode Monogram Initial) -->
-                <div class="bg-white rounded-2xl border border-brand-gold/20 shadow-xs p-5">
-                    <span class="text-xs font-bold uppercase tracking-wider text-gray-400 block mb-3">Academic Instruction</span>
+                <div class="bg-white rounded-xl border border-brand-hairline shadow-editorial p-5">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-brand-bronze block mb-3">Academic Mentorship</span>
                     <div class="flex items-center space-x-3.5">
-                        <div class="w-12 h-12 rounded-xl bg-brand-deep text-brand-gold border border-brand-gold/40 flex items-center justify-center font-bold text-lg shadow-xs select-none flex-shrink-0">
+                        <div class="w-11 h-11 rounded-lg bg-brand-deep text-brand-gold-light border border-brand-gold/40 flex items-center justify-center font-bold text-base shadow-xs select-none flex-shrink-0">
                             {{ "Hazira Umma" | unicode_initial }}
                         </div>
                         <div>
-                            <h4 class="text-sm font-bold text-brand-dark">Hazira Umma</h4>
-                            <p class="text-xs text-brand-primary font-semibold">Founder, BE, BAIS</p>
-                            <p class="text-[11px] text-gray-500">Alimiyyah & Traditional Sciences</p>
+                            <h4 class="font-serif text-sm font-bold text-brand-ink">Hazira Umma</h4>
+                            <p class="text-xs text-brand-bronze font-semibold uppercase tracking-wider">Founder & Director, BE, BAIS</p>
+                            <p class="text-[11px] text-brand-muted mt-0.5">Classical Islamic Sciences & Tafseer</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Back to Directory -->
                 <div class="text-center">
-                    <a href="/courses" class="inline-flex items-center text-xs font-bold text-brand-dark hover:text-brand-primary transition-colors">
-                        <i class="fas fa-arrow-left mr-2 text-brand-gold"></i> Back to Complete Course Directory
+                    <a href="/courses" class="inline-flex items-center text-xs font-medium text-brand-muted hover:text-brand-ink transition-colors">
+                        <i class="fas fa-arrow-left mr-1.5 text-xs text-brand-primary"></i> Back to Complete Course Directory
                     </a>
                 </div>
             </div>
