@@ -257,10 +257,45 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mobileDrawerCloseBtn) mobileDrawerCloseBtn.addEventListener('click', closeMobileDrawer);
     if (mobileDrawerBackdrop) mobileDrawerBackdrop.addEventListener('click', closeMobileDrawer);
 
+    // Global Unicode Initial Extractor (supports English, Tamil conjuncts, Arabic, and Unicode scripts)
+    window.getUnicodeInitial = function(name) {
+        if (!name || !String(name).trim()) return '?';
+        const clean = String(name).trim();
+        if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+            try {
+                const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+                const iterator = segmenter.segment(clean)[Symbol.iterator]();
+                const first = iterator.next().value;
+                if (first && first.segment) {
+                    const seg = first.segment;
+                    return /^[a-zA-Z]$/.test(seg) ? seg.toUpperCase() : seg;
+                }
+            } catch (err) {
+                console.warn('Intl.Segmenter fallback:', err);
+            }
+        }
+        const match = clean.match(/^([\p{L}\p{N}][\p{M}]*)/u);
+        if (match) {
+            const seg = match[1];
+            return /^[a-zA-Z]$/.test(seg) ? seg.toUpperCase() : seg;
+        }
+        return clean.charAt(0).toUpperCase();
+    };
+
     // 3. Synchronize Auth State Across Elements
+    const userProfilePill = document.getElementById('userProfilePill');
+    const userMonogramAvatar = document.getElementById('userMonogramAvatar');
+
     if (token) {
         loginBtns.forEach(btn => btn.classList.add('hidden'));
         logoutBtns.forEach(btn => btn.classList.remove('hidden'));
+
+        if (userProfilePill && userMonogramAvatar) {
+            userProfilePill.classList.remove('hidden');
+            userProfilePill.classList.add('flex');
+            userMonogramAvatar.textContent = window.getUnicodeInitial(userName || userRole || 'S');
+            if (userName) userMonogramAvatar.title = userName;
+        }
 
         if (userRole === 'admin') {
             adminBtns.forEach(btn => btn.classList.remove('hidden'));
@@ -274,6 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
         logoutBtns.forEach(btn => btn.classList.add('hidden'));
         adminBtns.forEach(btn => btn.classList.add('hidden'));
         deleteCourseBtns.forEach(btn => btn.classList.add('hidden'));
+        if (userProfilePill) userProfilePill.classList.add('hidden');
     }
 
     function handleLogout(e) {
@@ -401,6 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const nowTimestamp = Date.now().toString();
                 localStorage.setItem('login_time', nowTimestamp);
                 localStorage.setItem('last_activity', nowTimestamp);
+                sessionStorage.setItem('open_member_gift_modal', 'true');
 
                 closeModal();
                 showToast('Welcome to Salsabeel Academy!', 'success');
@@ -410,6 +447,73 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast('Connection error. Please try again.', 'error');
             }
         });
+    }
+
+    // -------------------------------------------------------------
+    // Member Gift Modal Logic (Rasmul Mushaf)
+    // -------------------------------------------------------------
+    const memberGiftModal = document.getElementById('memberGiftModal');
+    const memberGiftNavBtn = document.getElementById('memberGiftNavBtn');
+    const mobileDrawerGiftBtn = document.getElementById('mobileDrawerGiftBtn');
+    const closeMemberGiftBtn = document.getElementById('closeMemberGiftBtn');
+    const memberGiftBackdrop = document.getElementById('memberGiftBackdrop');
+    const memberGiftAuthContent = document.getElementById('memberGiftContentAuthenticated');
+    const memberGiftGuestContent = document.getElementById('memberGiftContentGuest');
+    const giftSignInTriggerBtn = document.getElementById('giftSignInTriggerBtn');
+    const copyGiftLinkBtn = document.getElementById('copyGiftLinkBtn');
+
+    function openMemberGiftModal() {
+        closeMobileDrawer();
+        const currentToken = localStorage.getItem('token');
+        if (currentToken) {
+            if (memberGiftAuthContent) memberGiftAuthContent.classList.remove('hidden');
+            if (memberGiftGuestContent) memberGiftGuestContent.classList.add('hidden');
+        } else {
+            if (memberGiftAuthContent) memberGiftAuthContent.classList.add('hidden');
+            if (memberGiftGuestContent) memberGiftGuestContent.classList.remove('hidden');
+        }
+        if (memberGiftModal) memberGiftModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMemberGiftModal() {
+        if (memberGiftModal) memberGiftModal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    if (memberGiftNavBtn) memberGiftNavBtn.addEventListener('click', openMemberGiftModal);
+    if (mobileDrawerGiftBtn) mobileDrawerGiftBtn.addEventListener('click', openMemberGiftModal);
+    if (closeMemberGiftBtn) closeMemberGiftBtn.addEventListener('click', closeMemberGiftModal);
+    if (memberGiftBackdrop) memberGiftBackdrop.addEventListener('click', closeMemberGiftModal);
+
+    if (giftSignInTriggerBtn) {
+        giftSignInTriggerBtn.addEventListener('click', () => {
+            closeMemberGiftModal();
+            openModal();
+        });
+    }
+
+    if (copyGiftLinkBtn) {
+        copyGiftLinkBtn.addEventListener('click', () => {
+            const link = "https://classroom.google.com/c/NzkwNDI3MjAyMzc0?cjc=zyahrwyo";
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(link).then(() => {
+                    showToast("Classroom link copied to clipboard!", "success");
+                }).catch(() => {
+                    showToast("Link: " + link, "info");
+                });
+            } else {
+                showToast("Link: " + link, "info");
+            }
+        });
+    }
+
+    // Auto-trigger gift modal upon fresh login / registration
+    if (sessionStorage.getItem('open_member_gift_modal') === 'true' && token) {
+        sessionStorage.removeItem('open_member_gift_modal');
+        setTimeout(() => {
+            openMemberGiftModal();
+        }, 400);
     }
 
     // -------------------------------------------------------------

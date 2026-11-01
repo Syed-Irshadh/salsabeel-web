@@ -6,223 +6,38 @@
     <title>Salsabeel Academy - Sacred Islamic Sciences</title>
     <link rel="icon" type="image/jpeg" href="/static/img/logo.jpeg">
 
-    <!-- Modern Sans-Serif Fonts (Plus Jakarta Sans & Inter) + Classical Arabic Calligraphy (Amiri) -->
+    <!-- Canonical Multilingual Google Fonts (Plus Jakarta Sans, Inter, Noto Sans Tamil, Amiri) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- FontAwesome for Icons -->
+    <!-- FontAwesome Vector Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Motion One for silken animations -->
+    <!-- Motion One for silken micro-interactions -->
     <script src="https://cdn.jsdelivr.net/npm/motion@10.18.0/dist/motion.umd.js"></script>
 
-    <!-- Tailwind CSS with Logo-Derived Color System -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        navy: '#08535c',     /* Deep Regal Teal (Logo Primary) */
-                        teal: {
-                            DEFAULT: '#08535c',
-                            light: '#0e6873',
-                            dark: '#04272c'
-                        },
-                        emerald: '#0e6873',  /* Vibrant Teal / Jewel Accent */
-                        gold: {
-                            DEFAULT: '#c49851', /* Antique Logo Gold */
-                            light: '#dfb76c',
-                            dark: '#a17936'
-                        },
-                        dark: '#04272c',     /* Deep Petrol Night */
-                        sand: '#f8faf9'      /* Soft Clean Background */
-                    },
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
-                        arabic: ['"Amiri"', '"Traditional Arabic"', '"Scheherazade New"', 'serif']
-                    },
-                    boxShadow: {
-                        'glow-gold': '0 0 24px rgba(196, 152, 81, 0.35)',
-                        'glow-teal': '0 0 28px rgba(14, 104, 115, 0.35)',
-                        'shadcn': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
-                        'shadcn-hover': '0 10px 25px -5px rgba(4, 39, 44, 0.12), 0 8px 10px -6px rgba(4, 39, 44, 0.06)'
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body { 
-            background-color: #f8faf9; 
-            color: #0f2427; 
-            font-family: 'Plus Jakarta Sans', Inter, system-ui, sans-serif;
-            letter-spacing: -0.015em;
-        }
-
-        /* Classical Calligraphy Utility */
-        .font-arabic {
-            font-family: 'Amiri', 'Traditional Arabic', 'Scheherazade New', serif;
-        }
-
-        /* Custom Modern Scrollbar */
-        ::-webkit-scrollbar {
-            width: 7px;
-            height: 7px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #04272c;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #0e6873;
-            border-radius: 9999px;
-            border: 1px solid rgba(196, 152, 81, 0.2);
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #c49851;
-        }
-
-        /* Hide scrollbars for touch-friendly horizontal swipe bars */
-        .scrollbar-none::-webkit-scrollbar {
-            display: none;
-        }
-        .scrollbar-none {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        /* Logo-tinted Text Selection */
-        ::selection {
-            background: rgba(196, 152, 81, 0.3);
-            color: #04272c;
-        }
-
-        /* React Shadcn Aesthetic & Logo-Derived Gradients */
-        .bg-gradient-teal {
-            background: linear-gradient(135deg, #04272c 0%, #08535c 50%, #0e6873 100%);
-        }
-        .bg-gradient-gold {
-            background: linear-gradient(135deg, #c49851 0%, #dfb76c 50%, #a17936 100%);
-        }
-        .bg-mesh-dark {
-            background-color: #04272c;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(14, 104, 115, 0.35) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(196, 152, 81, 0.25) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(8, 83, 92, 0.4) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, rgba(4, 39, 44, 0.8) 0px, transparent 50%);
-        }
-        .text-gradient-gold {
-            background: linear-gradient(135deg, #dfb76c 0%, #c49851 50%, #fae596 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .text-gradient-teal {
-            background: linear-gradient(135deg, #08535c 0%, #0e6873 50%, #17a2b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Ambient Breathing Halo for Emblem */
-        @keyframes emblemBreathing {
-            0%, 100% { 
-                box-shadow: 0 0 20px rgba(196, 152, 81, 0.35), 0 0 40px rgba(14, 104, 115, 0.2); 
-            }
-            50% { 
-                box-shadow: 0 0 35px rgba(196, 152, 81, 0.65), 0 0 60px rgba(14, 104, 115, 0.35); 
-            }
-        }
-        .emblem-halo {
-            animation: emblemBreathing 4s ease-in-out infinite;
-        }
-
-        /* Shadcn-Style Clean Card Transitions */
-        .shadcn-card {
-            background: #ffffff;
-            border: 1px solid rgba(8, 83, 92, 0.1);
-            box-shadow: 0 1px 3px 0 rgba(4, 39, 44, 0.05), 0 1px 2px -1px rgba(4, 39, 44, 0.05);
-            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .shadcn-card:hover {
-            border-color: rgba(196, 152, 81, 0.45);
-            box-shadow: 0 14px 30px -6px rgba(4, 39, 44, 0.12), 0 0 16px rgba(196, 152, 81, 0.15);
-            transform: translateY(-3px);
-        }
-
-        /* Top Navigation Link Styles */
-        .top-nav-link {
-            position: relative;
-            color: #d1d5db;
-            font-size: 0.875rem;
-            font-weight: 500;
-            padding: 0.5rem 0.875rem;
-            border-radius: 0.75rem;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-        }
-        .top-nav-link:hover {
-            color: #ffffff;
-            background-color: rgba(255, 255, 255, 0.08);
-        }
-        .top-nav-link.active {
-            color: #ffffff;
-            font-weight: 600;
-            background-color: rgba(196, 152, 81, 0.2);
-            border: 1px solid rgba(196, 152, 81, 0.35);
-        }
-        .top-nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 2px;
-            background: #c49851;
-            border-radius: 9999px;
-        }
-
-        /* Hardware-Accelerated Animation Helpers */
-        @keyframes fadeInSlideUp {
-            from { opacity: 0; transform: translateY(16px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-enter {
-            animation: fadeInSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        /* Toast Animation */
-        @keyframes toastSlideIn {
-            from { transform: translateX(100%) scale(0.95); opacity: 0; }
-            to { transform: translateX(0) scale(1); opacity: 1; }
-        }
-        .toast-item {
-            animation: toastSlideIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            pointer-events: auto;
-        }
-    </style>
+    <!-- Compiled Production-Grade Minified Stylesheet (Zero CDN overhead) -->
+    <link rel="stylesheet" href="/static/css/styles.min.css">
 </head>
-<body class="text-gray-900 font-sans min-h-screen flex flex-col antialiased">
+<body class="bg-brand-ivory text-brand-dark font-sans min-h-screen flex flex-col antialiased">
 
     <!-- ============================================================== -->
-    <!-- SACRED TOP BANNER (Bismillah & Global Admissions)              -->
+    <!-- SACRED TOP BANNER (Bismillah & Multichannel Admissions)        -->
     <!-- ============================================================== -->
-    <div class="bg-[#031d21] text-gray-300 text-xs py-2 px-4 border-b border-gold/15 flex justify-between items-center tracking-wide">
+    <div class="bg-[#031d21] text-gray-300 text-xs py-2 px-4 border-b border-brand-gold/15 flex justify-between items-center tracking-wide">
         <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
-            <div class="flex items-center space-x-2 text-gold-light font-medium mx-auto sm:mx-0">
-                <span class="font-arabic text-sm text-gold-light tracking-wide">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span>
-                <span class="hidden lg:inline text-gray-500">·</span>
-                <span class="hidden lg:inline text-gray-300 font-sans">Salsabeel Academy · பாரம்பரிய இஸ்லாமியக் கல்விக்கூடம்</span>
+            <div class="flex items-center space-x-2 text-brand-gold font-medium mx-auto sm:mx-0">
+                <span class="font-arabic text-sm text-brand-gold tracking-wide">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span>
+                <span class="hidden lg:inline text-gray-600">·</span>
+                <span class="hidden lg:inline text-gray-300 font-sans">Salsabeel Academy · <span class="font-tamil">பாரம்பரிய இஸ்லாமியக் கல்விக்கூடம்</span></span>
             </div>
-            <div class="hidden sm:flex items-center space-x-4 text-xs">
-                <a href="https://wa.me/919940523013" target="_blank" class="text-gold-light hover:text-white transition-colors flex items-center font-medium">
-                    <i class="fab fa-whatsapp text-emerald mr-1.5 text-sm"></i> Admissions Desk: +91 99405 23013
+            <div class="hidden sm:flex items-center space-x-5 text-xs">
+                <a href="https://wa.me/919940523013" target="_blank" class="text-brand-gold hover:text-white transition-colors flex items-center font-medium">
+                    <i class="fab fa-whatsapp text-emerald-400 mr-1.5 text-sm"></i> Admissions: +91 99405 23013
+                </a>
+                <a href="https://www.instagram.com/salsabeel_academy_quran?igsi=b3h0Ym9yc3FmYXZ5&utm_source=qr" target="_blank" class="text-pink-300 hover:text-white transition-colors flex items-center font-medium" title="Official Instagram Page">
+                    <i class="fab fa-instagram text-pink-400 mr-1.5 text-sm"></i> Instagram
                 </a>
             </div>
         </div>
@@ -231,74 +46,87 @@
     <!-- ============================================================== -->
     <!-- PREMIER STICKY TOP NAVBAR                                      -->
     <!-- ============================================================== -->
-    <header class="sticky top-0 z-50 bg-[#04272c]/95 backdrop-blur-md border-b border-gold/25 shadow-md transition-all duration-200">
+    <header class="sticky top-0 z-50 bg-[#04272c]/95 backdrop-blur-md border-b border-brand-gold/20 shadow-sm transition-all duration-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
-            <!-- Left: Brand Logo & Title -->
+            <!-- Left: Brand Logo & Institutional Title -->
             <a href="/" class="flex items-center space-x-3.5 group flex-shrink-0">
-                <img src="/static/img/logo.jpeg" alt="Salsabeel Emblem" class="h-11 w-11 rounded-full border-2 border-gold object-cover shadow-sm transition-transform group-hover:scale-105">
+                <img src="/static/img/logo.jpeg" alt="Salsabeel Emblem" class="h-11 w-11 rounded-full border-2 border-brand-gold object-cover shadow-sm transition-transform group-hover:scale-105">
                 <div class="flex flex-col justify-center">
                     <span class="font-bold text-lg leading-tight text-white tracking-tight flex items-center">
-                        Salsabeel <span class="text-gold ml-1">Academy</span>
+                        Salsabeel <span class="text-brand-gold ml-1">Academy</span>
                     </span>
-                    <span class="text-[10px] uppercase tracking-widest text-gold-light font-medium">Sacred Islamic Sciences</span>
+                    <span class="text-[10px] uppercase tracking-widest text-brand-gold/90 font-medium">Sacred Islamic Sciences</span>
                 </div>
             </a>
 
             <!-- Center: Desktop Navigation Links -->
             <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
-                <a href="/" class="top-nav-link" data-page="/">
-                    <i class="fas fa-home text-gold-light mr-2 text-xs"></i>
+                <a href="/" class="top-nav-link text-gray-300 hover:text-white hover:bg-white/10 px-3.5 py-2 rounded-xl text-sm font-medium transition-colors" data-page="/">
+                    <i class="fas fa-home text-brand-gold mr-2 text-xs"></i>
                     <span>Home</span>
                 </a>
-                <a href="/courses" class="top-nav-link" data-page="/courses">
-                    <i class="fas fa-book-open text-gold-light mr-2 text-xs"></i>
+                <a href="/courses" class="top-nav-link text-gray-300 hover:text-white hover:bg-white/10 px-3.5 py-2 rounded-xl text-sm font-medium transition-colors" data-page="/courses">
+                    <i class="fas fa-book-open text-brand-gold mr-2 text-xs"></i>
                     <span>Courses</span>
-                    <span class="courses-count-badge ml-1.5 text-[10px] font-bold bg-emerald/30 text-emerald-200 border border-emerald/40 px-1.5 py-0.2 rounded-md">{% set total_courses = courses_count|default(courses|length if courses is defined else 0) %}{{ total_courses }} Program{{ 's' if total_courses != 1 else '' }}</span>
+                    <span class="courses-count-badge ml-1.5 text-[10px] font-bold bg-brand-primary/40 text-emerald-200 border border-brand-primary/60 px-1.5 py-0.5 rounded-md">{% set total_courses = courses_count|default(courses|length if courses is defined else 0) %}{{ total_courses }} Program{{ 's' if total_courses != 1 else '' }}</span>
                 </a>
-                <a href="/about" class="top-nav-link" data-page="/about">
-                    <i class="fas fa-landmark text-gold-light mr-2 text-xs"></i>
+                <a href="/about" class="top-nav-link text-gray-300 hover:text-white hover:bg-white/10 px-3.5 py-2 rounded-xl text-sm font-medium transition-colors" data-page="/about">
+                    <i class="fas fa-landmark text-brand-gold mr-2 text-xs"></i>
                     <span>About Us</span>
                 </a>
-                <a href="https://wa.me/919940523013" target="_blank" class="top-nav-link text-emerald-300 hover:text-emerald-200">
+                <a href="https://wa.me/919940523013" target="_blank" class="top-nav-link text-emerald-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-xl text-sm font-medium transition-colors">
                     <i class="fab fa-whatsapp text-emerald-400 mr-1.5 text-sm"></i>
                     <span>Admissions</span>
                 </a>
-                <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="top-nav-link text-green-300 hover:text-green-200">
+                <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="top-nav-link text-green-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-xl text-sm font-medium transition-colors">
                     <i class="fas fa-bullhorn text-green-400 mr-1.5 text-xs"></i>
                     <span>Updates</span>
                 </a>
             </nav>
 
-            <!-- Right: Search, Auth & Mobile Menu Toggle -->
+            <!-- Right: Search, Member Gift, Auth & Mobile Menu Toggle -->
             <div class="flex items-center space-x-2.5 sm:space-x-3">
                 <!-- Search Hotkey Pill -->
                 <a href="/courses" class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-gray-300 hover:text-white border border-white/10 text-xs transition-colors" title="Quick Search">
-                    <i class="fas fa-search text-gold text-xs"></i>
+                    <i class="fas fa-search text-brand-gold text-xs"></i>
                     <span class="text-xs">Search</span>
                     <kbd class="px-1.5 py-0.5 rounded bg-black/30 border border-white/10 text-[10px] font-mono text-gray-400">/</kbd>
                 </a>
 
-                <!-- Sign In / Sign Up Button (Guest) -->
-                <button type="button" id="topLoginBtn" class="inline-flex items-center px-4 py-2 rounded-xl border border-gold/50 text-gold hover:bg-gold hover:text-dark font-semibold text-xs tracking-wide transition-all shadow-xs cursor-pointer">
+                <!-- Member Gift Button (Always visible; triggers gift modal) -->
+                <button type="button" id="memberGiftNavBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 border border-brand-gold/40 text-brand-gold text-xs font-semibold transition-all cursor-pointer shadow-xs" title="Member Gift: Rasmul Mushaf">
+                    <i class="fas fa-gift text-brand-gold animate-bounce"></i>
+                    <span class="hidden sm:inline">Member Gift</span>
+                </button>
+
+                <!-- Sign In / Sign Up Button (Guest Only) -->
+                <button type="button" id="topLoginBtn" class="inline-flex items-center px-4 py-2 rounded-xl border border-brand-gold/60 text-brand-gold hover:bg-brand-gold hover:text-brand-dark font-semibold text-xs tracking-wide transition-all shadow-xs cursor-pointer">
                     <i class="fas fa-user-circle mr-1.5 text-sm"></i>
                     <span>Sign In</span>
                 </button>
 
-                <!-- Admin Dashboard (Logged in Admin) -->
-                <a href="/admin" id="topAdminBtn" class="hidden inline-flex items-center px-3.5 py-2 rounded-xl bg-emerald hover:bg-teal-700 text-white font-semibold text-xs tracking-wide transition-all shadow-sm">
-                    <i class="fas fa-shield-halved mr-1.5"></i>
+                <!-- Admin Dashboard (Admin Only) -->
+                <a href="/admin" id="topAdminBtn" class="hidden inline-flex items-center px-3.5 py-2 rounded-xl bg-brand-primary hover:bg-brand-deep text-white font-semibold text-xs tracking-wide transition-all shadow-sm border border-brand-primary/40">
+                    <i class="fas fa-shield-halved mr-1.5 text-brand-gold"></i>
                     <span>Dashboard</span>
                 </a>
 
-                <!-- Sign Out (Logged in User) -->
+                <!-- User Monogram Avatar Pill (Logged In) -->
+                <div id="userProfilePill" class="hidden items-center gap-2">
+                    <div id="userMonogramAvatar" class="w-8 h-8 rounded-lg bg-brand-deep border border-brand-gold/50 flex items-center justify-center text-xs font-bold text-brand-ivory select-none">
+                        ST
+                    </div>
+                </div>
+
+                <!-- Sign Out (Logged In User) -->
                 <button type="button" id="topLogoutBtn" class="hidden inline-flex items-center px-3 py-2 rounded-xl border border-red-400/40 text-red-300 hover:bg-red-600 hover:text-white font-medium text-xs tracking-wide transition-all cursor-pointer" title="Sign Out">
                     <i class="fas fa-arrow-right-from-bracket mr-1"></i>
                     <span class="hidden sm:inline">Sign Out</span>
                 </button>
 
                 <!-- Mobile Hamburger Button -->
-                <button type="button" id="mobileDrawerOpenBtn" class="md:hidden text-gray-300 hover:text-gold p-2 rounded-lg cursor-pointer focus:outline-none" aria-label="Open mobile navigation menu">
+                <button type="button" id="mobileDrawerOpenBtn" class="md:hidden text-gray-300 hover:text-brand-gold p-2 rounded-lg cursor-pointer focus:outline-none" aria-label="Open mobile navigation menu">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
@@ -309,15 +137,15 @@
     <div id="mobileDrawerBackdrop" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 hidden transition-opacity"></div>
 
     <!-- Mobile Slide-In Drawer Navigation -->
-    <div id="mobileDrawer" class="fixed inset-y-0 left-0 w-[82vw] max-w-xs bg-gradient-to-b from-[#04272c] via-[#08535c] to-[#04272c] z-50 transform -translate-x-full transition-transform duration-300 ease-in-out border-r border-gold/30 p-5 flex flex-col justify-between shadow-2xl overflow-y-auto">
+    <div id="mobileDrawer" class="fixed inset-y-0 left-0 w-[84vw] max-w-xs bg-[#04272C] z-50 transform -translate-x-full transition-transform duration-300 ease-in-out border-r border-brand-gold/20 p-5 flex flex-col justify-between shadow-2xl overflow-y-auto">
         <div>
             <!-- Drawer Header -->
             <div class="flex items-center justify-between pb-4 border-b border-white/10">
                 <div class="flex items-center space-x-3">
-                    <img src="/static/img/logo.jpeg" alt="Logo" class="h-10 w-10 rounded-full border-2 border-gold object-cover">
+                    <img src="/static/img/logo.jpeg" alt="Logo" class="h-10 w-10 rounded-full border-2 border-brand-gold object-cover">
                     <div>
                         <h4 class="font-bold text-white text-sm">Salsabeel Academy</h4>
-                        <span class="text-[10px] text-gold-light uppercase tracking-widest">Islamic Sciences</span>
+                        <span class="text-[10px] text-brand-gold uppercase tracking-widest">Islamic Sciences</span>
                     </div>
                 </div>
                 <button type="button" id="mobileDrawerCloseBtn" class="text-gray-400 hover:text-white p-2 text-lg cursor-pointer">
@@ -327,54 +155,29 @@
 
             <!-- Drawer Nav Links -->
             <nav class="py-5 space-y-2">
-                <a href="/" class="mobile-nav-link flex items-center px-3.5 py-2.5 rounded-xl text-gray-200 hover:text-gold hover:bg-white/10 transition-colors">
-                    <i class="fas fa-home w-6 text-gold-light"></i>
+                <a href="/" class="mobile-nav-link flex items-center px-3.5 py-2.5 rounded-xl text-gray-200 hover:text-brand-gold hover:bg-white/10 transition-colors">
+                    <i class="fas fa-home w-6 text-brand-gold"></i>
                     <span class="font-medium text-sm">Home</span>
                 </a>
-                <a href="/courses" class="mobile-nav-link flex items-center justify-between px-3.5 py-2.5 rounded-xl text-gray-200 hover:text-gold hover:bg-white/10 transition-colors">
+                <a href="/courses" class="mobile-nav-link flex items-center justify-between px-3.5 py-2.5 rounded-xl text-gray-200 hover:text-brand-gold hover:bg-white/10 transition-colors">
                     <span class="flex items-center">
-                        <i class="fas fa-book-open w-6 text-gold-light"></i>
+                        <i class="fas fa-book-open w-6 text-brand-gold"></i>
                         <span class="font-medium text-sm">All Courses</span>
                     </span>
-                    <span class="mobile-courses-count-badge text-[10px] font-bold bg-emerald/30 text-emerald-200 border border-emerald/40 px-2 py-0.5 rounded-full">{% set total_courses = courses_count|default(courses|length if courses is defined else 0) %}{{ total_courses }} Live</span>
+                    <span class="mobile-courses-count-badge text-[10px] font-bold bg-brand-primary/40 text-emerald-200 border border-brand-primary/60 px-2 py-0.5 rounded-full">{% set total_courses = courses_count|default(courses|length if courses is defined else 0) %}{{ total_courses }} Live</span>
                 </a>
 
-                <!-- Mobile Drawer Discipline Directory -->
-                <div class="pt-2 pb-1">
-                    <div class="px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-gold-light flex items-center justify-between">
-                        <span>Disciplines</span>
-                        <i class="fas fa-layer-group text-xs text-gold"></i>
-                    </div>
-                    <div class="grid grid-cols-2 gap-1.5 px-2 mt-1.5">
-                        <a href="/courses?category=tafseer" class="flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors">
-                            <span class="mr-1.5 text-xs">📖</span> Tafseer
-                        </a>
-                        <a href="/courses?category=tajweed" class="flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors">
-                            <span class="mr-1.5 text-xs">🎙️</span> Tajweed
-                        </a>
-                        <a href="/courses?category=hadith" class="flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors">
-                            <span class="mr-1.5 text-xs">📜</span> Hadith
-                        </a>
-                        <a href="/courses?category=arabic" class="flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors">
-                            <span class="mr-1.5 text-xs">✍️</span> Arabic
-                        </a>
-                        <a href="/courses?category=quran" class="flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors">
-                            <span class="mr-1.5 text-xs">🕋</span> Quran
-                        </a>
-                        <a href="/courses?category=fiqh" class="flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors">
-                            <span class="mr-1.5 text-xs">⚖️</span> Fiqh
-                        </a>
-                        <a href="/courses?category=seerah" class="flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors">
-                            <span class="mr-1.5 text-xs">🌴</span> Seerah
-                        </a>
-                        <a href="/courses?category=tazkiyah" class="flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 transition-colors">
-                            <span class="mr-1.5 text-xs">🤍</span> Tazkiyah
-                        </a>
-                    </div>
-                </div>
+                <!-- Member Gift Drawer Link -->
+                <button type="button" id="mobileDrawerGiftBtn" class="w-full text-left flex items-center justify-between px-3.5 py-2.5 rounded-xl text-brand-gold bg-brand-gold/10 hover:bg-brand-gold/20 border border-brand-gold/30 transition-colors">
+                    <span class="flex items-center">
+                        <i class="fas fa-gift w-6 text-brand-gold"></i>
+                        <span class="font-semibold text-sm">Member Gift</span>
+                    </span>
+                    <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-brand-gold/20 text-brand-gold">Rasmul Mushaf</span>
+                </button>
 
-                <a href="/about" class="mobile-nav-link flex items-center px-3.5 py-2.5 rounded-xl text-gray-200 hover:text-gold hover:bg-white/10 transition-colors">
-                    <i class="fas fa-landmark w-6 text-gold-light"></i>
+                <a href="/about" class="mobile-nav-link flex items-center px-3.5 py-2.5 rounded-xl text-gray-200 hover:text-brand-gold hover:bg-white/10 transition-colors">
+                    <i class="fas fa-landmark w-6 text-brand-gold"></i>
                     <span class="font-medium text-sm">About Us</span>
                 </a>
 
@@ -388,16 +191,19 @@
                     <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="flex items-center px-3.5 py-2 rounded-xl text-red-300 hover:bg-white/10 text-sm font-medium">
                         <i class="fab fa-youtube w-6 text-red-400 text-base"></i> YouTube Channel
                     </a>
+                    <a href="https://www.instagram.com/salsabeel_academy_quran?igsi=b3h0Ym9yc3FmYXZ5&utm_source=qr" target="_blank" class="flex items-center px-3.5 py-2 rounded-xl text-pink-300 hover:bg-white/10 text-sm font-medium">
+                        <i class="fab fa-instagram w-6 text-pink-400 text-base"></i> Instagram Page
+                    </a>
                 </div>
             </nav>
         </div>
 
         <!-- Drawer Bottom Auth -->
         <div class="pt-4 border-t border-white/10 space-y-2">
-            <a href="#" id="mobileDrawerLoginBtn" class="block text-center py-2.5 px-4 rounded-xl border border-gold text-gold font-semibold text-sm hover:bg-gold hover:text-dark transition-colors">
+            <a href="#" id="mobileDrawerLoginBtn" class="block text-center py-2.5 px-4 rounded-xl border border-brand-gold text-brand-gold font-semibold text-sm hover:bg-brand-gold hover:text-brand-dark transition-colors">
                 Sign Up / Login
             </a>
-            <a href="/admin" id="mobileDrawerAdminBtn" class="hidden block text-center py-2.5 px-4 rounded-xl bg-emerald text-white font-semibold text-sm hover:bg-teal-700 transition-colors">
+            <a href="/admin" id="mobileDrawerAdminBtn" class="hidden block text-center py-2.5 px-4 rounded-xl bg-brand-primary text-white font-semibold text-sm hover:bg-brand-deep transition-colors">
                 Admin Dashboard
             </a>
             <a href="#" id="mobileDrawerLogoutBtn" class="hidden block text-center py-2 px-4 rounded-xl border border-red-400 text-red-300 hover:bg-red-500 hover:text-white text-sm font-medium transition-colors">
@@ -415,21 +221,22 @@
             {% block content %}{% endblock %}
         </main>
 
-        <!-- Modern Footer (Shadcn aesthetic) -->
-        <footer class="bg-[#04272c] text-white py-12 mt-auto border-t border-gold/30">
+        <!-- Minimal Luxury Academic Footer -->
+        <footer class="bg-[#04272C] text-white py-12 mt-auto border-t border-brand-gold/25">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <div class="flex items-center justify-center space-x-3 mb-3">
-                    <img src="/static/img/logo.jpeg" alt="Salsabeel Academy Logo" class="h-10 w-10 rounded-full border-2 border-gold object-cover shadow-sm">
+                    <img src="/static/img/logo.jpeg" alt="Salsabeel Academy Logo" class="h-10 w-10 rounded-full border-2 border-brand-gold object-cover shadow-sm">
                     <span class="text-lg font-bold text-white tracking-tight">Salsabeel Academy</span>
                 </div>
-                <p class="text-gray-400 text-xs sm:text-sm max-w-md mx-auto mb-5 leading-relaxed">
+                <p class="text-gray-400 text-xs sm:text-sm max-w-md mx-auto mb-5 leading-relaxed font-body">
                     Dedicated to providing structured classical Islamic education in the Tamil language for seekers worldwide.
                 </p>
-                <div class="flex items-center justify-center space-x-5 mb-5">
-                    <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="text-emerald hover:text-green-300 transition-colors text-xl" title="WhatsApp Channel"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="text-red-400 hover:text-red-300 transition-colors text-xl" title="YouTube Channel"><i class="fab fa-youtube"></i></a>
+                <div class="flex items-center justify-center space-x-6 mb-5">
+                    <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" class="text-emerald-400 hover:text-emerald-300 transition-colors text-xl" title="Official WhatsApp Channel"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="text-red-400 hover:text-red-300 transition-colors text-xl" title="Official YouTube Channel"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.instagram.com/salsabeel_academy_quran?igsi=b3h0Ym9yc3FmYXZ5&utm_source=qr" target="_blank" class="text-pink-400 hover:text-pink-300 transition-colors text-xl" title="Official Instagram Page"><i class="fab fa-instagram"></i></a>
                 </div>
-                <p class="text-gray-500 text-xs">&copy; 2026 Salsabeel Academy. All rights reserved.</p>
+                <p class="text-gray-500 text-xs font-body">&copy; 2026 Salsabeel Academy. All rights reserved.</p>
             </div>
         </footer>
     </div>
@@ -437,84 +244,127 @@
     <!-- Global Toast Notification Container -->
     <div id="toastContainer" class="fixed bottom-5 sm:right-5 inset-x-4 sm:inset-x-auto sm:w-80 z-[9999] flex flex-col gap-2.5 pointer-events-none"></div>
 
+    <!-- Member Gift Modal (Rasmul Mushaf Google Classroom) -->
+    <div id="memberGiftModal" class="hidden fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="memberGiftTitle">
+        <div class="flex items-center justify-center min-h-screen px-4 py-8 text-center sm:p-0">
+            <div class="fixed inset-0 bg-[#04272C]/80 backdrop-blur-xs transition-opacity" id="memberGiftBackdrop"></div>
+            <div class="relative inline-block bg-white rounded-2xl text-left overflow-hidden shadow-academic-modal transform transition-all sm:my-8 sm:max-w-md w-full z-10 border border-brand-gold/30 p-6 sm:p-8">
+                <button type="button" id="closeMemberGiftBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 p-1 rounded-lg cursor-pointer">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+                <div class="text-center">
+                    <div class="w-14 h-14 rounded-2xl bg-brand-gold/15 border border-brand-gold/40 flex items-center justify-center mx-auto mb-4 text-2xl text-brand-gold">
+                        🎁
+                    </div>
+                    <span class="inline-block bg-brand-gold/15 text-brand-dark border border-brand-gold/40 text-[11px] font-bold uppercase tracking-wider py-0.5 px-3 rounded-full mb-2">
+                        Member Privilege
+                    </span>
+                    <h3 id="memberGiftTitle" class="text-xl sm:text-2xl font-bold text-brand-dark mb-1 tracking-tight">
+                        A lovely gift for our members👇
+                    </h3>
+                    <h4 class="text-lg font-bold text-brand-primary mb-3">
+                        Rasmul Mushaf <span class="font-arabic text-brand-gold text-base">(رَسْمُ الْمُصْحَفِ)</span>
+                    </h4>
+                    <p class="text-xs sm:text-sm text-gray-600 mb-6 leading-relaxed font-body">
+                        Complimentary access to the exclusive <strong>Rasmul Mushaf</strong> study portal on Google Classroom, covering the sacred calligraphy and orthography of the Holy Qur'an.
+                    </p>
+
+                    <!-- Dynamic State Container -->
+                    <div id="memberGiftContentAuthenticated" class="space-y-3">
+                        <a href="https://classroom.google.com/c/NzkwNDI3MjAyMzc0?cjc=zyahrwyo" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center py-3 px-5 rounded-xl bg-brand-primary hover:bg-brand-deep text-white font-bold text-sm shadow-sm transition-all">
+                            <i class="fas fa-graduation-cap mr-2 text-brand-gold"></i> Open Google Classroom
+                        </a>
+                        <div class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl p-2.5">
+                            <input type="text" readonly value="https://classroom.google.com/c/NzkwNDI3MjAyMzc0?cjc=zyahrwyo" class="w-full bg-transparent text-xs text-gray-600 font-mono select-all focus:outline-none truncate">
+                            <button type="button" id="copyGiftLinkBtn" class="flex-shrink-0 px-3 py-1 bg-white hover:bg-gray-100 border border-gray-300 rounded-lg text-xs font-semibold text-brand-dark transition-colors cursor-pointer">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="memberGiftContentGuest" class="hidden space-y-3">
+                        <p class="text-xs text-amber-700 bg-amber-50 border border-amber-200 p-3 rounded-xl leading-relaxed">
+                            <i class="fas fa-lock mr-1.5 text-brand-gold"></i> Please sign in or create a free student account to claim this gift.
+                        </p>
+                        <button type="button" id="giftSignInTriggerBtn" class="w-full inline-flex items-center justify-center py-3 px-5 rounded-xl bg-brand-gold hover:bg-[#b38843] text-brand-dark font-bold text-sm shadow-sm transition-all cursor-pointer">
+                            <i class="fas fa-user-circle mr-2"></i> Sign In to Claim Gift
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Custom Branded Confirmation Dialog Modal -->
-    <div id="customConfirmModal" class="hidden fixed inset-0 z-[9998] overflow-y-auto bg-dark/75 backdrop-blur-xs flex items-center justify-center p-4" role="dialog" aria-modal="true">
+    <div id="customConfirmModal" class="hidden fixed inset-0 z-[9998] overflow-y-auto bg-[#04272C]/80 backdrop-blur-xs flex items-center justify-center p-4" role="dialog" aria-modal="true">
         <div class="fixed inset-0 cursor-pointer" id="confirmModalBackdrop"></div>
-        <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 z-10 border border-gold/30 transform transition-all text-left">
+        <div class="relative bg-white rounded-2xl shadow-academic-modal max-w-md w-full p-6 z-10 border border-brand-gold/30 transform transition-all text-left">
             <div class="flex items-start space-x-4">
-                <div id="confirmModalIconBg" class="w-12 h-12 rounded-xl bg-amber-50 border border-gold/40 flex items-center justify-center flex-shrink-0 text-gold text-xl">
+                <div id="confirmModalIconBg" class="w-12 h-12 rounded-xl bg-amber-50 border border-brand-gold/40 flex items-center justify-center flex-shrink-0 text-brand-gold text-xl">
                     <i id="confirmModalIcon" class="fas fa-question-circle"></i>
                 </div>
                 <div class="flex-grow">
-                    <h3 id="confirmModalTitle" class="text-lg font-bold text-navy tracking-tight">Confirm Action</h3>
-                    <p id="confirmModalMessage" class="text-sm text-gray-600 mt-1 leading-relaxed">Are you sure you want to proceed?</p>
+                    <h3 id="confirmModalTitle" class="text-lg font-bold text-brand-dark tracking-tight">Confirm Action</h3>
+                    <p id="confirmModalMessage" class="text-sm text-gray-600 mt-1 leading-relaxed font-body">Are you sure you want to proceed?</p>
                 </div>
             </div>
             <div class="mt-6 flex justify-end gap-3">
                 <button type="button" id="confirmModalCancelBtn" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer">
                     Cancel
                 </button>
-                <button type="button" id="confirmModalConfirmBtn" class="px-5 py-2 text-sm font-bold text-white bg-navy hover:bg-teal-700 rounded-xl transition-all shadow-sm cursor-pointer">
+                <button type="button" id="confirmModalConfirmBtn" class="px-5 py-2 text-sm font-bold text-white bg-brand-primary hover:bg-brand-deep rounded-xl transition-all shadow-sm cursor-pointer">
                     Confirm
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Auth Modal (Modern Shadcn dialog style) -->
-    <div id="authModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <!-- Background overlay -->
-            <div class="fixed inset-0 bg-dark/75 backdrop-blur-xs transition-opacity modal-overlay" aria-hidden="true"></div>
-            
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            
-            <!-- Modal Panel -->
-            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md w-full relative z-10 border border-gray-100">
-                <div class="bg-white px-6 pt-6 pb-6 sm:p-8">
-                    <div class="absolute top-0 right-0 pt-4 pr-4">
-                        <button type="button" class="modal-close text-gray-400 hover:text-gray-600 focus:outline-none p-1 rounded-lg">
-                            <span class="sr-only">Close</span>
-                            <i class="fas fa-times text-xl"></i>
-                        </button>
+    <!-- Auth Modal (Clean Academic Dialog) -->
+    <div id="authModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modalTitle" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 py-8 text-center sm:p-0">
+            <div class="fixed inset-0 bg-[#04272C]/80 backdrop-blur-xs transition-opacity modal-overlay" aria-hidden="true"></div>
+            <div class="relative inline-block bg-white rounded-2xl text-left overflow-hidden shadow-academic-modal transform transition-all sm:my-8 sm:max-w-md w-full z-10 border border-brand-gold/20 p-6 sm:p-8">
+                <div class="absolute top-4 right-4">
+                    <button type="button" class="modal-close text-gray-400 hover:text-gray-600 focus:outline-none p-1 rounded-lg cursor-pointer">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+                <div class="w-full">
+                    <div class="flex justify-center mb-4">
+                        <img src="/static/img/logo.jpeg" alt="Logo" class="h-12 w-12 rounded-full border-2 border-brand-gold object-cover shadow-sm">
                     </div>
-                    <div class="w-full">
-                        <div class="flex justify-center mb-4">
-                            <img src="/static/img/logo.jpeg" alt="Logo" class="h-14 w-14 rounded-full border-2 border-gold object-cover shadow-sm">
+                    <h3 class="text-2xl font-bold text-brand-dark text-center mb-6 tracking-tight" id="modalTitle">Sign In to Salsabeel</h3>
+                    <form id="authForm" class="space-y-4">
+                        <div id="nameGroup" class="hidden">
+                            <label for="name" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Full Name</label>
+                            <input type="text" id="name" placeholder="Your Name" autocomplete="name" class="block w-full border border-gray-300 rounded-xl shadow-xs py-2.5 px-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary">
                         </div>
-                        <h3 class="text-2xl font-bold text-navy text-center mb-6 tracking-tight" id="modalTitle">Sign In to Salsabeel</h3>
-                        <form id="authForm" class="space-y-4">
-                            <div id="nameGroup" class="hidden">
-                                <label for="name" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Full Name</label>
-                                <input type="text" id="name" placeholder="Your Name" autocomplete="name" class="block w-full border border-gray-300 rounded-xl shadow-xs py-2.5 px-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald focus:border-emerald">
+                        <div>
+                            <label for="email" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Email Address</label>
+                            <input type="email" id="email" required autocomplete="email" class="block w-full border border-gray-300 rounded-xl shadow-xs py-2.5 px-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary">
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <label for="password" class="block text-xs font-bold uppercase tracking-wider text-gray-700">Password</label>
+                                <button type="button" id="forgotPasswordOpenBtn" class="text-xs text-brand-primary hover:underline font-semibold cursor-pointer">
+                                    Forgot Password?
+                                </button>
                             </div>
-                            <div>
-                                <label for="email" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Email Address</label>
-                                <input type="email" id="email" required autocomplete="email" class="block w-full border border-gray-300 rounded-xl shadow-xs py-2.5 px-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald focus:border-emerald">
+                            <div class="relative">
+                                <input type="password" id="password" required minlength="8" autocomplete="current-password" placeholder="At least 8 characters" class="block w-full border border-gray-300 rounded-xl shadow-xs py-2.5 pl-3.5 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary">
+                                <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-700 cursor-pointer text-sm" data-target="password" title="Toggle password visibility">
+                                    <i class="far fa-eye"></i>
+                                </button>
                             </div>
-                            <div>
-                                <div class="flex items-center justify-between mb-1">
-                                    <label for="password" class="block text-xs font-bold uppercase tracking-wider text-gray-700">Password</label>
-                                    <button type="button" id="forgotPasswordOpenBtn" class="text-xs text-emerald hover:underline font-semibold cursor-pointer">
-                                        Forgot Password?
-                                    </button>
-                                </div>
-                                <div class="relative">
-                                    <input type="password" id="password" required minlength="8" autocomplete="current-password" placeholder="At least 8 characters" class="block w-full border border-gray-300 rounded-xl shadow-xs py-2.5 pl-3.5 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-emerald focus:border-emerald">
-                                    <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-700 cursor-pointer text-sm" data-target="password" title="Toggle password visibility">
-                                        <i class="far fa-eye"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <button type="submit" id="authSubmitBtn" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-emerald hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald transition-colors">
-                                Sign In
-                            </button>
-                            <p class="text-center text-sm text-gray-500 pt-2">
-                                <span id="authTogglePrompt">Don't have an account?</span>
-                                <button type="button" id="authToggleBtn" class="text-emerald hover:underline font-semibold ml-1">Sign Up</button>
-                            </p>
-                        </form>
-                    </div>
+                        </div>
+                        <button type="submit" id="authSubmitBtn" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-brand-primary hover:bg-brand-deep focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary transition-colors cursor-pointer">
+                            Sign In
+                        </button>
+                        <p class="text-center text-sm text-gray-500 pt-2 font-body">
+                            <span id="authTogglePrompt">Don't have an account?</span>
+                            <button type="button" id="authToggleBtn" class="text-brand-primary hover:underline font-semibold ml-1 cursor-pointer">Sign Up</button>
+                        </p>
+                    </form>
                 </div>
             </div>
         </div>
@@ -522,93 +372,90 @@
 
     <!-- Forgot Password Modal -->
     <div id="forgotPasswordModal" class="hidden fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-dark/75 backdrop-blur-xs transition-opacity forgot-modal-overlay"></div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md w-full relative z-10 border border-gray-100">
-                <div class="bg-white px-6 pt-6 pb-6 sm:p-8">
-                    <div class="absolute top-0 right-0 pt-4 pr-4">
-                        <button type="button" id="closeForgotModalBtn" class="text-gray-400 hover:text-gray-600 focus:outline-none p-1 rounded-lg">
-                            <i class="fas fa-times text-xl"></i>
+        <div class="flex items-center justify-center min-h-screen px-4 py-8 text-center sm:p-0">
+            <div class="fixed inset-0 bg-[#04272C]/80 backdrop-blur-xs transition-opacity forgot-modal-overlay"></div>
+            <div class="relative inline-block bg-white rounded-2xl text-left overflow-hidden shadow-academic-modal transform transition-all sm:my-8 sm:max-w-md w-full z-10 border border-brand-gold/20 p-6 sm:p-8">
+                <div class="absolute top-4 right-4">
+                    <button type="button" id="closeForgotModalBtn" class="text-gray-400 hover:text-gray-600 focus:outline-none p-1 rounded-lg cursor-pointer">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Step 1: Request Code Form -->
+                <div id="forgotStep1">
+                    <div class="w-12 h-12 bg-amber-50 text-brand-gold rounded-2xl border border-brand-gold/30 flex items-center justify-center mx-auto mb-4 text-xl">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-dark text-center mb-2 tracking-tight">Forgot Your Password?</h3>
+                    <p class="text-xs text-gray-500 text-center mb-6 leading-relaxed font-body">
+                        Enter the email registered with your account. We will send a 6-digit verification code to reset your password.
+                    </p>
+                    <form id="requestCodeForm" class="space-y-4">
+                        <div>
+                            <label for="forgotEmail" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Email Address</label>
+                            <input type="email" id="forgotEmail" required placeholder="name@example.com" class="block w-full border border-gray-300 rounded-xl shadow-xs py-2.5 px-3.5 text-sm focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary">
+                        </div>
+                        <button type="submit" id="sendCodeBtn" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-brand-primary hover:bg-brand-deep transition-colors cursor-pointer">
+                            Send 6-Digit Code
                         </button>
-                    </div>
-
-                    <!-- Step 1: Request Code Form -->
-                    <div id="forgotStep1">
-                        <div class="w-12 h-12 bg-amber-50 text-gold rounded-2xl border border-gold/30 flex items-center justify-center mx-auto mb-4 text-xl">
-                            <i class="fas fa-key"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-navy text-center mb-2 tracking-tight">Forgot Your Password?</h3>
-                        <p class="text-xs text-gray-500 text-center mb-6 leading-relaxed">
-                            Enter the email registered with your account. We will send a 6-digit verification code to reset your password.
-                        </p>
-                        <form id="requestCodeForm" class="space-y-4">
-                            <div>
-                                <label for="forgotEmail" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Email Address</label>
-                                <input type="email" id="forgotEmail" required placeholder="name@example.com" class="block w-full border border-gray-300 rounded-xl shadow-xs py-2.5 px-3.5 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald">
-                            </div>
-                            <button type="submit" id="sendCodeBtn" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-navy hover:bg-teal-700 transition-colors cursor-pointer">
-                                Send 6-Digit Code
+                        <p class="text-center text-xs text-gray-500 pt-1">
+                            <button type="button" id="backToSignInBtn" class="text-brand-primary hover:underline font-semibold cursor-pointer">
+                                <i class="fas fa-arrow-left mr-1"></i> Back to Sign In
                             </button>
-                            <p class="text-center text-xs text-gray-500 pt-1">
-                                <button type="button" id="backToSignInBtn" class="text-emerald hover:underline font-semibold">
-                                    <i class="fas fa-arrow-left mr-1"></i> Back to Sign In
-                                </button>
-                            </p>
-                        </form>
-                    </div>
-
-                    <!-- Step 2: Verify Code and Reset Password Form -->
-                    <div id="forgotStep2" class="hidden">
-                        <div class="w-12 h-12 bg-emerald/10 text-emerald rounded-2xl border border-emerald/30 flex items-center justify-center mx-auto mb-4 text-xl">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-navy text-center mb-2 tracking-tight">Enter Verification Code</h3>
-                        <p class="text-xs text-gray-500 text-center mb-6 leading-relaxed">
-                            We've sent a 6-digit code to <span id="displayTargetEmail" class="font-bold text-navy"></span>. Enter it below along with your new password.
                         </p>
-                        <form id="resetPasswordForm" class="space-y-4">
-                            <div>
-                                <label for="resetCode" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">6-Digit Code</label>
-                                <input type="text" id="resetCode" required maxlength="6" pattern="\d{6}" placeholder="e.g. 123456" class="block w-full text-center text-xl font-mono tracking-widest border border-gray-300 rounded-xl py-2 px-3 focus:ring-2 focus:ring-emerald focus:border-emerald">
-                            </div>
-                            <div>
-                                <label for="resetNewPassword" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">New Password (Min. 8 characters)</label>
-                                <div class="relative">
-                                    <input type="password" id="resetNewPassword" required minlength="8" placeholder="Enter new password" class="block w-full border border-gray-300 rounded-xl py-2.5 pl-3.5 pr-10 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald">
-                                    <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-700 cursor-pointer text-sm" data-target="resetNewPassword" title="Toggle password visibility">
-                                        <i class="far fa-eye"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div>
-                                <label for="resetConfirmPassword" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Confirm New Password</label>
-                                <div class="relative">
-                                    <input type="password" id="resetConfirmPassword" required minlength="8" placeholder="Confirm new password" class="block w-full border border-gray-300 rounded-xl py-2.5 pl-3.5 pr-10 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald">
-                                    <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-700 cursor-pointer text-sm" data-target="resetConfirmPassword" title="Toggle password visibility">
-                                        <i class="far fa-eye"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <button type="submit" id="resetSubmitBtn" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-emerald hover:bg-teal-700 transition-colors cursor-pointer">
-                                Update & Save Password
-                            </button>
-                            <div class="flex items-center justify-between text-xs text-gray-500 pt-1">
-                                <button type="button" id="resendCodeBtn" class="text-emerald hover:underline font-medium">
-                                    Resend Code
-                                </button>
-                                <button type="button" id="backToStep1Btn" class="text-gray-400 hover:text-gray-600">
-                                    Change Email
-                                </button>
-                            </div>
-                        </form>
+                    </form>
+                </div>
+
+                <!-- Step 2: Verify Code and Reset Password Form -->
+                <div id="forgotStep2" class="hidden">
+                    <div class="w-12 h-12 bg-emerald-50 text-emerald-800 rounded-2xl border border-emerald-200 flex items-center justify-center mx-auto mb-4 text-xl">
+                        <i class="fas fa-shield-alt"></i>
                     </div>
+                    <h3 class="text-xl font-bold text-brand-dark text-center mb-2 tracking-tight">Enter Verification Code</h3>
+                    <p class="text-xs text-gray-500 text-center mb-6 leading-relaxed font-body">
+                        We've sent a 6-digit code to <span id="displayTargetEmail" class="font-bold text-brand-dark"></span>. Enter it below along with your new password.
+                    </p>
+                    <form id="resetPasswordForm" class="space-y-4">
+                        <div>
+                            <label for="resetCode" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">6-Digit Code</label>
+                            <input type="text" id="resetCode" required maxlength="6" pattern="\d{6}" placeholder="e.g. 123456" class="block w-full text-center text-xl font-mono tracking-widest border border-gray-300 rounded-xl py-2 px-3 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary">
+                        </div>
+                        <div>
+                            <label for="resetNewPassword" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">New Password (Min. 8 characters)</label>
+                            <div class="relative">
+                                <input type="password" id="resetNewPassword" required minlength="8" placeholder="Enter new password" class="block w-full border border-gray-300 rounded-xl py-2.5 pl-3.5 pr-10 text-sm focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary">
+                                <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-700 cursor-pointer text-sm" data-target="resetNewPassword" title="Toggle password visibility">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="resetConfirmPassword" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Confirm New Password</label>
+                            <div class="relative">
+                                <input type="password" id="resetConfirmPassword" required minlength="8" placeholder="Confirm new password" class="block w-full border border-gray-300 rounded-xl py-2.5 pl-3.5 pr-10 text-sm focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary">
+                                <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-700 cursor-pointer text-sm" data-target="resetConfirmPassword" title="Toggle password visibility">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" id="resetSubmitBtn" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-brand-primary hover:bg-brand-deep transition-colors cursor-pointer">
+                            Update & Save Password
+                        </button>
+                        <div class="flex items-center justify-between text-xs text-gray-500 pt-1">
+                            <button type="button" id="resendCodeBtn" class="text-brand-primary hover:underline font-medium cursor-pointer">
+                                Resend Code
+                            </button>
+                            <button type="button" id="backToStep1Btn" class="text-gray-400 hover:text-gray-600 cursor-pointer">
+                                Change Email
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Custom JS (v5.1 cache bust) -->
-    <script src="/static/js/main.js?v=5.1"></script>
+    <!-- Custom JS (v6.0 cache bust) -->
+    <script src="/static/js/main.js?v=6.0"></script>
 </body>
 </html>
