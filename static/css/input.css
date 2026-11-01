@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background-color: #F8F7F2;
+    color: #04272C;
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.015em;
+  }
+  ::selection {
+    background: rgba(196, 152, 81, 0.3);
+    color: #04272C;
+  }
+}
+
+/* Multilingual Typography Rules */
+.font-sans {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+.font-body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+.font-tamil {
+  font-family: 'Noto Sans Tamil', 'Plus Jakarta Sans', sans-serif;
+  line-height: 1.8;
+}
+.font-arabic {
+  font-family: 'Amiri', 'Traditional Arabic', serif;
+  line-height: 2.0;
+}
+
+/* Custom Academic Modern Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #04272C;
+}
+::-webkit-scrollbar-thumb {
+  background: #0E6873;
+  border-radius: 9999px;
+  border: 1px solid rgba(196, 152, 81, 0.2);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C49851;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Card Transitions & Elevations */
+.academic-card {
+  background: #ffffff;
+  border: 1px solid rgba(8, 83, 92, 0.12);
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(4, 39, 44, 0.04), 0 1px 2px -1px rgba(4, 39, 44, 0.04);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.academic-card:hover {
+  border-color: rgba(196, 152, 81, 0.4);
+  box-shadow: 0 10px 25px -5px rgba(4, 39, 44, 0.08), 0 8px 10px -6px rgba(4, 39, 44, 0.04);
+}
+
+/* Legacy Gradients and Emblem Breathing (Preserved for zero regression) */
+.bg-gradient-teal {
+  background: linear-gradient(135deg, #04272C 0%, #08535C 50%, #0E6873 100%);
+}
+.bg-gradient-gold {
+  background: linear-gradient(135deg, #C49851 0%, #DFB76C 50%, #A17936 100%);
+}
+.bg-mesh-dark {
+  background-color: #04272C;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(14, 104, 115, 0.35) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(196, 152, 81, 0.25) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(8, 83, 92, 0.4) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(4, 39, 44, 0.8) 0px, transparent 50%);
+}
+.text-gradient-gold {
+  background: linear-gradient(135deg, #DFB76C 0%, #C49851 50%, #FAE596 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.text-gradient-teal {
+  background: linear-gradient(135deg, #08535C 0%, #0E6873 50%, #17A2B8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes emblemBreathing {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(196, 152, 81, 0.35), 0 0 40px rgba(14, 104, 115, 0.2); 
+  }
+  50% { 
+    box-shadow: 0 0 35px rgba(196, 152, 81, 0.65), 0 0 60px rgba(14, 104, 115, 0.35); 
+  }
+}
+.emblem-halo {
+  animation: emblemBreathing 4s ease-in-out infinite;
+}
+
+.shadcn-card {
+  background: #ffffff;
+  border: 1px solid rgba(8, 83, 92, 0.1);
+  box-shadow: 0 1px 3px 0 rgba(4, 39, 44, 0.05), 0 1px 2px -1px rgba(4, 39, 44, 0.05);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.shadcn-card:hover {
+  border-color: rgba(196, 152, 81, 0.45);
+  box-shadow: 0 14px 30px -6px rgba(4, 39, 44, 0.12), 0 0 16px rgba(196, 152, 81, 0.15);
+  transform: translateY(-3px);
+}

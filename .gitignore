@@ -30,3 +30,6 @@ Thumbs.db
 .vercel
 pyproject.toml
 uv.lock
+
+# Node Dependencies
+node_modules/

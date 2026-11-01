@@ -1,0 +1,11 @@
+{
+  "name": "salsabeel-website",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build:css": "tailwindcss -i static/css/input.css -o static/css/styles.min.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.17"
+  }
+}
