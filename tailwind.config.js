@@ -37,8 +37,6 @@ module.exports = {
     'text-gray-400',
     'text-gray-600',
     'text-gray-800',
-    'shadow-glow-teal',
-    'shadow-glow-gold',
     'shadow-academic',
     'shadow-academic-hover',
     'shadow-academic-modal'
@@ -47,30 +45,33 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          canvas: '#FAFAF7',   /* Warm Scholarly Vellum / Architectural Off-White */
-          surface: '#FFFFFF',  /* Luminous White Card Surface */
-          border: '#E5E3DA',   /* Hairline 1px Structural Rules */
-          ink: '#0A2528',      /* Deep Scholarly Charcoal-Teal (13.8:1 AAA contrast) */
-          'ink-muted': '#4A5A5C', /* Secondary Slate Ink (5.8:1 AA contrast) */
-          bronze: '#8A6220',   /* Deep Antique Bronze Text on Light (4.8:1 AA contrast) */
-          deep: '#06383A',     /* Deep Teal (Anchor Tone: Footer, CTAs, Admin Sidebar) */
-          primary: '#08535C',  /* Primary Brand Teal */
-          muted: '#0E6873',    /* Muted Turquoise */
-          gold: '#C49851',     /* Antique Gold Accent */
+          canvas: '#F7F4EC',   /* Warm Ivory (Primary Canvas) */
+          ivory: '#F7F4EC',    /* Warm Ivory */
+          sand: '#E9E3D6',     /* Warm Sand (Four Pillars & Faculty Background) */
+          sage: '#DCE9E6',     /* Muted Sage (Hadith ribbon, About Highlight, Course Filters) */
+          surface: '#FFFFFF',  /* Pure White for elevated cards */
+          border: '#D8D3C5',   /* Warm Visible Hairline Rule */
+          ink: '#0A2528',      /* Primary Text (Deep Charcoal-Teal — 13.5:1 AAA) */
+          'ink-muted': '#3B4E50', /* Secondary Slate Ink (6.8:1 AA) */
+          bronze: '#7A551E',   /* High-Contrast Bronze Text for Light Surfaces (4.9:1 AA) */
+          deep: '#174C4B',     /* Deep Teal (Anchor Tone: Footer, CTAs, Admin Sidebar) */
+          primary: '#174C4B',  /* Primary Brand Teal */
+          muted: '#2A6362',    /* Muted Teal */
+          turquoise: '#A9C5C0', /* Muted Turquoise (Hairlines on Sage) */
+          gold: '#B78A43',     /* Antique Gold Accent & Rules */
           'gold-light': '#DFC188', /* Luminous Gold (Solely on Deep Teal surfaces) */
-          ivory: '#FAFAF7',    /* Replaced muddy cream with Warm Canvas */
-          dark: '#04272C'      /* Dark Petrol Night */
+          dark: '#0A2528'      /* Dark Petrol Ink */
         },
         /* Preserved legacy mappings for zero-regression template migration */
-        navy: '#08535c',
-        emerald: '#0e6873',
+        navy: '#174C4B',
+        emerald: '#2A6362',
         gold: {
-          DEFAULT: '#8A6220',
+          DEFAULT: '#B78A43',
           light: '#DFC188',
-          dark: '#684A15'
+          dark: '#7A551E'
         },
-        dark: '#04272c',
-        sand: '#FAFAF7'
+        dark: '#0A2528',
+        sand: '#E9E3D6'
       },
       fontFamily: {
         serif: ['"Newsreader"', 'Georgia', 'serif'],
@@ -82,10 +83,10 @@ module.exports = {
         'tamil-serif': ['"Noto Serif Tamil"', 'serif']
       },
       boxShadow: {
-        'academic': '0 1px 3px 0 rgba(4, 39, 44, 0.04), 0 1px 2px -1px rgba(4, 39, 44, 0.04)',
-        'academic-hover': '0 8px 24px -4px rgba(4, 39, 44, 0.08), 0 4px 8px -4px rgba(4, 39, 44, 0.04)',
-        'academic-modal': '0 25px 50px -12px rgba(4, 39, 44, 0.25)',
-        'editorial': '0 4px 20px -2px rgba(6, 56, 58, 0.06)'
+        'academic': '0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04)',
+        'academic-hover': '0 8px 24px -4px rgba(0, 0, 0, 0.08), 0 4px 8px -4px rgba(0, 0, 0, 0.04)',
+        'academic-modal': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        'editorial': '0 4px 20px -2px rgba(0, 0, 0, 0.06)'
       }
     }
   },

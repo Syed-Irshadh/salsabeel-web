@@ -7,14 +7,14 @@
     box-sizing: border-box;
   }
   body {
-    background-color: #FAFAF7;
+    background-color: #F7F4EC;
     color: #0A2528;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     letter-spacing: -0.011em;
   }
   ::selection {
-    background: rgba(8, 83, 92, 0.15);
-    color: #06383A;
+    background: rgba(23, 76, 75, 0.2);
+    color: #0A2528;
   }
 }
 
@@ -46,15 +46,14 @@
   height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #04272C;
+  background: #F7F4EC;
 }
 ::-webkit-scrollbar-thumb {
-  background: #0E6873;
+  background: #C7C2B4;
   border-radius: 9999px;
-  border: 1px solid rgba(196, 152, 81, 0.2);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #C49851;
+  background: #A8A293;
 }
 
 .scrollbar-none::-webkit-scrollbar {
@@ -68,53 +67,57 @@
 /* Card Transitions & Elevations */
 .academic-card {
   background: #ffffff;
-  border: 1px solid rgba(8, 83, 92, 0.12);
+  border: 1px solid #D8D3C5;
   border-radius: 1rem;
-  box-shadow: 0 1px 3px 0 rgba(4, 39, 44, 0.04), 0 1px 2px -1px rgba(4, 39, 44, 0.04);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
   transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .academic-card:hover {
-  border-color: rgba(196, 152, 81, 0.4);
-  box-shadow: 0 10px 25px -5px rgba(4, 39, 44, 0.08), 0 8px 10px -6px rgba(4, 39, 44, 0.04);
+  border-color: #B78A43;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
 }
+
+/* Surface Alternation Helpers */
+.bg-brand-ivory { background-color: #F7F4EC; }
+.bg-brand-sand { background-color: #E9E3D6; }
+.bg-brand-sage { background-color: #DCE9E6; }
+.bg-brand-deep { background-color: #174C4B; }
+.text-brand-deep { color: #174C4B; }
+.text-brand-bronze { color: #7A551E; }
+.border-brand-hairline { border-color: #D8D3C5; }
+.border-brand-sand { border-color: #D8D3C5; }
+.border-brand-sage { border-color: #A9C5C0; }
+.border-brand-gold { border-color: #B78A43; }
 
 /* Legacy Helper Classes (Grounded solids for zero regression) */
 .bg-gradient-teal {
-  background-color: #06383A;
+  background-color: #174C4B;
 }
 .bg-gradient-gold {
-  background-color: #8A6220;
+  background-color: #B78A43;
 }
 .bg-mesh-dark {
-  background-color: #06383A;
+  background-color: #174C4B;
 }
 .text-gradient-gold {
-  color: #8A6220;
+  color: #7A551E;
 }
 .text-gradient-teal {
-  color: #08535C;
+  color: #174C4B;
 }
 
-@keyframes emblemBreathing {
-  0%, 100% { 
-    box-shadow: 0 4px 12px rgba(6, 56, 58, 0.15); 
-  }
-  50% { 
-    box-shadow: 0 6px 16px rgba(6, 56, 58, 0.25); 
-  }
-}
 .emblem-halo {
-  animation: emblemBreathing 4s ease-in-out infinite;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .shadcn-card {
   background: #ffffff;
-  border: 1px solid rgba(8, 83, 92, 0.1);
-  box-shadow: 0 1px 3px 0 rgba(4, 39, 44, 0.05), 0 1px 2px -1px rgba(4, 39, 44, 0.05);
+  border: 1px solid #D8D3C5;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
   transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .shadcn-card:hover {
-  border-color: rgba(196, 152, 81, 0.45);
-  box-shadow: 0 14px 30px -6px rgba(4, 39, 44, 0.12), 0 0 16px rgba(196, 152, 81, 0.15);
-  transform: translateY(-3px);
+  border-color: #B78A43;
+  box-shadow: 0 14px 30px -6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
