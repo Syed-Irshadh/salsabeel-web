@@ -320,8 +320,40 @@ async def courses_page(request: Request, db: Session = Depends(database.get_db))
     return templates.TemplateResponse(request=request, name="courses.html", context={"courses": courses, "courses_count": len(courses)})
 
 @app.get("/about")
-async def about_page(request: Request):
-    return templates.TemplateResponse(request=request, name="about.html", context={"courses_count": get_total_courses_count()})
+async def about_page(request: Request, db: Session = Depends(database.get_db)):
+    faculty_members = db.query(models.User).filter(models.User.role == "admin").all()
+    has_hazira = any("hazira" in (f.name or "").lower() for f in faculty_members)
+    display_faculty = []
+    if not has_hazira:
+        display_faculty.append({
+            "name": "Hazira Umma",
+            "title": "Founder & Director",
+            "credentials": "BE, BAIS",
+            "bio": "Dedicated to fostering classical sacred learning, Qur'anic reflection, and empowering Tamil-speaking families with authentic knowledge."
+        })
+    for f in faculty_members:
+        if "hazira" in (f.name or "").lower():
+            display_faculty.append({
+                "name": f.name,
+                "title": "Founder & Director",
+                "credentials": "BE, BAIS",
+                "bio": "Dedicated to fostering classical sacred learning, Qur'anic reflection, and empowering Tamil-speaking families with authentic knowledge."
+            })
+        elif f.name and f.name != "Main Admin":
+            display_faculty.append({
+                "name": f.name,
+                "title": "Faculty & Academic Administration",
+                "credentials": "",
+                "bio": "Academic instruction and student mentorship in sacred Islamic sciences."
+            })
+    return templates.TemplateResponse(
+        request=request, 
+        name="about.html", 
+        context={
+            "courses_count": get_total_courses_count(),
+            "faculty": display_faculty
+        }
+    )
 
 @app.get("/admin")
 async def admin_page(request: Request, db: Session = Depends(database.get_db)):
