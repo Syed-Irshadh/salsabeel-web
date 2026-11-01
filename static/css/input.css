@@ -78,38 +78,29 @@
   box-shadow: 0 10px 25px -5px rgba(4, 39, 44, 0.08), 0 8px 10px -6px rgba(4, 39, 44, 0.04);
 }
 
-/* Legacy Gradients and Emblem Breathing (Preserved for zero regression) */
+/* Legacy Helper Classes (Grounded solids for zero regression) */
 .bg-gradient-teal {
-  background: linear-gradient(135deg, #04272C 0%, #08535C 50%, #0E6873 100%);
+  background-color: #06383A;
 }
 .bg-gradient-gold {
-  background: linear-gradient(135deg, #C49851 0%, #DFB76C 50%, #A17936 100%);
+  background-color: #8A6220;
 }
 .bg-mesh-dark {
-  background-color: #04272C;
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(14, 104, 115, 0.35) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(196, 152, 81, 0.25) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(8, 83, 92, 0.4) 0px, transparent 50%),
-    radial-gradient(at 0% 100%, rgba(4, 39, 44, 0.8) 0px, transparent 50%);
+  background-color: #06383A;
 }
 .text-gradient-gold {
-  background: linear-gradient(135deg, #DFB76C 0%, #C49851 50%, #FAE596 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #8A6220;
 }
 .text-gradient-teal {
-  background: linear-gradient(135deg, #08535C 0%, #0E6873 50%, #17A2B8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #08535C;
 }
 
 @keyframes emblemBreathing {
   0%, 100% { 
-    box-shadow: 0 0 20px rgba(196, 152, 81, 0.35), 0 0 40px rgba(14, 104, 115, 0.2); 
+    box-shadow: 0 4px 12px rgba(6, 56, 58, 0.15); 
   }
   50% { 
-    box-shadow: 0 0 35px rgba(196, 152, 81, 0.65), 0 0 60px rgba(14, 104, 115, 0.35); 
+    box-shadow: 0 6px 16px rgba(6, 56, 58, 0.25); 
   }
 }
 .emblem-halo {
