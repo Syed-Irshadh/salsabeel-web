@@ -47,36 +47,45 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          deep: '#06383A',     /* Deep Teal (Sidebar & Dark Surface) */
+          canvas: '#FAFAF7',   /* Warm Scholarly Vellum / Architectural Off-White */
+          surface: '#FFFFFF',  /* Luminous White Card Surface */
+          border: '#E5E3DA',   /* Hairline 1px Structural Rules */
+          ink: '#0A2528',      /* Deep Scholarly Charcoal-Teal (13.8:1 AAA contrast) */
+          'ink-muted': '#4A5A5C', /* Secondary Slate Ink (5.8:1 AA contrast) */
+          bronze: '#8A6220',   /* Deep Antique Bronze Text on Light (4.8:1 AA contrast) */
+          deep: '#06383A',     /* Deep Teal (Anchor Tone: Footer, CTAs, Admin Sidebar) */
           primary: '#08535C',  /* Primary Brand Teal */
           muted: '#0E6873',    /* Muted Turquoise */
-          gold: '#C49851',     /* Antique Gold */
-          ivory: '#F8F7F2',    /* Ivory Background Canvas */
+          gold: '#C49851',     /* Antique Gold Accent */
+          'gold-light': '#DFC188', /* Luminous Gold (Solely on Deep Teal surfaces) */
+          ivory: '#FAFAF7',    /* Replaced muddy cream with Warm Canvas */
           dark: '#04272C'      /* Dark Petrol Night */
         },
         /* Preserved legacy mappings for zero-regression template migration */
         navy: '#08535c',
         emerald: '#0e6873',
         gold: {
-          DEFAULT: '#c49851',
-          light: '#dfb76c',
-          dark: '#a17936'
+          DEFAULT: '#8A6220',
+          light: '#DFC188',
+          dark: '#684A15'
         },
         dark: '#04272c',
-        sand: '#f8f7f2'
+        sand: '#FAFAF7'
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['"Newsreader"', 'Georgia', 'serif'],
+        heading: ['"Newsreader"', 'Georgia', 'serif'],
+        sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
         body: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
-        tamil: ['"Noto Sans Tamil"', '"Plus Jakarta Sans"', 'sans-serif'],
-        arabic: ['"Amiri"', '"Traditional Arabic"', 'serif']
+        arabic: ['"Amiri"', '"Traditional Arabic"', 'serif'],
+        tamil: ['"Noto Sans Tamil"', 'sans-serif'],
+        'tamil-serif': ['"Noto Serif Tamil"', 'serif']
       },
       boxShadow: {
         'academic': '0 1px 3px 0 rgba(4, 39, 44, 0.04), 0 1px 2px -1px rgba(4, 39, 44, 0.04)',
-        'academic-hover': '0 10px 25px -5px rgba(4, 39, 44, 0.08), 0 8px 10px -6px rgba(4, 39, 44, 0.04)',
+        'academic-hover': '0 8px 24px -4px rgba(4, 39, 44, 0.08), 0 4px 8px -4px rgba(4, 39, 44, 0.04)',
         'academic-modal': '0 25px 50px -12px rgba(4, 39, 44, 0.25)',
-        'glow-gold': '0 0 24px rgba(196, 152, 81, 0.35)',
-        'glow-teal': '0 0 28px rgba(14, 104, 115, 0.35)'
+        'editorial': '0 4px 20px -2px rgba(6, 56, 58, 0.06)'
       }
     }
   },
