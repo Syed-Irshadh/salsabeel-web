@@ -6,36 +6,36 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <!-- Breadcrumb Navigation -->
     <nav class="flex items-center space-x-2 text-xs text-gray-500 mb-6 font-medium">
-        <a href="/" class="hover:text-emerald transition-colors flex items-center">
-            <i class="fas fa-home mr-1.5 text-gold"></i> Home
+        <a href="/" class="hover:text-brand-primary transition-colors flex items-center">
+            <i class="fas fa-home mr-1.5 text-brand-gold"></i> Home
         </a>
         <span>/</span>
-        <a href="/courses" class="hover:text-emerald transition-colors">Courses</a>
+        <a href="/courses" class="hover:text-brand-primary transition-colors">Sacred Sciences</a>
         <span>/</span>
-        <span class="text-navy font-semibold truncate max-w-xs sm:max-w-md">{{ course.title }}</span>
+        <span class="text-brand-dark font-semibold truncate max-w-xs sm:max-w-md">{{ course.title }}</span>
     </nav>
 
-    <!-- Course Hero Header -->
-    <div class="bg-mesh-dark rounded-3xl p-6 sm:p-10 mb-8 border border-gold/30 text-white relative overflow-hidden shadow-xl">
-        <div class="max-w-3xl">
+    <!-- Course Hero Header (Academic Editorial) -->
+    <div class="bg-mesh-dark rounded-3xl p-6 sm:p-10 mb-8 border border-brand-gold/30 text-white relative overflow-hidden shadow-xl">
+        <div class="max-w-3xl relative z-10">
             <div class="flex flex-wrap items-center gap-2.5 mb-4">
                 <span class="inline-block bg-white/10 text-white border border-white/20 text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-lg backdrop-blur-xs">
                     {{ course.category }}
                 </span>
-                <span class="inline-flex items-center text-xs font-bold py-1 px-3 rounded-lg {% if course.price and course.price.strip().lower() != 'free' %}bg-gradient-gold text-dark shadow-sm{% else %}bg-emerald/30 text-emerald-200 border border-emerald/40{% endif %}">
+                <span class="inline-flex items-center text-xs font-bold py-1 px-3 rounded-lg {% if course.price and course.price.strip().lower() != 'free' %}bg-gradient-gold text-brand-dark shadow-xs{% else %}bg-brand-primary/40 text-brand-gold-light border border-brand-gold/30{% endif %}">
                     <i class="fas fa-tag mr-1.5 text-xs"></i> {{ course.price or 'Free' }}
                 </span>
                 {% if course.status == 'past' %}
                 <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-white/10 text-gray-300 border border-white/10">
-                    <i class="fas fa-check-circle mr-1.5 text-gray-400"></i> Completed
+                    <i class="fas fa-check-circle mr-1.5 text-gray-400"></i> Completed Batch
                 </span>
                 {% elif course.status == 'upcoming' %}
                 <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-amber-500/90 text-white shadow-xs">
-                    <i class="fas fa-clock mr-1.5"></i> Upcoming Batch
+                    <i class="fas fa-clock mr-1.5"></i> Upcoming Program
                 </span>
                 {% else %}
-                <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-emerald text-white shadow-xs">
-                    <i class="fas fa-play-circle mr-1.5"></i> Ongoing Program
+                <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-brand-primary text-white shadow-xs">
+                    <i class="fas fa-play-circle mr-1.5"></i> Active Batch
                 </span>
                 {% endif %}
             </div>
@@ -50,14 +50,14 @@
             </p>
             {% endif %}
 
-            <div class="flex flex-wrap items-center gap-4 text-xs text-gold-light font-medium">
+            <div class="flex flex-wrap items-center gap-4 text-xs text-brand-gold-light font-medium">
                 {% if course.start_date %}
                 <span class="inline-flex items-center bg-black/30 border border-white/10 px-3 py-1.5 rounded-xl">
-                    <i class="far fa-calendar-alt mr-2 text-gold"></i> Schedule: {{ course.start_date }}
+                    <i class="far fa-calendar-alt mr-2 text-brand-gold"></i> Schedule: {{ course.start_date }}
                 </span>
                 {% endif %}
                 <span class="inline-flex items-center bg-black/30 border border-white/10 px-3 py-1.5 rounded-xl">
-                    <i class="fas fa-language mr-2 text-emerald-300"></i> Medium: {{ course.language or 'Tamil' }}
+                    <i class="fas fa-language mr-2 text-brand-turquoise"></i> Medium: {{ course.language or 'Tamil' }}
                 </span>
             </div>
         </div>
@@ -65,15 +65,15 @@
 
     <!-- Main Content & Sticky Action Card Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Left: Course Poster & Full Syllabus Content -->
+        <!-- Left: Course Poster, Syllabus Content & Recordings -->
         <div class="lg:col-span-2 space-y-8">
             {% if course.image_url %}
-            <div class="shadcn-card rounded-2xl p-4 sm:p-6 overflow-hidden">
+            <div class="bg-white rounded-2xl border border-brand-gold/20 shadow-xs p-4 sm:p-6 overflow-hidden">
                 <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
-                    <h3 class="text-base font-bold text-navy flex items-center">
-                        <i class="fas fa-image text-emerald mr-2"></i> Official Program Poster
+                    <h3 class="text-base font-bold text-brand-dark flex items-center">
+                        <i class="fas fa-image text-brand-primary mr-2"></i> Official Program Poster
                     </h3>
-                    <a href="{{ course.image_url }}" target="_blank" class="text-xs font-semibold text-emerald hover:text-teal-800 transition-colors inline-flex items-center">
+                    <a href="{{ course.image_url }}" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-brand-primary hover:text-brand-deep transition-colors inline-flex items-center">
                         <i class="fas fa-external-link-alt mr-1"></i> Full Resolution
                     </a>
                 </div>
@@ -87,14 +87,14 @@
             {% endif %}
 
             <!-- Syllabus & Detailed Content Card -->
-            <div class="shadcn-card rounded-2xl p-6 sm:p-8">
+            <div class="bg-white rounded-2xl border border-brand-gold/20 shadow-xs p-6 sm:p-8">
                 <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-gray-100">
-                    <div class="w-10 h-10 rounded-xl bg-navy/10 text-navy flex items-center justify-center text-lg">
-                        <i class="fas fa-book-open text-emerald"></i>
+                    <div class="w-10 h-10 rounded-xl bg-brand-deep/10 text-brand-deep flex items-center justify-center text-lg border border-brand-gold/30">
+                        <i class="fas fa-book-open text-brand-primary"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold tracking-tight text-navy">Curriculum & Detailed Content</h2>
-                        <p class="text-xs text-gray-500">Comprehensive study modules and lesson outline</p>
+                        <h2 class="text-xl font-bold tracking-tight text-brand-dark">Curriculum & Detailed Content</h2>
+                        <p class="text-xs text-gray-500">Comprehensive study modules, lesson plan, and subject requirements</p>
                     </div>
                 </div>
 
@@ -102,34 +102,73 @@
                     {{ course.content | replace('\n', '<br>') | safe }}
                 </div>
             </div>
+
+            <!-- Course Lecture Recordings (If Available in Database) -->
+            {% if course.recordings and course.recordings|length > 0 %}
+            <div class="bg-white rounded-2xl border border-brand-gold/20 shadow-xs p-6 sm:p-8">
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-brand-deep/10 text-brand-deep flex items-center justify-center text-lg border border-brand-gold/30">
+                            <i class="fas fa-video text-brand-primary"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold tracking-tight text-brand-dark">Session Recordings</h2>
+                            <p class="text-xs text-gray-500">Recorded lectures available for enrolled seekers</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold text-brand-primary bg-brand-primary/10 border border-brand-primary/20 px-3 py-1 rounded-full">
+                        {{ course.recordings|length }} Recording{% if course.recordings|length > 1 %}s{% endif %}
+                    </span>
+                </div>
+
+                <div class="space-y-3">
+                    {% for rec in course.recordings %}
+                    <div class="flex items-center justify-between p-3.5 rounded-xl bg-gray-50 hover:bg-brand-deep/5 border border-gray-200 transition-colors">
+                        <div class="flex items-center space-x-3 overflow-hidden">
+                            <span class="w-7 h-7 rounded-lg bg-brand-deep text-brand-gold text-xs font-bold flex items-center justify-center flex-shrink-0">
+                                {{ loop.index }}
+                            </span>
+                            <span class="text-sm font-semibold text-brand-dark truncate">
+                                {{ rec.title }}
+                            </span>
+                        </div>
+                        <a href="{{ rec.youtube_url }}" target="_blank" rel="noopener noreferrer" class="flex-shrink-0 text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors flex items-center border border-red-200">
+                            <i class="fab fa-youtube mr-1.5 text-sm"></i> Watch
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
         </div>
 
-        <!-- Right: Sticky Quick Action Card -->
+        <!-- Right: Sticky Quick Action Card & Faculty Profile -->
         <div class="lg:col-span-1">
             <div class="sticky top-20 space-y-6">
                 <!-- Registration / Enrollment Box -->
-                <div class="shadcn-card rounded-2xl p-6 border-t-4 border-gold shadow-md">
+                <div class="bg-white rounded-2xl border-t-4 border-brand-gold border-x border-b border-gray-200 shadow-md p-6">
                     <span class="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-1">Tuition & Admission</span>
                     <div class="flex items-baseline space-x-2 mb-6">
-                        <span class="text-3xl font-extrabold text-navy tracking-tight">
+                        <span class="text-3xl font-extrabold text-brand-dark tracking-tight">
                             {{ course.price or 'Free' }}
                         </span>
                         {% if course.price and course.price.strip().lower() != 'free' %}
-                        <span class="text-xs text-gray-500">one-time enrollment</span>
+                        <span class="text-xs text-gray-500">program fee</span>
                         {% else %}
-                        <span class="text-xs text-emerald font-semibold">Community Access</span>
+                        <span class="text-xs text-brand-primary font-semibold">Community Access</span>
                         {% endif %}
                     </div>
 
                     <div class="space-y-3 mb-6">
                         {% if course.status == 'past' %}
-                        <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-sm flex items-center justify-center text-sm">
+                        <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" rel="noopener noreferrer" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-xs flex items-center justify-center text-sm cursor-pointer">
                             <i class="fab fa-youtube mr-2 text-lg"></i> Watch Recordings on YouTube
                         </a>
                         {% else %}
                         <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22%20(Fee%3A%20{{ (course.price or 'Free') | urlencode }}).%20Please%20share%20the%20details." 
                            target="_blank" 
-                           class="enroll-btn w-full bg-emerald hover:bg-teal-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-glow-teal flex items-center justify-center text-sm cursor-pointer"
+                           rel="noopener noreferrer"
+                           class="enroll-btn w-full bg-brand-primary hover:bg-brand-deep text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-glow-teal flex items-center justify-center text-sm cursor-pointer border border-brand-turquoise/40"
                            data-id="{{ course.id }}"
                            data-title="{{ course.title }}">
                             <i class="fab fa-whatsapp mr-2 text-lg"></i> Enroll via WhatsApp
@@ -139,36 +178,52 @@
                         <!-- Direct WhatsApp Share Button -->
                         <a href="https://api.whatsapp.com/send?text=Assalamu%20Alaikum%2C%20check%20out%20this%20program%20at%20Salsabeel%20Academy%3A%20{{ course.title | urlencode }}%20-%20https%3A%2F%2Fsalsabeelacademy.com%2Fviewer%2F{{ course.id }}" 
                            target="_blank" 
-                           class="w-full bg-sand hover:bg-gray-100 text-navy font-semibold py-2.5 px-4 rounded-xl border border-gray-200 transition-colors flex items-center justify-center text-xs">
-                            <i class="fas fa-share-alt mr-2 text-emerald"></i> Share with Family & Friends
+                           rel="noopener noreferrer"
+                           class="w-full bg-brand-ivory hover:bg-gray-100 text-brand-dark font-semibold py-2.5 px-4 rounded-xl border border-gray-200 transition-colors flex items-center justify-center text-xs cursor-pointer">
+                            <i class="fas fa-share-alt mr-2 text-brand-primary"></i> Share with Family & Friends
                         </a>
                     </div>
 
                     <!-- Program Highlights Checklist -->
                     <div class="pt-5 border-t border-gray-100 space-y-3 text-xs text-gray-600">
                         <div class="flex items-center">
-                            <i class="fas fa-user-tie w-5 text-emerald flex-shrink-0"></i>
-                            <span>Instructor: <strong>Hazira Umma</strong> (Founder, BE, BAIS)</span>
+                            <i class="fas fa-user-graduate w-5 text-brand-primary flex-shrink-0"></i>
+                            <span>Qualified faculty mentorship & guidance</span>
                         </div>
                         <div class="flex items-center">
-                            <i class="fas fa-language w-5 text-emerald flex-shrink-0"></i>
+                            <i class="fas fa-language w-5 text-brand-primary flex-shrink-0"></i>
                             <span>Instruction in clear, authentic <strong>Tamil</strong></span>
                         </div>
                         <div class="flex items-center">
-                            <i class="fas fa-video w-5 text-emerald flex-shrink-0"></i>
+                            <i class="fas fa-video w-5 text-brand-primary flex-shrink-0"></i>
                             <span>Live interactive sessions & lecture recordings</span>
                         </div>
                         <div class="flex items-center">
-                            <i class="fas fa-certificate w-5 text-gold flex-shrink-0"></i>
+                            <i class="fas fa-certificate w-5 text-brand-gold flex-shrink-0"></i>
                             <span>Certificate of Program Completion</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Faculty Profile Card (Generated Unicode Monogram Initial) -->
+                <div class="bg-white rounded-2xl border border-brand-gold/20 shadow-xs p-5">
+                    <span class="text-xs font-bold uppercase tracking-wider text-gray-400 block mb-3">Academic Instruction</span>
+                    <div class="flex items-center space-x-3.5">
+                        <div class="w-12 h-12 rounded-xl bg-brand-deep text-brand-gold border border-brand-gold/40 flex items-center justify-center font-bold text-lg shadow-xs select-none flex-shrink-0">
+                            {{ "Hazira Umma" | unicode_initial }}
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-brand-dark">Hazira Umma</h4>
+                            <p class="text-xs text-brand-primary font-semibold">Founder, BE, BAIS</p>
+                            <p class="text-[11px] text-gray-500">Alimiyyah & Traditional Sciences</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Back to Directory -->
                 <div class="text-center">
-                    <a href="/courses" class="inline-flex items-center text-xs font-bold text-navy hover:text-emerald transition-colors">
-                        <i class="fas fa-arrow-left mr-2 text-gold"></i> Back to Complete Course Directory
+                    <a href="/courses" class="inline-flex items-center text-xs font-bold text-brand-dark hover:text-brand-primary transition-colors">
+                        <i class="fas fa-arrow-left mr-2 text-brand-gold"></i> Back to Complete Course Directory
                     </a>
                 </div>
             </div>
