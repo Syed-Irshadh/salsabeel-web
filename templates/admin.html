@@ -1,165 +1,398 @@
 {% extends "base.html" %}
 
+{% block title %}Academic Administration Console - Salsabeel Academy{% endblock %}
+
 {% block content %}
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-6 border-b border-gray-200">
+<div class="min-h-[calc(100vh-76px)] bg-brand-ivory flex flex-col lg:flex-row">
+    <!-- Dedicated Dark Teal Sidebar (#06383A) -->
+    <aside class="w-full lg:w-72 bg-brand-deep text-white border-r border-brand-gold/20 flex-shrink-0 flex flex-col justify-between">
         <div>
-            <h2 class="text-3xl font-bold tracking-tight text-navy">Admin Dashboard</h2>
-            <p class="text-xs sm:text-sm text-gray-500 mt-1">Manage courses, student enrollments, and configure security credentials.</p>
-        </div>
-        <div class="flex items-center gap-3">
-            <button type="button" id="openChangePasswordModalBtn" class="inline-flex items-center text-xs sm:text-sm font-semibold text-navy hover:text-white bg-white hover:bg-navy border border-gray-300 hover:border-navy px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer">
-                <i class="fas fa-key text-gold mr-2"></i> Change Password
-            </button>
-        </div>
-    </div>
-    
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        <!-- Left Column: Forms -->
-        <div class="lg:col-span-1 space-y-8">
-            
-            <!-- AI Poster Upload -->
-            <div class="bg-white p-6 sm:p-7 rounded-2xl shadow-md border-t-4 border-gold">
-                <h3 class="text-xl font-bold text-navy mb-3"><i class="fas fa-magic text-emerald mr-2"></i> AI Course Parser</h3>
-                <p class="text-xs sm:text-sm text-gray-500 mb-4">Upload a promotional poster. Our AI will automatically extract course details!</p>
-                <form id="aiParseForm">
-                    <div class="mb-4">
-                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Poster Image</label>
-                        <input type="file" id="posterImage" accept="image/*" required class="block w-full text-xs sm:text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald file:text-white hover:file:bg-teal-700 cursor-pointer border border-gray-300 rounded-xl">
+            <!-- Sidebar Header / Academic Monogram -->
+            <div class="p-6 border-b border-brand-gold/20">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-brand-dark/80 text-brand-gold border border-brand-gold/40 flex items-center justify-center text-lg font-bold shadow-xs flex-shrink-0">
+                        <i class="fas fa-university"></i>
                     </div>
-                    <button type="submit" id="parseBtn" class="w-full bg-navy text-white hover:bg-teal-800 font-bold py-2.5 px-4 rounded-xl transition-colors flex items-center justify-center text-sm shadow-sm cursor-pointer">
-                        <i class="fas fa-robot mr-2 text-gold"></i> Extract Details
-                    </button>
-                </form>
+                    <div class="overflow-hidden">
+                        <h2 class="text-sm font-bold tracking-tight text-white uppercase font-sans">Salsabeel Console</h2>
+                        <p class="text-[11px] text-brand-gold-light truncate">Academic Administration</p>
+                    </div>
+                </div>
             </div>
 
-            <!-- Manual Add Course -->
-            <div class="bg-white p-6 sm:p-7 rounded-2xl shadow-md border border-gray-100">
-                <h3 class="text-xl font-bold text-navy mb-4">Add / Edit Course</h3>
-                <form id="addCourseForm" enctype="multipart/form-data" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Course Title</label>
-                        <input type="text" id="title" name="title" required class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald">
+            <!-- Mobile Tab Navigation Bar (Horizontal on phone screens) -->
+            <div class="lg:hidden p-3 bg-brand-dark/40 border-b border-white/10 flex overflow-x-auto gap-1 scrollbar-none" style="-webkit-overflow-scrolling: touch;">
+                <button type="button" class="admin-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-gold text-brand-dark flex items-center gap-1.5 transition-all cursor-pointer" data-view="overview">
+                    <i class="fas fa-chart-pie"></i> Overview
+                </button>
+                <button type="button" class="admin-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1.5 transition-all cursor-pointer" data-view="courses">
+                    <i class="fas fa-book-open"></i> Courses
+                </button>
+                <button type="button" class="admin-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1.5 transition-all cursor-pointer" data-view="enrolments">
+                    <i class="fas fa-user-graduate"></i> Enrolments
+                </button>
+                <button type="button" class="admin-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1.5 transition-all cursor-pointer" data-view="admins">
+                    <i class="fas fa-user-shield"></i> Admins
+                </button>
+                <button type="button" class="admin-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1.5 transition-all cursor-pointer" data-view="settings">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+            </div>
+
+            <!-- Desktop Sidebar Navigation Links -->
+            <nav class="hidden lg:block p-4 space-y-1.5">
+                <div class="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-brand-gold-light/60">
+                    Console Navigation
+                </div>
+                
+                <button type="button" class="admin-tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer bg-brand-gold text-brand-dark shadow-xs" data-view="overview">
+                    <span class="flex items-center gap-3">
+                        <i class="fas fa-chart-pie w-4 text-center"></i>
+                        <span>Dashboard Overview</span>
+                    </span>
+                    <i class="fas fa-chevron-right text-[10px] opacity-70"></i>
+                </button>
+
+                <button type="button" class="admin-tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-gray-200 hover:text-white hover:bg-white/10 transition-all cursor-pointer" data-view="courses">
+                    <span class="flex items-center gap-3">
+                        <i class="fas fa-book-open w-4 text-center text-brand-gold"></i>
+                        <span>Courses & Posters</span>
+                    </span>
+                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-brand-gold-light">{{ courses|length }}</span>
+                </button>
+
+                <button type="button" class="admin-tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-gray-200 hover:text-white hover:bg-white/10 transition-all cursor-pointer" data-view="enrolments">
+                    <span class="flex items-center gap-3">
+                        <i class="fas fa-user-graduate w-4 text-center text-brand-turquoise"></i>
+                        <span>Student Enrolments</span>
+                    </span>
+                    <span id="sidebarEnrollmentCount" class="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-gray-300">...</span>
+                </button>
+
+                <button type="button" class="admin-tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-gray-200 hover:text-white hover:bg-white/10 transition-all cursor-pointer" data-view="admins">
+                    <span class="flex items-center gap-3">
+                        <i class="fas fa-user-shield w-4 text-center text-brand-gold"></i>
+                        <span>Administrators</span>
+                    </span>
+                    <i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                </button>
+
+                <button type="button" class="admin-tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-gray-200 hover:text-white hover:bg-white/10 transition-all cursor-pointer" data-view="settings">
+                    <span class="flex items-center gap-3">
+                        <i class="fas fa-cog w-4 text-center text-gray-300"></i>
+                        <span>Security & Settings</span>
+                    </span>
+                    <i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Sidebar Footer: Current Administrator Badge & Back to Site -->
+        <div class="p-4 border-t border-brand-gold/20 bg-brand-dark/40 space-y-3">
+            <div class="flex items-center space-x-3 px-2">
+                <div id="adminUserAvatar" class="w-9 h-9 rounded-xl bg-brand-gold text-brand-dark font-bold text-sm flex items-center justify-center flex-shrink-0 select-none shadow-xs">
+                    A
+                </div>
+                <div class="overflow-hidden flex-grow">
+                    <div id="adminUserName" class="text-xs font-bold text-white truncate">Administrator</div>
+                    <div class="text-[10px] text-brand-gold-light flex items-center gap-1">
+                        <i class="fas fa-circle text-[6px] text-emerald-400"></i> Authenticated Session
                     </div>
-                    
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Category / Discipline</label>
-                        <input type="text" id="category" name="category" list="categorySuggestions" required placeholder="e.g. Tafseer, Tajweed, Hadith..." class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald">
-                        <datalist id="categorySuggestions">
-                            <option value="Tafseer">
-                            <option value="Tajweed & Qira'at">
-                            <option value="Hadith">
-                            <option value="Arabic Language">
-                            <option value="Quran & Hifz">
-                            <option value="Fiqh">
-                            <option value="Aqeedah">
-                            <option value="Seerah & History">
-                            <option value="Tazkiyah & Adab">
-                        </datalist>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 pt-1">
+                <a href="/" class="flex-1 text-center py-2 px-3 rounded-lg bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-medium transition-colors flex items-center justify-center gap-1.5">
+                    <i class="fas fa-external-link-alt text-[10px]"></i> View Site
+                </a>
+                <button type="button" id="adminSidebarLogoutBtn" class="py-2 px-3 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs font-medium transition-colors cursor-pointer" title="Sign Out">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Spacious Ivory Workspace Content Area (#F8F7F2) -->
+    <main class="flex-grow p-5 sm:p-8 lg:p-10 overflow-y-auto">
+        <!-- Top Workspace Bar -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-brand-gold/20">
+            <div>
+                <span class="text-[11px] font-bold uppercase tracking-wider text-brand-gold flex items-center gap-1.5 mb-1">
+                    <span>۞</span> Salsabeel Administration Workspace
+                </span>
+                <h1 id="currentViewTitle" class="text-2xl sm:text-3xl font-extrabold tracking-tight text-brand-dark">
+                    Overview
+                </h1>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <button type="button" id="openAddCourseModalBtn" class="bg-brand-deep hover:bg-brand-primary text-brand-gold hover:text-white font-bold py-2.5 px-4 rounded-xl transition-all shadow-xs text-xs flex items-center gap-2 cursor-pointer border border-brand-gold/40">
+                    <i class="fas fa-plus"></i>
+                    <span>Add New Course</span>
+                </button>
+                <button type="button" id="openChangePasswordModalBtn" class="bg-white hover:bg-gray-100 text-brand-dark border border-gray-300 font-semibold py-2.5 px-4 rounded-xl transition-all shadow-xs text-xs flex items-center gap-2 cursor-pointer">
+                    <i class="fas fa-key text-brand-gold"></i>
+                    <span>Password</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- VIEW 1: Minimal Luxury Academic Overview -->
+        <div id="viewOverview" class="admin-view space-y-8">
+            <!-- 3 Quiet Academic Metric Cards (No noisy charts) -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <!-- Courses Metric -->
+                <div class="bg-white rounded-2xl border border-brand-gold/20 p-6 shadow-xs flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-brand-deep text-brand-gold flex items-center justify-center text-xl flex-shrink-0 border border-brand-gold/30">
+                        <i class="fas fa-book-open"></i>
                     </div>
-                    
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Cover Image</label>
-                        <input type="file" id="image" name="image" accept="image/*" class="w-full border border-gray-300 rounded-xl px-3 py-1.5 focus:ring-2 focus:ring-emerald focus:border-emerald text-sm">
-                        <input type="hidden" id="image_url" name="image_url" value="">
-                        
-                        <!-- Image Preview Box -->
-                        <div id="coverPreviewContainer" class="mt-2.5 hidden">
-                            <div class="relative inline-block border-2 border-emerald/40 rounded-xl overflow-hidden shadow-sm bg-gray-50 p-2">
-                                <img id="coverPreviewImg" src="" alt="Cover Preview" class="h-36 w-auto max-w-xs object-contain rounded-lg border border-gray-200">
-                                <div class="mt-1.5 flex items-center justify-between text-xs text-gray-600 px-1">
-                                    <span class="text-emerald font-semibold flex items-center">
-                                        <i class="fas fa-check-circle mr-1 text-emerald"></i> Ready to publish
-                                    </span>
-                                    <button type="button" id="removeCoverPreview" class="text-red-500 hover:text-red-700 cursor-pointer ml-4 font-medium">
-                                        <i class="fas fa-times mr-1"></i> Clear
-                                    </button>
+                        <div class="text-2xl sm:text-3xl font-extrabold text-brand-dark tracking-tight">{{ courses|length }}</div>
+                        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mt-0.5">Active Courses</div>
+                    </div>
+                </div>
+
+                <!-- Enrollments Metric -->
+                <div class="bg-white rounded-2xl border border-brand-gold/20 p-6 shadow-xs flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-brand-primary/10 text-brand-primary flex items-center justify-center text-xl flex-shrink-0 border border-brand-primary/20">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div>
+                        <div id="overviewEnrollmentCount" class="text-2xl sm:text-3xl font-extrabold text-brand-dark tracking-tight">0</div>
+                        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mt-0.5">Enrolled Seekers</div>
+                    </div>
+                </div>
+
+                <!-- Administrators Metric -->
+                <div class="bg-white rounded-2xl border border-brand-gold/20 p-6 shadow-xs flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-brand-gold/15 text-brand-dark flex items-center justify-center text-xl flex-shrink-0 border border-brand-gold/30">
+                        <i class="fas fa-user-shield text-brand-gold"></i>
+                    </div>
+                    <div>
+                        <div id="overviewAdminCount" class="text-2xl sm:text-3xl font-extrabold text-brand-dark tracking-tight">1</div>
+                        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mt-0.5">Authorized Admins</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Management Navigation Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Manage Courses Shortcut -->
+                <div class="bg-white rounded-2xl border border-brand-gold/20 p-6 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-primary">Curriculum</span>
+                            <span class="text-xs font-bold bg-brand-deep/5 text-brand-deep px-2.5 py-0.5 rounded-full border border-brand-deep/15">{{ courses|length }} Programs</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-brand-dark mb-1">Course & Poster Management</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed mb-4">
+                            Review existing programs, modify promotional posters, update syllabus content, schedule dates, and tuition fees.
+                        </p>
+                    </div>
+                    <button type="button" class="switch-to-view-btn text-xs font-bold text-brand-deep hover:text-brand-primary inline-flex items-center gap-1.5 transition-colors cursor-pointer" data-target="courses">
+                        <span>Open Course Directory</span> <i class="fas fa-arrow-right text-[10px] text-brand-gold"></i>
+                    </button>
+                </div>
+
+                <!-- Manage Enrolments Shortcut -->
+                <div class="bg-white rounded-2xl border border-brand-gold/20 p-6 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-primary">Rosters</span>
+                            <span id="overviewEnrolmentBadge" class="text-xs font-bold bg-brand-primary/10 text-brand-primary px-2.5 py-0.5 rounded-full border border-brand-primary/20">0 Enrolled</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-brand-dark mb-1">Student Rosters & Exports</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed mb-4">
+                            Filter student rosters by course discipline, copy registered emails for communication, and export data directly to Excel (.xlsx).
+                        </p>
+                    </div>
+                    <button type="button" class="switch-to-view-btn text-xs font-bold text-brand-deep hover:text-brand-primary inline-flex items-center gap-1.5 transition-colors cursor-pointer" data-target="enrolments">
+                        <span>Manage Enrolments</span> <i class="fas fa-arrow-right text-[10px] text-brand-gold"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Published Courses Summary List -->
+            <div class="bg-white rounded-2xl border border-brand-gold/20 p-6 shadow-xs">
+                <div class="flex items-center justify-between pb-4 mb-4 border-b border-gray-100">
+                    <div>
+                        <h3 class="text-base font-bold text-brand-dark">Recently Published Programs</h3>
+                        <p class="text-xs text-gray-500">Live courses currently visible on the public website</p>
+                    </div>
+                    <button type="button" class="switch-to-view-btn text-xs font-semibold text-brand-primary hover:underline cursor-pointer" data-target="courses">
+                        View All ({{ courses|length }})
+                    </button>
+                </div>
+
+                <div class="divide-y divide-gray-100">
+                    {% for course in courses[:5] %}
+                    <div class="py-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div class="flex items-center space-x-3.5 overflow-hidden">
+                            <img src="{{ course.image_url }}" alt="{{ course.title }}" class="w-12 h-12 rounded-xl object-cover border border-brand-gold/30 flex-shrink-0" onerror="this.src='/static/img/logo.jpeg';">
+                            <div class="overflow-hidden">
+                                <h4 class="text-sm font-bold text-brand-dark truncate">{{ course.title }}</h4>
+                                <div class="flex items-center gap-2 mt-0.5 text-xs text-gray-500">
+                                    <span class="font-medium text-brand-deep">{{ course.category }}</span>
+                                    <span>·</span>
+                                    <span>{{ course.price or 'Free' }}</span>
+                                    <span>·</span>
+                                    <span class="capitalize">{{ course.status | default('current') }}</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Medium / Language</label>
-                            <select id="language" name="language" class="w-full border border-gray-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-emerald focus:border-emerald bg-white text-sm font-medium">
-                                <option value="Tamil">Tamil (தமிழ் வழிக் கல்வி)</option>
-                                <option value="English">English Medium</option>
-                                <option value="Bilingual (Tamil & English)">Bilingual (Tamil & English)</option>
-                                <option value="Arabic">Arabic</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Course Status</label>
-                            <select id="status" name="status" class="w-full border border-gray-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-emerald focus:border-emerald bg-white text-sm">
-                                <option value="current">Current (Ongoing)</option>
-                                <option value="upcoming">Future (Upcoming)</option>
-                                <option value="past">Past (Completed)</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Course Price / Fee</label>
-                            <input type="text" id="price" name="price" value="Free" placeholder="e.g. Free, $49, ₹999" class="w-full border border-gray-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-emerald focus:border-emerald text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Start Date / Schedule</label>
-                            <input type="text" id="start_date" name="start_date" placeholder="e.g. 3rd August, 2026" class="w-full border border-gray-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-emerald focus:border-emerald text-sm">
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Short Description</label>
-                        <textarea id="description" name="description" rows="2" required class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald"></textarea>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Full Course Content</label>
-                        <textarea id="content" name="content" rows="4" required class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald"></textarea>
-                    </div>
-                    
-                    <button type="submit" class="w-full bg-emerald text-white hover:bg-teal-700 font-bold py-2.5 px-4 rounded-xl transition-colors text-sm shadow-sm cursor-pointer">
-                        <i class="fas fa-paper-plane mr-2"></i> Publish Course
-                    </button>
-                </form>
-            </div>
 
+                        <div class="flex items-center gap-2 self-end sm:self-center">
+                            <a href="/viewer/{{ course.id }}" target="_blank" class="px-2.5 py-1 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium transition-colors">
+                                <i class="fas fa-eye mr-1"></i> View
+                            </a>
+                            <button type="button" class="admin-edit-course-btn px-2.5 py-1 rounded-lg bg-brand-deep text-brand-gold hover:text-white text-xs font-bold transition-colors cursor-pointer border border-brand-gold/30"
+                                    data-id="{{ course.id }}"
+                                    data-title="{{ course.title }}"
+                                    data-category="{{ course.category }}"
+                                    data-status="{{ course.status | default('current') }}"
+                                    data-language="{{ course.language or 'Tamil' }}"
+                                    data-price="{{ course.price or 'Free' }}"
+                                    data-startdate="{{ course.start_date or '' }}"
+                                    data-desc="{{ course.description or '' }}"
+                                    data-content="{{ course.content or '' }}"
+                                    data-poster="{{ course.image_url }}">
+                                <i class="fas fa-edit mr-1"></i> Edit
+                            </button>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="py-8 text-center text-xs text-gray-500">No courses published yet.</div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
 
-        <!-- Right Column: Data Tables -->
-        <div class="lg:col-span-2 space-y-8">
-            <!-- Course Enrollments & Rosters Card -->
-            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+        <!-- VIEW 2: Dedicated Courses & Posters Management Page -->
+        <div id="viewCourses" class="admin-view hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-brand-gold/20 p-6 shadow-xs">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-brand-dark flex items-center">
+                            <i class="fas fa-book-open text-brand-primary mr-2"></i> All Programs & Posters
+                        </h3>
+                        <p class="text-xs text-gray-500 mt-0.5">Edit course promotional posters, pricing, syllabus, and schedules</p>
+                    </div>
+                    <button type="button" class="open-add-course-btn inline-flex items-center self-start sm:self-auto bg-brand-deep hover:bg-brand-primary text-brand-gold hover:text-white font-bold py-2 px-4 rounded-xl transition-all text-xs cursor-pointer border border-brand-gold/40">
+                        <i class="fas fa-plus mr-1.5"></i> Add New Course
+                    </button>
+                </div>
+
+                <!-- Courses List Table -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50/80">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-bold text-brand-dark uppercase tracking-wider">Poster & Course</th>
+                                <th class="px-4 py-3 text-left text-xs font-bold text-brand-dark uppercase tracking-wider">Category</th>
+                                <th class="px-4 py-3 text-left text-xs font-bold text-brand-dark uppercase tracking-wider">Status</th>
+                                <th class="px-4 py-3 text-left text-xs font-bold text-brand-dark uppercase tracking-wider">Medium / Fee</th>
+                                <th class="px-4 py-3 text-right text-xs font-bold text-brand-dark uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white">
+                            {% for course in courses %}
+                            <tr class="hover:bg-gray-50/80 transition-colors">
+                                <td class="px-4 py-3.5 whitespace-nowrap">
+                                    <div class="flex items-center space-x-3">
+                                        <img src="{{ course.image_url }}" alt="{{ course.title }}" class="w-12 h-14 object-cover rounded-lg border border-brand-gold/30 shadow-xs flex-shrink-0" onerror="this.src='/static/img/logo.jpeg';">
+                                        <div class="max-w-xs sm:max-w-sm truncate">
+                                            <a href="/viewer/{{ course.id }}" target="_blank" class="text-sm font-bold text-brand-dark hover:text-brand-primary transition-colors truncate block">
+                                                {{ course.title }}
+                                            </a>
+                                            <span class="text-xs text-gray-400 block truncate">{{ course.start_date or 'No schedule specified' }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3.5 whitespace-nowrap">
+                                    <span class="inline-block bg-brand-deep/5 text-brand-deep border border-brand-deep/15 text-xs font-semibold px-2.5 py-1 rounded-md">
+                                        {{ course.category }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3.5 whitespace-nowrap">
+                                    {% if course.status == 'past' %}
+                                    <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700">Completed</span>
+                                    {% elif course.status == 'upcoming' %}
+                                    <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800">Upcoming</span>
+                                    {% else %}
+                                    <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-brand-primary/10 text-brand-primary border border-brand-primary/20">Ongoing</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-4 py-3.5 whitespace-nowrap text-xs text-gray-600">
+                                    <div>{{ course.language or 'Tamil' }}</div>
+                                    <div class="font-bold text-brand-dark mt-0.5">{{ course.price or 'Free' }}</div>
+                                </td>
+                                <td class="px-4 py-3.5 whitespace-nowrap text-right text-xs">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button type="button" 
+                                                class="admin-edit-course-btn inline-flex items-center px-3 py-1.5 rounded-lg bg-brand-deep hover:bg-brand-primary text-brand-gold hover:text-white font-bold transition-all cursor-pointer border border-brand-gold/40 shadow-xs"
+                                                data-id="{{ course.id }}"
+                                                data-title="{{ course.title }}"
+                                                data-category="{{ course.category }}"
+                                                data-status="{{ course.status | default('current') }}"
+                                                data-language="{{ course.language or 'Tamil' }}"
+                                                data-price="{{ course.price or 'Free' }}"
+                                                data-startdate="{{ course.start_date or '' }}"
+                                                data-desc="{{ course.description or '' }}"
+                                                data-content="{{ course.content or '' }}"
+                                                data-poster="{{ course.image_url }}">
+                                            <i class="fas fa-edit mr-1.5"></i> Edit Poster & Details
+                                        </button>
+                                        <button type="button" 
+                                                class="delete-course-btn inline-flex items-center px-2.5 py-1.5 rounded-lg bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 transition-colors cursor-pointer"
+                                                data-id="{{ course.id }}"
+                                                title="Delete Course">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="py-12 text-center text-gray-500 text-sm">
+                                    No courses found. Click "+ Add New Course" to create your first course.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 3: Dedicated Student Enrolments Page -->
+        <div id="viewEnrolments" class="admin-view hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-brand-gold/20 p-6 shadow-xs">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                     <div>
-                        <h3 class="text-xl font-bold text-navy flex items-center">
-                            <i class="fas fa-user-graduate text-emerald mr-2.5"></i> Course Enrollments & Rosters
+                        <h3 class="text-xl font-bold text-brand-dark flex items-center">
+                            <i class="fas fa-user-graduate text-brand-primary mr-2.5"></i> Course Enrollments & Rosters
                         </h3>
                         <p class="text-xs text-gray-500 mt-1">Review students enrolled across each course, filter by specific course, and manage or remove enrollments.</p>
                     </div>
                     <div class="flex items-center gap-2 self-start sm:self-auto">
-                        <span id="enrollmentCountBadge" class="bg-emerald/10 text-emerald border border-emerald/20 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
+                        <span id="enrollmentCountBadge" class="bg-brand-primary/10 text-brand-primary border border-brand-primary/20 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
                             0 Enrollments
                         </span>
-                        <button type="button" id="refreshEnrollmentsBtn" class="text-gray-500 hover:text-emerald p-1.5 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" title="Refresh Enrollments">
+                        <button type="button" id="refreshEnrollmentsBtn" class="text-gray-500 hover:text-brand-primary p-1.5 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" title="Refresh Enrollments">
                             <i class="fas fa-sync-alt text-sm"></i>
                         </button>
                     </div>
                 </div>
 
                 <!-- Filter & Search Controls Bar -->
-                <div class="bg-sand/60 border border-gold/20 rounded-xl p-4 mb-4 space-y-3">
-                    <!-- Top Row: Course Filter Dropdown & Search Input -->
+                <div class="bg-brand-ivory border border-brand-gold/20 rounded-xl p-4 mb-4 space-y-3">
                     <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
                         <!-- Course Filter Dropdown -->
                         <div class="flex items-center gap-2 flex-grow sm:flex-grow-0">
-                            <label for="courseFilterSelect" class="text-xs font-bold text-navy uppercase tracking-wider whitespace-nowrap flex items-center">
-                                <i class="fas fa-book-open text-emerald mr-1.5"></i> Course:
+                            <label for="courseFilterSelect" class="text-xs font-bold text-brand-dark uppercase tracking-wider whitespace-nowrap flex items-center">
+                                <i class="fas fa-book-open text-brand-primary mr-1.5"></i> Course:
                             </label>
-                            <select id="courseFilterSelect" class="w-full sm:w-auto bg-white border border-gray-300 text-gray-800 text-xs rounded-lg px-3 py-2 focus:ring-emerald focus:border-emerald font-medium cursor-pointer shadow-xs max-w-xs truncate">
+                            <select id="courseFilterSelect" class="w-full sm:w-auto bg-white border border-gray-300 text-gray-800 text-xs rounded-lg px-3 py-2 focus:ring-brand-primary focus:border-brand-primary font-medium cursor-pointer shadow-xs max-w-xs truncate">
                                 <option value="all">All Courses (Overview)</option>
                                 {% for course in courses %}
                                 <option value="{{ course.id }}">{{ course.title }}</option>
@@ -172,31 +405,29 @@
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
                                 <i class="fas fa-search text-xs"></i>
                             </span>
-                            <input type="text" id="enrollmentSearchInput" placeholder="Search student or course..." class="w-full pl-9 pr-3 py-2 bg-white border border-gray-300 rounded-lg text-xs focus:ring-emerald focus:border-emerald placeholder-gray-400 shadow-xs">
+                            <input type="text" id="enrollmentSearchInput" placeholder="Search student or course..." class="w-full pl-9 pr-3 py-2 bg-white border border-gray-300 rounded-lg text-xs focus:ring-brand-primary focus:border-brand-primary placeholder-gray-400 shadow-xs">
                         </div>
                     </div>
 
-                    <!-- Bottom Row: Status Hint & Action Buttons Group (Never Overflows!) -->
-                    <div class="flex flex-wrap items-center justify-between gap-2 pt-2.5 border-t border-gold/20">
+                    <!-- Actions Row -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-2.5 border-t border-brand-gold/20">
                         <div class="text-xs text-gray-500 flex items-center">
-                            <i class="fas fa-filter text-emerald mr-1.5"></i>
+                            <i class="fas fa-filter text-brand-primary mr-1.5"></i>
                             <span>Showing filtered roster records</span>
                         </div>
                         <div class="flex flex-wrap items-center gap-2">
-                            <button type="button" id="copyEmailsBtn" class="inline-flex items-center text-xs font-semibold text-navy hover:text-emerald bg-white hover:bg-emerald/10 border border-gray-300 hover:border-emerald/30 px-3 py-1.5 rounded-lg transition-colors cursor-pointer whitespace-nowrap shadow-xs" title="Copy visible student emails to clipboard">
-                                <i class="fas fa-copy mr-1.5 text-emerald"></i> Copy Emails
+                            <button type="button" id="copyEmailsBtn" class="inline-flex items-center text-xs font-semibold text-brand-dark hover:text-brand-primary bg-white hover:bg-brand-deep/5 border border-gray-300 px-3 py-1.5 rounded-lg transition-colors cursor-pointer whitespace-nowrap shadow-xs" title="Copy visible student emails">
+                                <i class="fas fa-copy mr-1.5 text-brand-primary"></i> Copy Emails
                             </button>
-                            <button type="button" id="exportExcelBtn" class="inline-flex items-center text-xs font-bold text-white bg-emerald hover:bg-green-600 px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer whitespace-nowrap shadow-xs" title="Export shown filtered rows to Excel spreadsheet (.xlsx)">
-                                <i class="fas fa-file-excel mr-1.5 text-gold"></i> Export Excel
+                            <button type="button" id="exportExcelBtn" class="inline-flex items-center text-xs font-bold text-white bg-brand-primary hover:bg-brand-deep px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer whitespace-nowrap shadow-xs" title="Export shown rows to Excel (.xlsx)">
+                                <i class="fas fa-file-excel mr-1.5 text-brand-gold"></i> Export Excel
                             </button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Quick Course Summary Pills -->
-                <div id="coursePillsContainer" class="flex flex-wrap gap-1.5 mb-4">
-                    <!-- Dynamic quick pills showing enrollment count per course -->
-                </div>
+                <div id="coursePillsContainer" class="flex flex-wrap gap-1.5 mb-4"></div>
 
                 <!-- Enrollments Table -->
                 <div class="overflow-x-auto">
@@ -210,7 +441,6 @@
                             </tr>
                         </thead>
                         <tbody id="enrollmentsTableBody" class="bg-white divide-y divide-gray-200">
-                            <!-- Dynamic Content -->
                             <tr>
                                 <td colspan="4" class="px-6 py-6 text-center text-gray-500">Loading enrollments...</td>
                             </tr>
@@ -218,39 +448,41 @@
                     </table>
                 </div>
             </div>
+        </div>
 
-            <!-- Manage Administrators Card -->
-            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+        <!-- VIEW 4: Dedicated Platform Administrators Page -->
+        <div id="viewAdmins" class="admin-view hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-brand-gold/20 p-6 shadow-xs">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                     <div>
-                        <h3 class="text-xl font-bold text-navy flex items-center">
-                            <i class="fas fa-user-shield text-emerald mr-2.5"></i> Platform Administrators
+                        <h3 class="text-xl font-bold text-brand-dark flex items-center">
+                            <i class="fas fa-user-shield text-brand-primary mr-2.5"></i> Platform Administrators
                         </h3>
-                        <p class="text-xs text-gray-500 mt-1">Team members with administrative access to manage courses and view enrollments.</p>
+                        <p class="text-xs text-gray-500 mt-1">Authorized team members with administrative privileges. Owner protection is strictly enforced.</p>
                     </div>
-                    <button type="button" id="toggleAddAdminBtn" class="inline-flex items-center self-start sm:self-auto bg-navy hover:bg-dark text-white text-xs font-bold py-2 px-3.5 rounded-lg transition-colors cursor-pointer shadow-sm">
-                        <i class="fas fa-user-plus mr-1.5 text-gold"></i> Add / Promote Admin
+                    <button type="button" id="toggleAddAdminBtn" class="inline-flex items-center self-start sm:self-auto bg-brand-deep hover:bg-brand-primary text-brand-gold hover:text-white text-xs font-bold py-2 px-3.5 rounded-lg transition-colors cursor-pointer shadow-xs border border-brand-gold/40">
+                        <i class="fas fa-user-plus mr-1.5"></i> Add / Promote Admin
                     </button>
                 </div>
                 
                 <!-- Add Admin Form (Collapsible) -->
-                <div id="addAdminFormContainer" class="hidden mb-6 p-4 bg-sand border border-gold/30 rounded-lg">
-                    <h4 class="text-sm font-bold text-navy mb-1">Add or Promote Administrator</h4>
-                    <p class="text-xs text-gray-500 mb-3">Enter credentials for a new admin, or enter an existing student's email to promote them.</p>
+                <div id="addAdminFormContainer" class="hidden mb-6 p-5 bg-brand-ivory border border-brand-gold/30 rounded-xl">
+                    <h4 class="text-sm font-bold text-brand-dark mb-1">Add or Promote Administrator</h4>
+                    <p class="text-xs text-gray-500 mb-3">Enter credentials for a new administrator, or enter an existing user's email to promote them to admin.</p>
                     <form id="addAdminForm" class="space-y-3">
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <div>
                                 <label class="block text-xs font-medium text-gray-700 mb-1">Full Name</label>
-                                <input type="text" id="newAdminName" placeholder="Admin Name" class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-emerald focus:border-emerald bg-white">
+                                <input type="text" id="newAdminName" placeholder="Admin Name" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-brand-primary focus:border-brand-primary bg-white">
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-gray-700 mb-1">Email Address *</label>
-                                <input type="email" id="newAdminEmail" required placeholder="admin@example.com" class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-emerald focus:border-emerald bg-white">
+                                <input type="email" id="newAdminEmail" required placeholder="admin@example.com" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-brand-primary focus:border-brand-primary bg-white">
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-gray-700 mb-1">Password</label>
                                 <div class="relative">
-                                    <input type="password" id="newAdminPassword" minlength="8" placeholder="Min 8 chars (for new user)" class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-emerald focus:border-emerald bg-white pr-9">
+                                    <input type="password" id="newAdminPassword" minlength="8" placeholder="Min 8 chars (for new user)" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-brand-primary focus:border-brand-primary bg-white pr-9">
                                     <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-2.5 flex items-center text-gray-400 hover:text-gray-700 cursor-pointer text-xs" data-target="newAdminPassword" title="Toggle password visibility">
                                         <i class="far fa-eye"></i>
                                     </button>
@@ -259,7 +491,7 @@
                         </div>
                         <div class="flex justify-end space-x-2 pt-2">
                             <button type="button" id="cancelAddAdminBtn" class="text-xs font-medium text-gray-600 hover:text-gray-800 px-3 py-1.5 cursor-pointer">Cancel</button>
-                            <button type="submit" id="saveAdminBtn" class="bg-emerald hover:bg-green-600 text-white text-xs font-bold px-4 py-1.5 rounded-md shadow-sm transition-colors cursor-pointer flex items-center">
+                            <button type="submit" id="saveAdminBtn" class="bg-brand-primary hover:bg-brand-deep text-white text-xs font-bold px-4 py-1.5 rounded-lg shadow-xs transition-colors cursor-pointer flex items-center">
                                 <i class="fas fa-check mr-1.5"></i> Save Administrator
                             </button>
                         </div>
@@ -286,22 +518,321 @@
                 </div>
             </div>
         </div>
-        
+
+        <!-- VIEW 5: Dedicated Security & Settings Page -->
+        <div id="viewSettings" class="admin-view hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Change Password Direct Card -->
+                <div class="bg-white rounded-2xl border border-brand-gold/20 p-6 shadow-xs">
+                    <div class="flex items-center space-x-3 mb-4 pb-3 border-b border-gray-100">
+                        <div class="w-10 h-10 rounded-xl bg-brand-deep/10 text-brand-deep flex items-center justify-center text-lg border border-brand-gold/30">
+                            <i class="fas fa-key text-brand-gold"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-brand-dark">Change Password</h3>
+                            <p class="text-xs text-gray-500">Update your administrator account password</p>
+                        </div>
+                    </div>
+
+                    <button type="button" class="open-change-password-btn w-full bg-brand-deep hover:bg-brand-primary text-brand-gold hover:text-white font-bold py-3 px-4 rounded-xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer border border-brand-gold/40 shadow-xs">
+                        <i class="fas fa-lock"></i> Open Password Change Form
+                    </button>
+                </div>
+
+                <!-- Session Security Summary Card -->
+                <div class="bg-white rounded-2xl border border-brand-gold/20 p-6 shadow-xs">
+                    <div class="flex items-center space-x-3 mb-4 pb-3 border-b border-gray-100">
+                        <div class="w-10 h-10 rounded-xl bg-brand-deep/10 text-brand-deep flex items-center justify-center text-lg border border-brand-gold/30">
+                            <i class="fas fa-shield-alt text-brand-primary"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-brand-dark">Session Security</h3>
+                            <p class="text-xs text-gray-500">Platform security protocols & RBAC integrity</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2.5 text-xs text-gray-600">
+                        <div class="flex items-center justify-between p-2 rounded-lg bg-gray-50">
+                            <span>Role-Based Access Control</span>
+                            <span class="font-bold text-brand-primary">Server Enforced</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 rounded-lg bg-gray-50">
+                            <span>Session Validity Limit</span>
+                            <span class="font-bold text-brand-dark">60 Minutes</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 rounded-lg bg-gray-50">
+                            <span>Inactivity Watchdog</span>
+                            <span class="font-bold text-brand-dark">30 Minutes Idle</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 rounded-lg bg-gray-50">
+                            <span>Database Architecture</span>
+                            <span class="font-bold text-brand-primary">Supabase PostgreSQL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Add Course Modal with Integrated AI Parser Workflow -->
+<div id="addCourseModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="addCourseModalTitle">
+    <div id="addCourseModalBackdrop" class="fixed inset-0 cursor-pointer" aria-hidden="true"></div>
+    
+    <div class="relative max-w-3xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] border border-brand-gold/30 z-10">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between px-6 py-4 bg-brand-deep text-white border-b-2 border-brand-gold flex-shrink-0">
+            <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-lg bg-brand-gold/20 flex items-center justify-center text-brand-gold">
+                    <i class="fas fa-plus text-sm"></i>
+                </div>
+                <div>
+                    <h3 id="addCourseModalTitle" class="text-base sm:text-lg font-bold tracking-tight">Create New Course</h3>
+                    <p class="text-[11px] text-gray-300">Publish a new sacred sciences program to the catalog</p>
+                </div>
+            </div>
+            <button type="button" id="closeAddCourseModal" class="text-gray-300 hover:text-white text-2xl leading-none p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer" title="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Scrollable Modal Body -->
+        <div class="p-6 overflow-y-auto flex-grow space-y-6">
+            <!-- Integrated AI Parser Workflow Box -->
+            <div class="bg-brand-deep/5 rounded-2xl border border-brand-gold/30 p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-brand-dark flex items-center">
+                        <i class="fas fa-magic text-brand-gold mr-1.5"></i> AI Course Parser (Optional)
+                    </span>
+                    <span class="text-[11px] text-gray-500">Upload poster to auto-populate fields</span>
+                </div>
+                <form id="aiParseForm" class="flex flex-col sm:flex-row items-center gap-3">
+                    <input type="file" id="posterImage" accept="image/*" class="block w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-deep file:text-brand-gold hover:file:bg-brand-primary cursor-pointer border border-gray-300 rounded-xl bg-white">
+                    <button type="submit" id="parseBtn" class="w-full sm:w-auto flex-shrink-0 bg-brand-deep text-brand-gold hover:text-white hover:bg-brand-primary font-bold py-2 px-4 rounded-xl transition-colors flex items-center justify-center text-xs shadow-xs cursor-pointer border border-brand-gold/40">
+                        <i class="fas fa-robot mr-1.5"></i> Extract Details
+                    </button>
+                </form>
+            </div>
+
+            <!-- Manual Add Course Form -->
+            <form id="addCourseForm" enctype="multipart/form-data" class="space-y-4 text-sm">
+                <!-- Title & Category Row -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">Course Title <span class="text-red-500">*</span></label>
+                        <input type="text" id="title" name="title" required class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-brand-primary focus:border-brand-primary bg-gray-50/50">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">Discipline / Category <span class="text-red-500">*</span></label>
+                        <input type="text" id="category" name="category" list="categorySuggestions" required placeholder="e.g. Tafseer, Tajweed, Hadith..." class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-brand-primary focus:border-brand-primary bg-gray-50/50">
+                        <datalist id="categorySuggestions">
+                            <option value="Tafseer">
+                            <option value="Tajweed & Qira'at">
+                            <option value="Hadith & Sunnah">
+                            <option value="Arabic Language">
+                            <option value="Quran & Hifz">
+                            <option value="Fiqh & Shariah">
+                            <option value="Aqeedah">
+                            <option value="Seerah & History">
+                            <option value="Tazkiyah & Adab">
+                        </datalist>
+                    </div>
+                </div>
+                
+                <!-- Cover Image & Live Preview -->
+                <div class="bg-gray-50 rounded-2xl p-4 border border-gray-200">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">Course Promotional Poster <span class="text-red-500">*</span></label>
+                    <input type="file" id="image" name="image" accept="image/*" class="w-full border border-gray-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-brand-primary focus:border-brand-primary text-sm bg-white">
+                    <input type="hidden" id="image_url" name="image_url" value="">
+                    
+                    <div id="coverPreviewContainer" class="mt-3 hidden">
+                        <div class="relative inline-flex items-center gap-3 border border-brand-gold/40 rounded-xl overflow-hidden shadow-xs bg-white p-2">
+                            <img id="coverPreviewImg" src="" alt="Cover Preview" class="h-24 w-auto object-cover rounded-lg border border-gray-200">
+                            <div>
+                                <span class="text-xs font-bold text-brand-primary flex items-center">
+                                    <i class="fas fa-check-circle mr-1"></i> Poster ready to publish
+                                </span>
+                                <button type="button" id="removeCoverPreview" class="text-red-500 hover:text-red-700 cursor-pointer text-xs font-medium block mt-1">
+                                    <i class="fas fa-times mr-1"></i> Clear image
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Medium, Status & Price -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">Medium / Language</label>
+                        <select id="language" name="language" class="w-full border border-gray-300 rounded-xl px-3 py-2.5 focus:ring-2 focus:ring-brand-primary focus:border-brand-primary bg-white text-sm font-medium">
+                            <option value="Tamil">Tamil (தமிழ் வழிக் கல்வி)</option>
+                            <option value="English">English Medium</option>
+                            <option value="Bilingual (Tamil & English)">Bilingual (Tamil & English)</option>
+                            <option value="Arabic">Arabic</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">Status</label>
+                        <select id="status" name="status" class="w-full border border-gray-300 rounded-xl px-3 py-2.5 focus:ring-2 focus:ring-brand-primary focus:border-brand-primary bg-white text-sm">
+                            <option value="current">Current (Ongoing)</option>
+                            <option value="upcoming">Future (Upcoming)</option>
+                            <option value="past">Past (Completed)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">Course Fee</label>
+                        <input type="text" id="price" name="price" value="Free" placeholder="e.g. Free or ₹500" class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-brand-primary focus:border-brand-primary text-sm bg-gray-50/50">
+                    </div>
+                </div>
+                
+                <!-- Start Date / Schedule -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">Start Date / Schedule</label>
+                    <input type="text" id="start_date" name="start_date" placeholder="e.g. Weekly Sundays 8:00 PM IST" class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-brand-primary focus:border-brand-primary text-sm bg-gray-50/50">
+                </div>
+                
+                <!-- Short Description -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">Short Description <span class="text-red-500">*</span></label>
+                    <textarea id="description" name="description" rows="2" required class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-brand-primary focus:border-brand-primary bg-gray-50/50"></textarea>
+                </div>
+                
+                <!-- Full Course Syllabus -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1.5">Curriculum & Detailed Content <span class="text-red-500">*</span></label>
+                    <textarea id="content" name="content" rows="4" required class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-brand-primary focus:border-brand-primary bg-gray-50/50"></textarea>
+                </div>
+                
+                <!-- Footer Buttons -->
+                <div class="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
+                    <button type="button" id="cancelAddCourseBtn" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-100 font-semibold text-xs transition-colors cursor-pointer">
+                        Cancel
+                    </button>
+                    <button type="submit" class="bg-brand-deep hover:bg-brand-primary text-brand-gold hover:text-white font-bold py-2.5 px-6 rounded-xl transition-all text-xs shadow-xs cursor-pointer border border-brand-gold/40 flex items-center gap-2">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Publish Course</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Edit Course Modal (For Editing Course & Poster from Admin Console) -->
+<div id="adminEditModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="adminEditModalTitle">
+    <div id="adminEditModalBackdrop" class="fixed inset-0 cursor-pointer" aria-hidden="true"></div>
+    
+    <div class="relative max-w-2xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] border border-brand-gold/30 z-10">
+        <div class="flex items-center justify-between px-6 py-4 bg-brand-deep text-white border-b-2 border-brand-gold flex-shrink-0">
+            <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-lg bg-brand-gold/20 flex items-center justify-center text-brand-gold">
+                    <i class="fas fa-edit text-sm"></i>
+                </div>
+                <div>
+                    <h3 id="adminEditModalTitle" class="text-base sm:text-lg font-bold tracking-tight">Edit Course & Poster</h3>
+                    <p class="text-[11px] text-gray-300">Update promotional poster, schedule, syllabus, and course metadata</p>
+                </div>
+            </div>
+            <button type="button" id="closeAdminEditModal" class="text-gray-300 hover:text-white text-2xl leading-none p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer" title="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <form id="adminEditForm" class="p-6 overflow-y-auto flex-grow space-y-4 text-sm">
+            <input type="hidden" id="adminEditCourseId" name="course_id">
+
+            <div class="bg-gray-50 rounded-2xl p-4 border border-gray-200">
+                <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-2">
+                    <i class="fas fa-image mr-1 text-brand-gold"></i> Promotional Poster
+                </label>
+                <div class="flex flex-col sm:flex-row items-center gap-4">
+                    <img id="adminEditPosterPreview" src="" alt="Current Poster" class="h-24 w-20 object-cover rounded-xl border border-brand-gold/40 shadow-xs bg-gray-200 flex-shrink-0">
+                    <div class="flex-grow w-full">
+                        <label for="adminEditImage" class="block w-full border-2 border-dashed border-gray-300 hover:border-brand-primary rounded-xl p-3 text-center cursor-pointer transition-colors bg-white">
+                            <i class="fas fa-cloud-upload-alt text-brand-primary text-xl mb-1"></i>
+                            <div class="text-xs font-semibold text-brand-dark" id="adminEditImageName">Click to replace poster image</div>
+                            <div class="text-[11px] text-gray-400 mt-0.5">JPG, PNG, or WebP. Leave empty to keep existing poster.</div>
+                            <input type="file" id="adminEditImage" name="image" accept="image/jpeg,image/png,image/webp" class="hidden">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">Course Title</label>
+                    <input type="text" id="adminEditTitle" required class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-brand-primary">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">Category</label>
+                    <input type="text" id="adminEditCategory" list="categorySuggestions" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-brand-primary">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">Status</label>
+                    <select id="adminEditStatus" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-brand-primary">
+                        <option value="current">Ongoing</option>
+                        <option value="upcoming">Upcoming</option>
+                        <option value="past">Completed</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">Medium</label>
+                    <select id="adminEditLanguage" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-brand-primary">
+                        <option value="Tamil">Tamil (தமிழ்)</option>
+                        <option value="English">English</option>
+                        <option value="Bilingual (Tamil & English)">Bilingual</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">Fee</label>
+                    <input type="text" id="adminEditPrice" placeholder="Free" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-brand-primary">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">Schedule / Date</label>
+                <input type="text" id="adminEditStartDate" placeholder="Weekly schedule..." class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-brand-primary">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">Description</label>
+                <textarea id="adminEditDesc" rows="2" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-brand-primary"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">Syllabus Outline</label>
+                <textarea id="adminEditContent" rows="3" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-brand-primary"></textarea>
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
+                <button type="button" id="cancelAdminEditBtn" class="px-5 py-2 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-100 font-semibold text-xs cursor-pointer">
+                    Cancel
+                </button>
+                <button type="submit" id="saveAdminEditBtn" class="px-6 py-2 rounded-xl bg-brand-deep hover:bg-brand-primary text-brand-gold hover:text-white font-bold text-xs transition-all shadow-xs flex items-center gap-2 border border-brand-gold/40 cursor-pointer">
+                    <i class="fas fa-save"></i>
+                    <span>Save Changes</span>
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
 <!-- Change Password Modal -->
-<div id="changePasswordModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-dark/70 backdrop-blur-xs flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="changePasswordTitle">
+<div id="changePasswordModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="changePasswordTitle">
     <div id="changePasswordBackdrop" class="fixed inset-0 cursor-pointer"></div>
-    <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 z-10 border border-gray-100">
+    <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 z-10 border border-brand-gold/30">
         <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-navy/10 flex items-center justify-center text-navy">
-                    <i class="fas fa-lock text-gold text-lg"></i>
+                <div class="w-10 h-10 rounded-xl bg-brand-deep text-brand-gold flex items-center justify-center border border-brand-gold/30">
+                    <i class="fas fa-lock text-sm"></i>
                 </div>
                 <div>
-                    <h3 id="changePasswordTitle" class="text-xl font-bold tracking-tight text-navy">Change Password</h3>
-                    <p class="text-xs text-gray-500">Update your administrator login credentials</p>
+                    <h3 id="changePasswordTitle" class="text-xl font-bold tracking-tight text-brand-dark">Change Password</h3>
+                    <p class="text-xs text-gray-500">Update your administrator credentials</p>
                 </div>
             </div>
             <button type="button" id="closeChangePasswordBtn" class="text-gray-400 hover:text-gray-600 text-xl p-1 rounded-lg transition-colors cursor-pointer">
@@ -309,29 +840,29 @@
             </button>
         </div>
         
-        <form id="changePasswordForm" class="space-y-4">
+        <form id="changePasswordForm" class="space-y-4 text-sm">
             <div>
-                <label for="currentPassword" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Current Password</label>
+                <label for="currentPassword" class="block text-xs font-bold text-brand-dark uppercase tracking-wider mb-1">Current Password</label>
                 <div class="relative">
-                    <input type="password" id="currentPassword" required autocomplete="current-password" placeholder="Enter your current password" class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald pr-10">
+                    <input type="password" id="currentPassword" required autocomplete="current-password" placeholder="Enter current password" class="w-full border border-gray-300 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-brand-primary pr-10">
                     <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer" data-target="currentPassword">
                         <i class="far fa-eye text-sm"></i>
                     </button>
                 </div>
             </div>
             <div>
-                <label for="newPassword" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">New Password (Min. 8 characters)</label>
+                <label for="newPassword" class="block text-xs font-bold text-brand-dark uppercase tracking-wider mb-1">New Password (Min. 8 chars)</label>
                 <div class="relative">
-                    <input type="password" id="newPassword" required minlength="8" autocomplete="new-password" placeholder="Create a strong password" class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald pr-10">
+                    <input type="password" id="newPassword" required minlength="8" autocomplete="new-password" placeholder="Min. 8 characters" class="w-full border border-gray-300 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-brand-primary pr-10">
                     <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer" data-target="newPassword">
                         <i class="far fa-eye text-sm"></i>
                     </button>
                 </div>
             </div>
             <div>
-                <label for="confirmPassword" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Confirm New Password</label>
+                <label for="confirmPassword" class="block text-xs font-bold text-brand-dark uppercase tracking-wider mb-1">Confirm New Password</label>
                 <div class="relative">
-                    <input type="password" id="confirmPassword" required minlength="8" autocomplete="new-password" placeholder="Confirm your new password" class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald focus:border-emerald pr-10">
+                    <input type="password" id="confirmPassword" required minlength="8" autocomplete="new-password" placeholder="Confirm new password" class="w-full border border-gray-300 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-brand-primary pr-10">
                     <button type="button" class="toggle-pwd-btn absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer" data-target="confirmPassword">
                         <i class="far fa-eye text-sm"></i>
                     </button>
@@ -351,7 +882,7 @@
                 <button type="button" id="cancelChangePasswordBtn" class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer">
                     Cancel
                 </button>
-                <button type="submit" id="submitChangePasswordBtn" class="inline-flex items-center px-5 py-2.5 text-sm font-bold text-white bg-navy hover:bg-teal-700 rounded-xl shadow-sm transition-colors cursor-pointer">
+                <button type="submit" id="submitChangePasswordBtn" class="inline-flex items-center px-5 py-2 text-sm font-bold text-white bg-brand-deep hover:bg-brand-primary rounded-xl shadow-xs transition-colors cursor-pointer">
                     <i class="fas fa-check mr-2"></i> Update Password
                 </button>
             </div>
@@ -362,14 +893,397 @@
 <!-- SheetJS library for genuine client-side Excel (.xlsx) generation -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-<!-- Admin Specific JS -->
+<!-- Minimal Luxury Admin Console Script -->
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('token');
-    if (!token) {
-        showToast("Not authenticated. Please log in.", "warning");
-        setTimeout(() => { window.location.href = '/'; }, 800);
+    const userRole = localStorage.getItem('role');
+    const currentUserName = localStorage.getItem('userName') || 'Administrator';
+    
+    if (!token || userRole !== 'admin') {
+        if (window.showToast) window.showToast("Admin session required. Please sign in.", "warning");
+        setTimeout(() => { window.location.href = '/'; }, 600);
         return;
+    }
+
+    // Set Sidebar User Profile
+    const adminUserAvatar = document.getElementById('adminUserAvatar');
+    const adminUserName = document.getElementById('adminUserName');
+    if (adminUserName) adminUserName.textContent = currentUserName;
+    if (adminUserAvatar && window.getUnicodeInitial) {
+        adminUserAvatar.textContent = window.getUnicodeInitial(currentUserName);
+    }
+
+    const adminSidebarLogoutBtn = document.getElementById('adminSidebarLogoutBtn');
+    if (adminSidebarLogoutBtn) {
+        adminSidebarLogoutBtn.addEventListener('click', () => {
+            localStorage.clear();
+            if (window.showToast) window.showToast('Signed out of Admin Console.', 'info');
+            setTimeout(() => { window.location.href = '/'; }, 400);
+        });
+    }
+
+    // -------------------------------------------------------------
+    // Sidebar Tabs / Dedicated Views Switcher
+    // -------------------------------------------------------------
+    const tabButtons = document.querySelectorAll('.admin-tab-btn');
+    const views = {
+        'overview': document.getElementById('viewOverview'),
+        'courses': document.getElementById('viewCourses'),
+        'enrolments': document.getElementById('viewEnrolments'),
+        'admins': document.getElementById('viewAdmins'),
+        'settings': document.getElementById('viewSettings')
+    };
+    const viewTitles = {
+        'overview': 'Dashboard Overview',
+        'courses': 'Courses & Posters Directory',
+        'enrolments': 'Student Rosters & Enrolments',
+        'admins': 'Platform Administrators',
+        'settings': 'Security & System Settings'
+    };
+    const currentViewTitle = document.getElementById('currentViewTitle');
+
+    function switchView(viewName) {
+        if (!views[viewName]) return;
+
+        // Hide all views
+        Object.keys(views).forEach(key => {
+            if (views[key]) views[key].classList.add('hidden');
+        });
+
+        // Show active view
+        views[viewName].classList.remove('hidden');
+
+        // Update header title
+        if (currentViewTitle && viewTitles[viewName]) {
+            currentViewTitle.textContent = viewTitles[viewName];
+        }
+
+        // Update active tab styles
+        tabButtons.forEach(btn => {
+            const btnView = btn.getAttribute('data-view');
+            const isDesktop = btn.classList.contains('w-full');
+            if (btnView === viewName) {
+                if (isDesktop) {
+                    btn.className = 'admin-tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer bg-brand-gold text-brand-dark shadow-xs';
+                } else {
+                    btn.className = 'admin-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-gold text-brand-dark flex items-center gap-1.5 transition-all cursor-pointer';
+                }
+            } else {
+                if (isDesktop) {
+                    btn.className = 'admin-tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-gray-200 hover:text-white hover:bg-white/10 transition-all cursor-pointer';
+                } else {
+                    btn.className = 'admin-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1.5 transition-all cursor-pointer';
+                }
+            }
+        });
+    }
+
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const view = btn.getAttribute('data-view');
+            switchView(view);
+        });
+    });
+
+    document.querySelectorAll('.switch-to-view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.getAttribute('data-target');
+            switchView(target);
+        });
+    });
+
+    // -------------------------------------------------------------
+    // Add Course Modal Controls (with Integrated AI Parser Dropzone)
+    // -------------------------------------------------------------
+    const addCourseModal = document.getElementById('addCourseModal');
+    const addCourseModalBackdrop = document.getElementById('addCourseModalBackdrop');
+    const closeAddCourseModal = document.getElementById('closeAddCourseModal');
+    const cancelAddCourseBtn = document.getElementById('cancelAddCourseBtn');
+    const openAddCourseModalBtns = [
+        document.getElementById('openAddCourseModalBtn'),
+        ...document.querySelectorAll('.open-add-course-btn')
+    ].filter(Boolean);
+
+    function openAddModal() {
+        if (!addCourseModal) return;
+        addCourseModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeAddModal() {
+        if (!addCourseModal) return;
+        addCourseModal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    openAddCourseModalBtns.forEach(btn => btn.addEventListener('click', openAddModal));
+    if (closeAddCourseModal) closeAddCourseModal.addEventListener('click', closeAddModal);
+    if (cancelAddCourseBtn) cancelAddCourseBtn.addEventListener('click', closeAddModal);
+    if (addCourseModalBackdrop) addCourseModalBackdrop.addEventListener('click', closeAddModal);
+
+    // Cover Image & Auto-Apply elements
+    const posterInput = document.getElementById('posterImage');
+    const coverInput = document.getElementById('image');
+    const coverUrlInput = document.getElementById('image_url');
+    const previewContainer = document.getElementById('coverPreviewContainer');
+    const previewImg = document.getElementById('coverPreviewImg');
+    const removePreviewBtn = document.getElementById('removeCoverPreview');
+
+    function showCoverPreview(source) {
+        if (!source || !previewContainer || !previewImg) return;
+        if (typeof source === 'string') {
+            previewImg.src = source;
+            previewContainer.classList.remove('hidden');
+        } else if (source instanceof File || source instanceof Blob) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+                previewContainer.classList.remove('hidden');
+            };
+            reader.readAsDataURL(source);
+        }
+    }
+
+    function syncPosterFileToCover(file) {
+        if (!file || !coverInput) return;
+        try {
+            const dt = new DataTransfer();
+            dt.items.add(file);
+            coverInput.files = dt.files;
+        } catch (err) {
+            console.warn('DataTransfer fallback active', err);
+        }
+        showCoverPreview(file);
+    }
+
+    if (posterInput) {
+        posterInput.addEventListener('change', () => {
+            if (posterInput.files && posterInput.files[0]) {
+                syncPosterFileToCover(posterInput.files[0]);
+            }
+        });
+    }
+
+    if (coverInput) {
+        coverInput.addEventListener('change', () => {
+            if (coverInput.files && coverInput.files[0]) {
+                if (coverUrlInput) coverUrlInput.value = '';
+                showCoverPreview(coverInput.files[0]);
+            }
+        });
+    }
+
+    if (removePreviewBtn) {
+        removePreviewBtn.addEventListener('click', () => {
+            if (coverInput) coverInput.value = '';
+            if (posterInput) posterInput.value = '';
+            if (coverUrlInput) coverUrlInput.value = '';
+            if (previewContainer) previewContainer.classList.add('hidden');
+            if (previewImg) previewImg.src = '';
+            if (window.showToast) window.showToast('Poster preview cleared.', 'info');
+        });
+    }
+
+    // AI Parser Form Handler (Integrated into Add Course modal)
+    const aiForm = document.getElementById('aiParseForm');
+    if (aiForm) {
+        aiForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('parseBtn');
+            const originalBtn = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i> Parsing...';
+            btn.disabled = true;
+
+            const fileInput = document.getElementById('posterImage');
+            if (!fileInput.files || !fileInput.files[0]) {
+                if (window.showToast) window.showToast('Please select a promotional poster image first.', 'warning');
+                btn.innerHTML = originalBtn;
+                btn.disabled = false;
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            try {
+                const res = await fetch('/api/parse-poster', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                
+                if (res.ok) {
+                    const data = await res.json();
+                    if (document.getElementById('title')) document.getElementById('title').value = data.title || '';
+                    if (document.getElementById('category')) document.getElementById('category').value = data.category || '';
+                    if (document.getElementById('description')) document.getElementById('description').value = data.description || '';
+                    if (document.getElementById('start_date')) document.getElementById('start_date').value = data.start_date || '';
+                    if (data.status) {
+                        const statusSelect = document.getElementById('status');
+                        if (statusSelect) statusSelect.value = data.status.toLowerCase().trim();
+                    }
+                    if (data.language) {
+                        const langSelect = document.getElementById('language');
+                        if (langSelect) {
+                            const val = data.language.toLowerCase();
+                            if (val.includes('bilingual')) langSelect.value = 'Bilingual (Tamil & English)';
+                            else if (val.includes('english')) langSelect.value = 'English';
+                            else if (val.includes('arabic')) langSelect.value = 'Arabic';
+                            else langSelect.value = 'Tamil';
+                        }
+                    }
+                    if (data.price && document.getElementById('price')) {
+                        document.getElementById('price').value = data.price;
+                    }
+                    if (document.getElementById('content')) document.getElementById('content').value = data.content || '';
+                    
+                    if (data.image_url) {
+                        if (coverUrlInput) coverUrlInput.value = data.image_url;
+                        showCoverPreview(data.image_url);
+                    } else if (fileInput.files && fileInput.files[0]) {
+                        syncPosterFileToCover(fileInput.files[0]);
+                    }
+
+                    if (window.showToast) {
+                        window.showToast("Poster parsed! Course fields have been automatically filled.", 'success');
+                    }
+                } else {
+                    const err = await res.text();
+                    if (window.showToast) window.showToast("Parser notice: " + err, 'warning');
+                }
+            } catch (err) {
+                console.error(err);
+                if (window.showToast) window.showToast("Network error parsing poster.", 'error');
+            } finally {
+                btn.innerHTML = originalBtn;
+                btn.disabled = false;
+            }
+        });
+    }
+
+    // -------------------------------------------------------------
+    // Admin Edit Course & Poster Modal Logic
+    // -------------------------------------------------------------
+    const adminEditModal = document.getElementById('adminEditModal');
+    const adminEditModalBackdrop = document.getElementById('adminEditModalBackdrop');
+    const closeAdminEditModal = document.getElementById('closeAdminEditModal');
+    const cancelAdminEditBtn = document.getElementById('cancelAdminEditBtn');
+    const adminEditForm = document.getElementById('adminEditForm');
+    const adminEditImage = document.getElementById('adminEditImage');
+    const adminEditPosterPreview = document.getElementById('adminEditPosterPreview');
+    const adminEditImageName = document.getElementById('adminEditImageName');
+
+    function openAdminEditModal(data) {
+        if (!adminEditModal) return;
+        document.getElementById('adminEditCourseId').value = data.id || '';
+        document.getElementById('adminEditTitle').value = data.title || '';
+        document.getElementById('adminEditCategory').value = data.category || '';
+        document.getElementById('adminEditStatus').value = data.status || 'current';
+        document.getElementById('adminEditLanguage').value = data.language || 'Tamil';
+        document.getElementById('adminEditPrice').value = data.price || '';
+        document.getElementById('adminEditStartDate').value = data.startdate || '';
+        document.getElementById('adminEditDesc').value = data.desc || '';
+        document.getElementById('adminEditContent').value = data.content || '';
+
+        if (adminEditPosterPreview) {
+            adminEditPosterPreview.src = data.poster || '/static/img/logo.jpeg';
+        }
+        if (adminEditImage) adminEditImage.value = '';
+        if (adminEditImageName) adminEditImageName.textContent = 'Click to replace poster image';
+
+        adminEditModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeAdminEdit() {
+        if (!adminEditModal) return;
+        adminEditModal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    if (closeAdminEditModal) closeAdminEditModal.addEventListener('click', closeAdminEdit);
+    if (cancelAdminEditBtn) cancelAdminEditBtn.addEventListener('click', closeAdminEdit);
+    if (adminEditModalBackdrop) adminEditModalBackdrop.addEventListener('click', closeAdminEdit);
+
+    if (adminEditImage) {
+        adminEditImage.addEventListener('change', () => {
+            const file = adminEditImage.files[0];
+            if (file) {
+                adminEditImageName.textContent = file.name;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (adminEditPosterPreview) adminEditPosterPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    document.querySelectorAll('.admin-edit-course-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            openAdminEditModal({
+                id: btn.getAttribute('data-id'),
+                title: btn.getAttribute('data-title'),
+                category: btn.getAttribute('data-category'),
+                status: btn.getAttribute('data-status'),
+                language: btn.getAttribute('data-language'),
+                price: btn.getAttribute('data-price'),
+                startdate: btn.getAttribute('data-startdate'),
+                desc: btn.getAttribute('data-desc'),
+                content: btn.getAttribute('data-content'),
+                poster: btn.getAttribute('data-poster')
+            });
+        });
+    });
+
+    if (adminEditForm) {
+        adminEditForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const courseId = document.getElementById('adminEditCourseId').value;
+            const saveBtn = document.getElementById('saveAdminEditBtn');
+            const originalHTML = saveBtn.innerHTML;
+
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i> Saving...';
+
+            try {
+                const formData = new FormData();
+                formData.append('title', document.getElementById('adminEditTitle').value.trim());
+                formData.append('category', document.getElementById('adminEditCategory').value.trim());
+                formData.append('status', document.getElementById('adminEditStatus').value);
+                formData.append('language', document.getElementById('adminEditLanguage').value);
+                formData.append('price', document.getElementById('adminEditPrice').value.trim());
+                formData.append('start_date', document.getElementById('adminEditStartDate').value.trim());
+                formData.append('description', document.getElementById('adminEditDesc').value.trim());
+                formData.append('content', document.getElementById('adminEditContent').value.trim());
+
+                if (adminEditImage.files && adminEditImage.files[0]) {
+                    formData.append('image', adminEditImage.files[0]);
+                }
+
+                const res = await fetch(`/api/courses/${courseId}`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+
+                const result = await res.json();
+                if (!res.ok) {
+                    throw new Error(result.detail || 'Failed to update course.');
+                }
+
+                if (window.showToast) window.showToast('Course and promotional poster updated successfully!', 'success');
+                closeAdminEdit();
+                setTimeout(() => window.location.reload(), 600);
+            } catch (err) {
+                console.error(err);
+                if (window.showToast) window.showToast(err.message || 'Error updating course.', 'error');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalHTML;
+            }
+        });
     }
 
     // -------------------------------------------------------------
@@ -378,6 +1292,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     let allEnrollments = [];
     const enrollmentsTableBody = document.getElementById('enrollmentsTableBody');
     const enrollmentCountBadge = document.getElementById('enrollmentCountBadge');
+    const overviewEnrollmentCount = document.getElementById('overviewEnrollmentCount');
+    const overviewEnrolmentBadge = document.getElementById('overviewEnrolmentBadge');
+    const sidebarEnrollmentCount = document.getElementById('sidebarEnrollmentCount');
     const courseFilterSelect = document.getElementById('courseFilterSelect');
     const enrollmentSearchInput = document.getElementById('enrollmentSearchInput');
     const coursePillsContainer = document.getElementById('coursePillsContainer');
@@ -385,25 +1302,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const copyEmailsBtn = document.getElementById('copyEmailsBtn');
     const exportExcelBtn = document.getElementById('exportExcelBtn');
 
-    function getInitials(name, email) {
-        if (name && name.trim()) {
-            const parts = name.trim().split(/\s+/);
-            if (parts.length >= 2) {
-                return (parts[0][0] + parts[1][0]).toUpperCase();
-            }
-            return parts[0].substring(0, 2).toUpperCase();
-        }
-        if (email) {
-            return email.substring(0, 2).toUpperCase();
-        }
-        return 'ST';
-    }
-
     function renderCoursePills(enrollments) {
         if (!coursePillsContainer) return;
         const selectedVal = courseFilterSelect ? courseFilterSelect.value : 'all';
         let pillsHtml = `
-            <button type="button" class="course-pill px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${selectedVal === 'all' ? 'bg-navy text-white shadow-xs' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'}" data-course-id="all">
+            <button type="button" class="course-pill px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${selectedVal === 'all' ? 'bg-brand-deep text-brand-gold shadow-xs border border-brand-gold/40' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'}" data-course-id="all">
                 All (${enrollments.length})
             </button>
         `;
@@ -420,7 +1323,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         courseMap.forEach((c) => {
             const isSelected = selectedVal === c.id;
             pillsHtml += `
-                <button type="button" class="course-pill px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${isSelected ? 'bg-emerald text-white shadow-xs' : 'bg-white text-gray-700 hover:bg-emerald/10 hover:text-emerald border border-gray-200'}" data-course-id="${c.id}">
+                <button type="button" class="course-pill px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${isSelected ? 'bg-brand-primary text-white shadow-xs' : 'bg-white text-gray-700 hover:bg-brand-deep/5 hover:text-brand-deep border border-gray-200'}" data-course-id="${c.id}">
                     ${c.title} <span class="ml-1 opacity-80 font-normal">(${c.count})</span>
                 </button>
             `;
@@ -458,18 +1361,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         if (enrollmentCountBadge) {
-            if (selectedCourse === 'all') {
-                enrollmentCountBadge.textContent = `${filtered.length} Total Enrollment${filtered.length === 1 ? '' : 's'}`;
-            } else {
-                enrollmentCountBadge.textContent = `${filtered.length} Enrolled in Course`;
-            }
+            enrollmentCountBadge.textContent = `${filtered.length} Enrollment${filtered.length === 1 ? '' : 's'}`;
         }
 
         if (coursePillsContainer) {
             coursePillsContainer.querySelectorAll('.course-pill').forEach(pill => {
                 const cid = pill.getAttribute('data-course-id');
                 if (cid === selectedCourse) {
-                    pill.className = `course-pill px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${cid === 'all' ? 'bg-navy text-white shadow-xs' : 'bg-emerald text-white shadow-xs'}`;
+                    pill.className = `course-pill px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${cid === 'all' ? 'bg-brand-deep text-brand-gold shadow-xs border border-brand-gold/40' : 'bg-brand-primary text-white shadow-xs'}`;
                 } else {
                     pill.className = 'course-pill px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer bg-white text-gray-700 hover:bg-gray-100 border border-gray-200';
                 }
@@ -491,39 +1390,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         filtered.forEach(e => {
-            const initials = getInitials(e.student_name, e.student_email);
+            const initial = window.getUnicodeInitial ? window.getUnicodeInitial(e.student_name || e.student_email || 'S') : 'S';
             let statusBadge = '';
             if (e.course_status === 'past') {
                 statusBadge = '<span class="text-[10px] font-semibold bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Completed</span>';
             } else if (e.course_status === 'upcoming') {
                 statusBadge = '<span class="text-[10px] font-semibold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Upcoming</span>';
             } else {
-                statusBadge = '<span class="text-[10px] font-semibold bg-emerald/10 text-emerald px-2 py-0.5 rounded-full">Ongoing</span>';
+                statusBadge = '<span class="text-[10px] font-semibold bg-brand-primary/10 text-brand-primary px-2 py-0.5 rounded-full">Ongoing</span>';
             }
 
             enrollmentsTableBody.innerHTML += `
                 <tr class="hover:bg-gray-50/80 transition-colors">
                     <td class="px-5 py-3.5 whitespace-nowrap">
                         <div class="flex items-center">
-                            <div class="w-8 h-8 rounded-full bg-emerald/15 text-emerald font-bold text-xs flex items-center justify-center mr-3 border border-emerald/30 flex-shrink-0">
-                                ${initials}
+                            <div class="w-8 h-8 rounded-xl bg-brand-deep text-brand-gold font-bold text-xs flex items-center justify-center mr-3 border border-brand-gold/30 flex-shrink-0">
+                                ${initial}
                             </div>
                             <div>
-                                <div class="text-sm font-semibold text-navy">${e.student_name}</div>
+                                <div class="text-sm font-semibold text-brand-dark">${e.student_name}</div>
                                 <div class="text-xs text-gray-500">${e.student_email}</div>
                             </div>
                         </div>
                     </td>
                     <td class="px-5 py-3.5">
-                        <div class="text-sm font-semibold text-navy">${e.course_title}</div>
+                        <div class="text-sm font-semibold text-brand-dark">${e.course_title}</div>
                         <div class="flex items-center gap-1.5 mt-0.5">
-                            <span class="text-[11px] font-medium bg-navy/10 text-navy px-2 py-0.5 rounded-full">${e.course_category}</span>
+                            <span class="text-[11px] font-medium bg-brand-deep/5 text-brand-deep px-2 py-0.5 rounded-full">${e.course_category}</span>
                             ${statusBadge}
                         </div>
                     </td>
                     <td class="px-5 py-3.5 whitespace-nowrap text-xs text-gray-600">
                         <span class="inline-flex items-center">
-                            <i class="far fa-calendar-alt text-emerald mr-1.5"></i> ${e.date}
+                            <i class="far fa-calendar-alt text-brand-primary mr-1.5"></i> ${e.date}
                         </span>
                     </td>
                     <td class="px-5 py-3.5 whitespace-nowrap text-right text-sm">
@@ -542,7 +1441,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     data-user-id="${e.student_id}" 
                                     data-student="${e.student_name}" 
                                     data-email="${e.student_email}"
-                                    title="Permanently delete this user account">
+                                    title="Permanently delete user account">
                                 <i class="fas fa-user-times mr-1 text-red-600"></i> Delete User
                             </button>
                         </div>
@@ -559,41 +1458,41 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const email = btn.getAttribute('data-email');
                 const course = btn.getAttribute('data-course');
 
-                const confirmMsg = `Are you sure you want to unenroll ${student} (${email}) from "${course}"?`;
-                confirmModal({
-                    title: 'Unenroll Student',
-                    message: confirmMsg,
-                    confirmText: 'Unenroll',
-                    isDestructive: true,
-                    onConfirm: async () => {
-                        btn.disabled = true;
-                        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Removing...';
-
-                        try {
-                            const delRes = await fetch(`/api/admin/enrollments/${enrollmentId}`, {
-                                method: 'DELETE',
-                                headers: { 'Authorization': `Bearer ${token}` }
-                            });
-                            const delData = await delRes.json();
-                            if (delRes.ok) {
-                                showToast(delData.message || 'Enrollment successfully removed.', 'success');
-                                loadEnrollments();
-                            } else {
-                                showToast(delData.detail || 'Failed to remove enrollment.', 'error');
+                if (window.confirmModal) {
+                    window.confirmModal({
+                        title: 'Unenroll Student',
+                        message: `Are you sure you want to unenroll ${student} (${email}) from "${course}"?`,
+                        confirmText: 'Unenroll',
+                        isDestructive: true,
+                        onConfirm: async () => {
+                            btn.disabled = true;
+                            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Removing...';
+                            try {
+                                const delRes = await fetch(`/api/admin/enrollments/${enrollmentId}`, {
+                                    method: 'DELETE',
+                                    headers: { 'Authorization': `Bearer ${token}` }
+                                });
+                                const delData = await delRes.json();
+                                if (delRes.ok) {
+                                    if (window.showToast) window.showToast(delData.message || 'Enrollment successfully removed.', 'success');
+                                    loadEnrollments();
+                                } else {
+                                    if (window.showToast) window.showToast(delData.detail || 'Failed to remove enrollment.', 'error');
+                                    btn.disabled = false;
+                                    btn.innerHTML = '<i class="fas fa-user-minus mr-1 text-amber-600"></i> Unenroll';
+                                }
+                            } catch (err) {
+                                if (window.showToast) window.showToast('Network error while removing enrollment.', 'error');
                                 btn.disabled = false;
                                 btn.innerHTML = '<i class="fas fa-user-minus mr-1 text-amber-600"></i> Unenroll';
                             }
-                        } catch (err) {
-                            showToast('Network error while removing enrollment.', 'error');
-                            btn.disabled = false;
-                            btn.innerHTML = '<i class="fas fa-user-minus mr-1 text-amber-600"></i> Unenroll';
                         }
-                    }
-                });
+                    });
+                }
             });
         });
 
-        // Attach Delete User Handlers (Available to all admins for non-admin users)
+        // Attach Delete User Handlers
         enrollmentsTableBody.querySelectorAll('.delete-student-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const userId = btn.getAttribute('data-user-id');
@@ -601,42 +1500,42 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const email = btn.getAttribute('data-email');
 
                 if (!userId || userId === 'null') {
-                    showToast('User record not found.', 'warning');
+                    if (window.showToast) window.showToast('User record not found.', 'warning');
                     return;
                 }
 
-                const confirmMsg = `Are you sure you want to PERMANENTLY delete the student account for "${student}" (${email})? All course enrollments will be wiped.`;
-                confirmModal({
-                    title: 'Delete Student Account',
-                    message: confirmMsg,
-                    confirmText: 'Delete Permanently',
-                    isDestructive: true,
-                    onConfirm: async () => {
-                        btn.disabled = true;
-                        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Deleting...';
-
-                        try {
-                            const delRes = await fetch(`/api/admin/users/${userId}`, {
-                                method: 'DELETE',
-                                headers: { 'Authorization': `Bearer ${token}` }
-                            });
-                            const delData = await delRes.json();
-                            if (delRes.ok) {
-                                showToast(delData.message || 'User account deleted successfully.', 'success');
-                                loadEnrollments();
-                                loadAdmins();
-                            } else {
-                                showToast(delData.detail || 'Failed to delete user account.', 'error');
+                if (window.confirmModal) {
+                    window.confirmModal({
+                        title: 'Delete Student Account',
+                        message: `Are you sure you want to PERMANENTLY delete student account "${student}" (${email})? All course enrollments will be wiped.`,
+                        confirmText: 'Delete Permanently',
+                        isDestructive: true,
+                        onConfirm: async () => {
+                            btn.disabled = true;
+                            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Deleting...';
+                            try {
+                                const delRes = await fetch(`/api/admin/users/${userId}`, {
+                                    method: 'DELETE',
+                                    headers: { 'Authorization': `Bearer ${token}` }
+                                });
+                                const delData = await delRes.json();
+                                if (delRes.ok) {
+                                    if (window.showToast) window.showToast(delData.message || 'User account deleted successfully.', 'success');
+                                    loadEnrollments();
+                                    loadAdmins();
+                                } else {
+                                    if (window.showToast) window.showToast(delData.detail || 'Failed to delete user account.', 'error');
+                                    btn.disabled = false;
+                                    btn.innerHTML = '<i class="fas fa-user-times mr-1 text-red-600"></i> Delete User';
+                                }
+                            } catch (err) {
+                                if (window.showToast) window.showToast('Network error deleting user account.', 'error');
                                 btn.disabled = false;
                                 btn.innerHTML = '<i class="fas fa-user-times mr-1 text-red-600"></i> Delete User';
                             }
-                        } catch (err) {
-                            showToast('Network error while deleting user account.', 'error');
-                            btn.disabled = false;
-                            btn.innerHTML = '<i class="fas fa-user-times mr-1 text-red-600"></i> Delete User';
                         }
-                    }
-                });
+                    });
+                }
             });
         });
     }
@@ -649,25 +1548,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
             if (res.ok) {
                 allEnrollments = await res.json();
+                if (overviewEnrollmentCount) overviewEnrollmentCount.textContent = allEnrollments.length;
+                if (overviewEnrolmentBadge) overviewEnrolmentBadge.textContent = `${allEnrollments.length} Enrolled`;
+                if (sidebarEnrollmentCount) sidebarEnrollmentCount.textContent = allEnrollments.length;
                 renderCoursePills(allEnrollments);
                 renderEnrollments();
-            } else {
-                if (res.status === 401 || res.status === 403) {
-                    showToast("Unauthorized or session expired. Please log in as an administrator.", "warning");
-                    setTimeout(() => { window.location.href = '/'; }, 1000);
-                }
+            } else if (res.status === 401 || res.status === 403) {
+                if (window.showToast) window.showToast("Unauthorized session. Please log in as an administrator.", "warning");
+                setTimeout(() => { window.location.href = '/'; }, 800);
             }
         } catch (err) {
             console.error('Failed to load enrollments:', err);
         }
     }
 
-    if (courseFilterSelect) {
-        courseFilterSelect.addEventListener('change', renderEnrollments);
-    }
-    if (enrollmentSearchInput) {
-        enrollmentSearchInput.addEventListener('input', renderEnrollments);
-    }
+    if (courseFilterSelect) courseFilterSelect.addEventListener('change', renderEnrollments);
+    if (enrollmentSearchInput) enrollmentSearchInput.addEventListener('input', renderEnrollments);
     if (refreshEnrollmentsBtn) {
         refreshEnrollmentsBtn.addEventListener('click', () => {
             const icon = refreshEnrollmentsBtn.querySelector('i');
@@ -697,20 +1593,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const emails = [...new Set(filtered.map(e => e.student_email).filter(Boolean))];
             if (emails.length === 0) {
-                showToast('No student emails found with the current filter.', 'warning');
+                if (window.showToast) window.showToast('No student emails found with the current filter.', 'warning');
                 return;
             }
             navigator.clipboard.writeText(emails.join(', ')).then(() => {
-                showToast(`Copied ${emails.length} email(s) to clipboard!`, 'success');
+                if (window.showToast) window.showToast(`Copied ${emails.length} email(s) to clipboard!`, 'success');
             }).catch(() => {
-                showToast(`Student Emails: ${emails.slice(0, 3).join(', ')}...`, 'info');
+                if (window.showToast) window.showToast(`Emails: ${emails.slice(0, 3).join(', ')}...`, 'info');
             });
         });
     }
 
-    // -------------------------------------------------------------
-    // Export Filtered Enrollments to Excel (.xlsx) / CSV
-    // -------------------------------------------------------------
+    // Export to Excel / CSV
     function exportToExcel() {
         const selectedCourse = courseFilterSelect ? courseFilterSelect.value : 'all';
         const searchQuery = enrollmentSearchInput ? enrollmentSearchInput.value.toLowerCase().trim() : '';
@@ -728,7 +1622,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         if (filtered.length === 0) {
-            showToast('No student enrollment rows to export with current filter.', 'warning');
+            if (window.showToast) window.showToast('No student enrollment rows to export with current filter.', 'warning');
             return;
         }
 
@@ -773,7 +1667,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // CSV fallback with UTF-8 BOM
+        // CSV fallback
         const headers = ['S.No', 'Student Name', 'Student Email', 'Course Title', 'Category', 'Course Status', 'Enrolled Date'];
         const csvLines = [headers.join(',')];
 
@@ -800,156 +1694,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.body.removeChild(link);
     }
 
-    if (exportExcelBtn) {
-        exportExcelBtn.addEventListener('click', exportToExcel);
-    }
+    if (exportExcelBtn) exportExcelBtn.addEventListener('click', exportToExcel);
 
-    // Initial load
+    // Initial load of enrollments
     loadEnrollments();
-
-    // Cover Image & Auto-Apply elements
-    const posterInput = document.getElementById('posterImage');
-    const coverInput = document.getElementById('image');
-    const coverUrlInput = document.getElementById('image_url');
-    const previewContainer = document.getElementById('coverPreviewContainer');
-    const previewImg = document.getElementById('coverPreviewImg');
-    const removePreviewBtn = document.getElementById('removeCoverPreview');
-
-    function showCoverPreview(source) {
-        if (!source || !previewContainer || !previewImg) return;
-        if (typeof source === 'string') {
-            previewImg.src = source;
-            previewContainer.classList.remove('hidden');
-        } else if (source instanceof File || source instanceof Blob) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                previewImg.src = e.target.result;
-                previewContainer.classList.remove('hidden');
-            };
-            reader.readAsDataURL(source);
-        }
-    }
-
-    function syncPosterFileToCover(file) {
-        if (!file || !coverInput) return;
-        try {
-            const dt = new DataTransfer();
-            dt.items.add(file);
-            coverInput.files = dt.files;
-        } catch (err) {
-            console.warn('DataTransfer fallback active', err);
-        }
-        showCoverPreview(file);
-    }
-
-    // Automatically apply image as soon as selected in AI Parser
-    if (posterInput) {
-        posterInput.addEventListener('change', () => {
-            if (posterInput.files && posterInput.files[0]) {
-                syncPosterFileToCover(posterInput.files[0]);
-            }
-        });
-    }
-
-    // If manual cover file is selected, update preview
-    if (coverInput) {
-        coverInput.addEventListener('change', () => {
-            if (coverInput.files && coverInput.files[0]) {
-                if (coverUrlInput) coverUrlInput.value = '';
-                showCoverPreview(coverInput.files[0]);
-            }
-        });
-    }
-
-    // Clear preview button
-    if (removePreviewBtn) {
-        removePreviewBtn.addEventListener('click', () => {
-            if (coverInput) coverInput.value = '';
-            if (posterInput) posterInput.value = '';
-            if (coverUrlInput) coverUrlInput.value = '';
-            if (previewContainer) previewContainer.classList.add('hidden');
-            if (previewImg) previewImg.src = '';
-            showToast('Cover image preview cleared.', 'info');
-        });
-    }
-
-    // AI Parser form handler
-    const aiForm = document.getElementById('aiParseForm');
-    if (aiForm) {
-        aiForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('parseBtn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Parsing...';
-            btn.disabled = true;
-
-            const fileInput = document.getElementById('posterImage');
-            const formData = new FormData();
-            formData.append('image', fileInput.files[0]);
-
-            try {
-                const res = await fetch('/api/parse-poster', {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` },
-                    body: formData
-                });
-                
-                if (res.ok) {
-                    const data = await res.json();
-                    document.getElementById('title').value = data.title || '';
-                    document.getElementById('category').value = data.category || '';
-                    document.getElementById('description').value = data.description || '';
-                    document.getElementById('start_date').value = data.start_date || '';
-                    if (data.status) {
-                        const statusVal = data.status.toLowerCase().trim();
-                        const statusSelect = document.getElementById('status');
-                        if (statusSelect) statusSelect.value = statusVal;
-                    }
-                    if (data.language) {
-                        const langSelect = document.getElementById('language');
-                        if (langSelect) {
-                            const val = data.language.toLowerCase();
-                            if (val.includes('bilingual')) langSelect.value = 'Bilingual (Tamil & English)';
-                            else if (val.includes('english')) langSelect.value = 'English';
-                            else if (val.includes('arabic')) langSelect.value = 'Arabic';
-                            else langSelect.value = 'Tamil';
-                        }
-                    }
-                    if (data.price) {
-                        document.getElementById('price').value = data.price;
-                    }
-                    document.getElementById('content').value = data.content || '';
-                    
-                    // Auto-apply cover image
-                    if (data.image_url) {
-                        if (coverUrlInput) coverUrlInput.value = data.image_url;
-                        showCoverPreview(data.image_url);
-                    } else if (fileInput.files && fileInput.files[0]) {
-                        syncPosterFileToCover(fileInput.files[0]);
-                    }
-
-                    if (data.error_notice) {
-                        showToast(data.error_notice, 'warning');
-                    } else {
-                        showToast("AI extraction complete! Details and poster preview applied.", 'success');
-                    }
-                } else {
-                    const error = await res.text();
-                    showToast("Failed to parse poster: " + error, 'error');
-                }
-            } catch (err) {
-                showToast("Network error parsing poster.", 'error');
-            } finally {
-                btn.innerHTML = '<i class="fas fa-robot mr-2"></i> Extract Details';
-                btn.disabled = false;
-            }
-        });
-    }
 
     // -------------------------------------------------------------
     // Administrators Management Logic
     // -------------------------------------------------------------
     const currentUserId = localStorage.getItem('userId');
     const adminsTableBody = document.getElementById('adminsTableBody');
+    const overviewAdminCount = document.getElementById('overviewAdminCount');
     const toggleAddAdminBtn = document.getElementById('toggleAddAdminBtn');
     const cancelAddAdminBtn = document.getElementById('cancelAddAdminBtn');
     const addAdminFormContainer = document.getElementById('addAdminFormContainer');
@@ -965,24 +1720,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const data = await res.json();
                 const admins = data.admins || [];
                 const currentIsMain = Boolean(data.current_user_is_main);
+                
+                if (overviewAdminCount) overviewAdminCount.textContent = admins.length;
                 adminsTableBody.innerHTML = '';
+                
                 if (admins.length === 0) {
                     adminsTableBody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">No administrators found.</td></tr>`;
                     return;
                 }
+                
                 admins.forEach(a => {
                     const isMe = String(a.id) === String(currentUserId);
+                    const initial = window.getUnicodeInitial ? window.getUnicodeInitial(a.name || a.email) : 'A';
                     let roleBadge = '';
                     if (a.is_main_admin) {
                         roleBadge = `
-                            <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-900 border border-gold/60 shadow-xs">
-                                <i class="fas fa-crown mr-1.5 text-gold"></i> Main Admin (Owner)
+                            <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-900 border border-brand-gold/60 shadow-xs">
+                                <i class="fas fa-crown mr-1.5 text-brand-gold"></i> Main Admin (Owner)
                             </span>
                         `;
                     } else {
                         roleBadge = `
-                            <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full bg-navy text-white shadow-xs">
-                                <i class="fas fa-shield-alt mr-1.5 text-gold"></i> Admin
+                            <span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full bg-brand-deep text-brand-gold shadow-xs">
+                                <i class="fas fa-shield-alt mr-1.5"></i> Admin
                             </span>
                         `;
                     }
@@ -991,10 +1751,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (isMe) {
                         actionHtml = '<span class="text-xs text-gray-400 italic">Current User</span>';
                     } else if (a.is_main_admin) {
-                        actionHtml = '<span class="text-xs text-amber-700 font-semibold italic"><i class="fas fa-lock text-gold mr-1"></i> Owner</span>';
+                        actionHtml = '<span class="text-xs text-amber-700 font-semibold italic"><i class="fas fa-lock text-brand-gold mr-1"></i> Owner</span>';
                     } else if (currentIsMain) {
                         actionHtml = `
-                            <button class="remove-admin-btn text-xs font-semibold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 px-2.5 py-1 rounded transition-colors cursor-pointer" data-id="${a.id}" data-email="${a.email}">
+                            <button class="remove-admin-btn text-xs font-semibold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 px-2.5 py-1 rounded-md transition-colors cursor-pointer" data-id="${a.id}" data-email="${a.email}">
                                 <i class="fas fa-user-minus mr-1"></i> Demote
                             </button>
                         `;
@@ -1005,15 +1765,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                     adminsTableBody.innerHTML += `
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
-                                ${a.name} ${isMe ? '<span class="ml-1.5 text-xs bg-emerald/15 text-emerald font-bold px-2 py-0.5 rounded-full">You</span>' : ''}
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 rounded-xl bg-brand-deep text-brand-gold font-bold text-xs flex items-center justify-center mr-3 border border-brand-gold/30 flex-shrink-0">
+                                        ${initial}
+                                    </div>
+                                    <div>
+                                        <span class="font-bold text-brand-dark">${a.name}</span>
+                                        ${isMe ? '<span class="ml-1.5 text-xs bg-brand-primary/10 text-brand-primary font-bold px-2 py-0.5 rounded-full">You</span>' : ''}
+                                    </div>
+                                </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${a.email}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                ${roleBadge}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-                                ${actionHtml}
-                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">${roleBadge}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm">${actionHtml}</td>
                         </tr>
                     `;
                 });
@@ -1023,33 +1787,35 @@ document.addEventListener('DOMContentLoaded', async () => {
                     btn.addEventListener('click', () => {
                         const targetId = btn.getAttribute('data-id');
                         const targetEmail = btn.getAttribute('data-email');
-                        confirmModal({
-                            title: 'Revoke Admin Privileges',
-                            message: `Are you sure you want to revoke admin privileges for ${targetEmail}?`,
-                            confirmText: 'Revoke Access',
-                            isDestructive: true,
-                            onConfirm: async () => {
-                                try {
-                                    const remRes = await fetch('/api/admin/remove-admin', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'Authorization': `Bearer ${token}`
-                                        },
-                                        body: JSON.stringify({ user_id: parseInt(targetId) })
-                                    });
-                                    const remData = await remRes.json();
-                                    if (remRes.ok) {
-                                        showToast(remData.message || 'Admin privileges revoked.', 'success');
-                                        loadAdmins();
-                                    } else {
-                                        showToast(remData.detail || 'Failed to revoke admin.', 'error');
+                        if (window.confirmModal) {
+                            window.confirmModal({
+                                title: 'Revoke Admin Privileges',
+                                message: `Are you sure you want to revoke admin privileges for ${targetEmail}?`,
+                                confirmText: 'Revoke Access',
+                                isDestructive: true,
+                                onConfirm: async () => {
+                                    try {
+                                        const remRes = await fetch('/api/admin/remove-admin', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'Authorization': `Bearer ${token}`
+                                            },
+                                            body: JSON.stringify({ user_id: parseInt(targetId) })
+                                        });
+                                        const remData = await remRes.json();
+                                        if (remRes.ok) {
+                                            if (window.showToast) window.showToast(remData.message || 'Admin privileges revoked.', 'success');
+                                            loadAdmins();
+                                        } else {
+                                            if (window.showToast) window.showToast(remData.detail || 'Failed to revoke admin.', 'error');
+                                        }
+                                    } catch (err) {
+                                        if (window.showToast) window.showToast('Network error.', 'error');
                                     }
-                                } catch (err) {
-                                    showToast('Network error.', 'error');
                                 }
-                            }
-                        });
+                            });
+                        }
                     });
                 });
             }
@@ -1095,15 +1861,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
                 const addData = await addRes.json();
                 if (addRes.ok) {
-                    showToast(addData.message || 'Administrator saved successfully!', 'success');
+                    if (window.showToast) window.showToast(addData.message || 'Administrator saved successfully!', 'success');
                     addAdminForm.reset();
                     if (addAdminFormContainer) addAdminFormContainer.classList.add('hidden');
                     loadAdmins();
                 } else {
-                    showToast(addData.detail || 'Failed to add administrator.', 'error');
+                    if (window.showToast) window.showToast(addData.detail || 'Failed to add administrator.', 'error');
                 }
             } catch (err) {
-                showToast('Network error.', 'error');
+                if (window.showToast) window.showToast('Network error.', 'error');
             } finally {
                 if (saveBtn) {
                     saveBtn.disabled = false;
@@ -1144,17 +1910,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (openChangePasswordModalBtn) openChangePasswordModalBtn.addEventListener('click', openChangePassword);
+    document.querySelectorAll('.open-change-password-btn').forEach(b => b.addEventListener('click', openChangePassword));
     if (closeChangePasswordBtn) closeChangePasswordBtn.addEventListener('click', closeChangePassword);
     if (cancelChangePasswordBtn) cancelChangePasswordBtn.addEventListener('click', closeChangePassword);
     if (changePasswordBackdrop) changePasswordBackdrop.addEventListener('click', closeChangePassword);
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && changePasswordModal && !changePasswordModal.classList.contains('hidden')) {
-            closeChangePassword();
-        }
-    });
-
-    // Password visibility toggles
     document.querySelectorAll('.toggle-pwd-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const targetId = btn.getAttribute('data-target');
@@ -1220,9 +1980,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         passwordSuccessAlert.classList.remove('hidden');
                     }
                     changePasswordForm.reset();
-                    setTimeout(() => {
-                        closeChangePassword();
-                    }, 1400);
+                    setTimeout(() => closeChangePassword(), 1400);
                 } else {
                     if (passwordErrorAlert && passwordErrorText) {
                         passwordErrorText.textContent = data.detail || 'Failed to change password.';
@@ -1243,7 +2001,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Initial load
+    // Escape Key Handler for Modals
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            if (addCourseModal && !addCourseModal.classList.contains('hidden')) {
+                closeAddModal();
+            } else if (adminEditModal && !adminEditModal.classList.contains('hidden')) {
+                closeAdminEdit();
+            } else if (changePasswordModal && !changePasswordModal.classList.contains('hidden')) {
+                closeChangePassword();
+            }
+        }
+    });
+
+    // Initial load of administrators
     loadAdmins();
 });
 </script>
