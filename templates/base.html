@@ -22,10 +22,21 @@
 </head>
 <body class="bg-brand-ivory text-brand-dark font-sans min-h-screen flex flex-col antialiased">
 
+    <!-- Route & Navigation State Detection -->
+    {% set current_path = (request.url.path.rstrip('/') if request.url.path != '/' else '/') if request is defined else '/' %}
+    {% set is_admin_route = (current_path == '/admin' or current_path.startswith('/admin/')) %}
+    {% set nav_active_section = 'home' if current_path in ['/', '/index.html']
+        else 'courses' if (current_path == '/courses' or current_path.startswith('/courses/') or current_path.startswith('/viewer/') or current_path.startswith('/course/'))
+        else 'about' if (current_path == '/about' or current_path.startswith('/about/'))
+        else 'admissions' if (current_path == '/admissions' or current_path.startswith('/admissions/'))
+        else 'updates' if (current_path == '/updates' or current_path.startswith('/updates/'))
+        else 'admin' if is_admin_route
+        else '' %}
+
     <!-- ============================================================== -->
     <!-- SACRED TOP BANNER (Bismillah & Multichannel Admissions)        -->
     <!-- ============================================================== -->
-    <div class="bg-[#031d21] text-gray-300 text-xs py-2 px-4 border-b border-brand-gold/15 flex justify-between items-center tracking-wide">
+    <div class="bg-[#031d21] text-gray-300 text-xs py-2 px-4 border-b border-brand-gold/15 flex justify-between items-center tracking-wide {% if is_admin_route %}hidden lg:flex{% endif %}">
         <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
             <div class="flex items-center space-x-2 text-brand-gold font-medium mx-auto sm:mx-0">
                 <span class="font-arabic text-sm text-brand-gold tracking-wide">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span>
@@ -46,62 +57,55 @@
     <!-- ============================================================== -->
     <!-- PREMIER STICKY TOP NAVBAR (Luminous Modern Academic)            -->
     <!-- ============================================================== -->
-    {% set current_path = (request.url.path.rstrip('/') if request.url.path != '/' else '/') if request is defined else '/' %}
-    {% set nav_active_section = 'home' if current_path in ['/', '/index.html']
-        else 'courses' if (current_path == '/courses' or current_path.startswith('/courses/') or current_path.startswith('/viewer/') or current_path.startswith('/course/'))
-        else 'about' if (current_path == '/about' or current_path.startswith('/about/'))
-        else 'admissions' if (current_path == '/admissions' or current_path.startswith('/admissions/'))
-        else 'updates' if (current_path == '/updates' or current_path.startswith('/updates/'))
-        else 'admin' if (current_path == '/admin' or current_path.startswith('/admin/'))
-        else '' %}
-    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-brand-border shadow-xs transition-all duration-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-4 md:px-4 lg:px-6 xl:px-8 h-20 flex items-center justify-between">
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-brand-border shadow-xs transition-all duration-200 {% if is_admin_route %}hidden lg:block{% endif %}">
+        <div class="max-w-7xl mx-auto px-3.5 sm:px-4 lg:px-5 xl:px-8 h-18 sm:h-20 flex items-center justify-between">
             
-            <!-- Left: Brand Logo & Scholarly Institutional Title -->
-            <a href="/" class="flex items-center space-x-2 lg:space-x-3.5 group flex-shrink-0" aria-label="Salsabeel Academy Home">
-                <img src="/static/img/logo.jpeg" alt="Salsabeel Emblem" class="h-9 w-9 sm:h-11 sm:w-11 rounded-full border border-brand-border object-cover shadow-xs transition-transform group-hover:scale-105">
-                <div class="flex flex-col justify-center">
-                    <span class="font-serif font-bold text-base sm:text-xl leading-tight text-brand-ink tracking-tight">
+            <!-- Left: Brand Logo & Scholarly Institutional Title (Non-Shrinking, Never Truncated) -->
+            <a href="/" class="flex items-center space-x-2.5 sm:space-x-3 group flex-shrink-0" aria-label="Salsabeel Academy Home">
+                <img src="/static/img/logo.jpeg" alt="Salsabeel Emblem" class="h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10 xl:h-11 xl:w-11 rounded-full border border-brand-border object-cover shadow-xs transition-transform group-hover:scale-105 flex-shrink-0">
+                <div class="flex flex-col justify-center flex-shrink-0">
+                    <span class="font-serif font-bold text-base sm:text-lg lg:text-lg xl:text-xl leading-tight text-brand-ink tracking-tight whitespace-nowrap">
                         Salsabeel <span class="text-brand-primary font-medium">Academy</span>
                     </span>
-                    <span class="hidden lg:block text-[10px] sm:text-xs uppercase tracking-widest text-brand-ink-muted font-medium font-sans">Sacred Islamic Sciences</span>
+                    <span class="hidden lg:block text-[9px] xl:text-[10px] uppercase tracking-wider xl:tracking-widest text-brand-ink-muted font-medium font-sans whitespace-nowrap">Sacred Islamic Sciences</span>
                 </div>
             </a>
 
-            <!-- Center: Desktop Navigation Links (Responsive md: 768px+ Single-Line) -->
-            <nav class="hidden md:flex items-center space-x-0.5 lg:space-x-1 xl:space-x-1.5 flex-shrink-0" aria-label="Main Navigation">
-                <a href="/" class="top-nav-link whitespace-nowrap px-1.5 lg:px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-xs xl:text-sm font-medium transition-colors {{ 'active text-brand-deep font-semibold' if nav_active_section == 'home' else 'text-brand-ink-muted hover:text-brand-deep hover:bg-gray-100/80' }}" data-nav="home" {% if nav_active_section == 'home' %}aria-current="page"{% endif %}>
+            <!-- Center: Desktop Navigation Links (Responsive lg: 1024px+ Single-Line) -->
+            <nav class="hidden lg:flex items-center space-x-1 xl:space-x-1.5 flex-shrink-0" aria-label="Main Navigation">
+                <a href="/" class="top-nav-link whitespace-nowrap px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-xs xl:text-xs 2xl:text-sm font-medium transition-colors {{ 'active text-brand-deep font-semibold' if nav_active_section == 'home' else 'text-brand-ink-muted hover:text-brand-deep hover:bg-gray-100/80' }}" data-nav="home" {% if nav_active_section == 'home' %}aria-current="page"{% endif %}>
                     <span>Home</span>
                 </a>
-                <a href="/courses" class="top-nav-link whitespace-nowrap px-1.5 lg:px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-xs xl:text-sm font-medium transition-colors {{ 'active text-brand-deep font-semibold' if nav_active_section == 'courses' else 'text-brand-ink-muted hover:text-brand-deep hover:bg-gray-100/80' }}" data-nav="courses" {% if nav_active_section == 'courses' %}aria-current="page"{% endif %}>
+                <a href="/courses" class="top-nav-link whitespace-nowrap px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-xs xl:text-xs 2xl:text-sm font-medium transition-colors {{ 'active text-brand-deep font-semibold' if nav_active_section == 'courses' else 'text-brand-ink-muted hover:text-brand-deep hover:bg-gray-100/80' }}" data-nav="courses" {% if nav_active_section == 'courses' %}aria-current="page"{% endif %}>
                     <span>Courses</span>
-                    <span class="courses-count-badge ml-1 xl:ml-1.5 text-[10px] xl:text-[11px] font-semibold bg-brand-deep/5 text-brand-deep border border-brand-deep/15 px-1 xl:px-2 py-0.5 rounded-md font-sans">{% set total_courses = courses_count|default(courses|length if courses is defined else 0) %}{{ total_courses }}<span class="hidden xl:inline"> Program{{ 's' if total_courses != 1 else '' }}</span></span>
+                    <span class="courses-count-badge ml-1 xl:ml-1.5 text-[10px] xl:text-[11px] font-semibold bg-brand-deep/5 text-brand-deep border border-brand-deep/15 px-1 xl:px-1.5 py-0.5 rounded-md font-sans">{% set total_courses = courses_count|default(courses|length if courses is defined else 0) %}{{ total_courses }}<span class="hidden 2xl:inline"> Program{{ 's' if total_courses != 1 else '' }}</span></span>
                 </a>
-                <a href="/about" class="top-nav-link whitespace-nowrap px-1.5 lg:px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-xs xl:text-sm font-medium transition-colors {{ 'active text-brand-deep font-semibold' if nav_active_section == 'about' else 'text-brand-ink-muted hover:text-brand-deep hover:bg-gray-100/80' }}" data-nav="about" {% if nav_active_section == 'about' %}aria-current="page"{% endif %}>
+                <a href="/about" class="top-nav-link whitespace-nowrap px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-xs xl:text-xs 2xl:text-sm font-medium transition-colors {{ 'active text-brand-deep font-semibold' if nav_active_section == 'about' else 'text-brand-ink-muted hover:text-brand-deep hover:bg-gray-100/80' }}" data-nav="about" {% if nav_active_section == 'about' %}aria-current="page"{% endif %}>
                     <span>About Us</span>
                 </a>
-                <a href="https://wa.me/919940523013" target="_blank" rel="noopener noreferrer" class="top-nav-link whitespace-nowrap px-1.5 lg:px-2.5 xl:px-3 py-1.5 xl:py-2 rounded-xl text-xs xl:text-sm font-semibold transition-colors flex items-center {{ 'active text-brand-deep' if nav_active_section == 'admissions' else 'text-brand-primary hover:text-brand-deep hover:bg-brand-deep/5' }}" data-nav="admissions" {% if nav_active_section == 'admissions' %}aria-current="page"{% endif %}>
+                <a href="https://wa.me/919940523013" target="_blank" rel="noopener noreferrer" class="top-nav-link whitespace-nowrap px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-xs xl:text-xs 2xl:text-sm font-semibold transition-colors flex items-center {{ 'active text-brand-deep' if nav_active_section == 'admissions' else 'text-brand-primary hover:text-brand-deep hover:bg-brand-deep/5' }}" data-nav="admissions" {% if nav_active_section == 'admissions' %}aria-current="page"{% endif %}>
                     <i class="fab fa-whatsapp mr-1 xl:mr-1.5 text-xs xl:text-sm text-emerald-600"></i>
                     <span>Admissions</span>
                 </a>
-                <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" rel="noopener noreferrer" class="top-nav-link whitespace-nowrap px-1.5 lg:px-2.5 xl:px-3 py-1.5 xl:py-2 rounded-xl text-xs xl:text-sm font-medium transition-colors {{ 'active text-brand-deep font-semibold' if nav_active_section == 'updates' else 'text-brand-ink-muted hover:text-brand-deep hover:bg-gray-100/80' }}" data-nav="updates" {% if nav_active_section == 'updates' %}aria-current="page"{% endif %}>
+                <a href="https://whatsapp.com/channel/0029VbCnSRYJ93wNzERa7v1S/141" target="_blank" rel="noopener noreferrer" class="top-nav-link whitespace-nowrap px-2 xl:px-2.5 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-xs xl:text-xs 2xl:text-sm font-medium transition-colors {{ 'active text-brand-deep font-semibold' if nav_active_section == 'updates' else 'text-brand-ink-muted hover:text-brand-deep hover:bg-gray-100/80' }}" data-nav="updates" {% if nav_active_section == 'updates' %}aria-current="page"{% endif %}>
                     <span>Updates</span>
                 </a>
             </nav>
 
             <!-- Right: Search, Member Gift, Auth & Mobile Menu Toggle (Unified h-9 Height) -->
-            <div class="flex items-center space-x-1 sm:space-x-1.5 lg:space-x-2 xl:space-x-2.5 flex-shrink-0">
-                <!-- Search Hotkey Pill (visible on xl: 1280px+) -->
-                <a href="/courses" class="hidden xl:inline-flex items-center gap-2 h-9 px-3 rounded-xl bg-gray-50 hover:bg-gray-100 text-brand-ink-muted hover:text-brand-deep border border-brand-border text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60" title="Quick Search">
+            <div class="flex items-center space-x-1.5 lg:space-x-2 xl:space-x-2.5 flex-shrink-0">
+                <!-- Search Hotkey Pill (Compact icon on xl: 1280px+, expanded with kbd on 2xl:) -->
+                <a href="/courses" class="hidden xl:inline-flex items-center justify-center h-9 px-2.5 2xl:px-3 rounded-xl bg-gray-50 hover:bg-gray-100 text-brand-ink-muted hover:text-brand-deep border border-brand-border text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60 shadow-xs" title="Quick Search">
                     <i class="fas fa-search text-brand-ink-muted text-xs"></i>
-                    <span class="text-xs font-medium">Search</span>
-                    <kbd class="px-1.5 py-0.5 rounded bg-white border border-brand-border text-[10px] font-mono text-gray-500">/</kbd>
+                    <span class="hidden 2xl:inline ml-1.5 text-xs font-medium">Search</span>
+                    <kbd class="hidden 2xl:inline ml-1 px-1.5 py-0.5 rounded bg-white border border-brand-border text-[10px] font-mono text-gray-500">/</kbd>
                 </a>
 
                 <!-- Member Gift Button (Always visible; triggers gift modal) -->
-                <button type="button" id="memberGiftNavBtn" class="inline-flex items-center gap-1.5 h-9 px-2.5 lg:px-3 rounded-xl bg-brand-bronze/10 hover:bg-brand-bronze/15 border border-brand-bronze/30 text-brand-bronze text-xs font-semibold transition-all cursor-pointer shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60" title="Member Gift: Rasmul Mushaf">
+                <button type="button" id="memberGiftNavBtn" class="inline-flex items-center gap-1.5 h-9 px-2.5 xl:px-3 rounded-xl bg-brand-bronze/10 hover:bg-brand-bronze/15 border border-brand-bronze/30 text-brand-bronze text-xs font-semibold transition-all cursor-pointer shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60" title="Member Gift: Rasmul Mushaf">
                     <i class="fas fa-gift text-brand-bronze"></i>
-                    <span class="hidden lg:inline">Member Gift</span>
+                    <span class="hidden xl:inline">Member Gift</span>
+                    <span class="hidden lg:inline xl:hidden">Gift</span>
                 </button>
 
                 <!-- Sign In Button (Guest Only) -->
@@ -111,8 +115,8 @@
                 </button>
 
                 <!-- Admin Dashboard (Admin Only) -->
-                <a href="/admin" id="topAdminBtn" class="hidden inline-flex items-center justify-center h-9 px-2.5 lg:px-3.5 rounded-xl bg-brand-deep hover:bg-brand-primary text-brand-gold-light font-semibold text-xs tracking-wide transition-all shadow-xs border border-brand-gold/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60 {{ 'ring-2 ring-brand-gold ring-offset-1' if nav_active_section == 'admin' else '' }}">
-                    <i class="fas fa-shield-alt mr-1.5 text-brand-gold-light"></i>
+                <a href="/admin" id="topAdminBtn" class="hidden inline-flex items-center justify-center h-9 px-2.5 xl:px-3.5 rounded-xl bg-brand-deep hover:bg-brand-primary text-brand-gold-light font-semibold text-xs tracking-wide transition-all shadow-xs border border-brand-gold/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60 {{ 'ring-2 ring-brand-gold ring-offset-1' if nav_active_section == 'admin' else '' }}">
+                    <i class="fas fa-shield-alt mr-1 text-brand-gold-light"></i>
                     <span>Dashboard</span>
                 </a>
 
@@ -124,13 +128,13 @@
                 </div>
 
                 <!-- Sign Out (Logged In User) -->
-                <button type="button" id="topLogoutBtn" class="hidden inline-flex items-center justify-center h-9 px-2.5 lg:px-3 rounded-xl border border-red-300 text-red-600 hover:bg-red-50 font-medium text-xs tracking-wide transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400" title="Sign Out">
-                    <i class="fas fa-sign-out-alt lg:mr-1"></i>
-                    <span class="hidden lg:inline">Sign Out</span>
+                <button type="button" id="topLogoutBtn" class="hidden inline-flex items-center justify-center h-9 px-2 xl:px-2.5 rounded-xl border border-red-300 text-red-600 hover:bg-red-50 font-medium text-xs tracking-wide transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400" title="Sign Out">
+                    <i class="fas fa-sign-out-alt xl:mr-1"></i>
+                    <span class="hidden xl:inline">Sign Out</span>
                 </button>
 
-                <!-- Mobile Hamburger Button (Visible on mobile < 768px, hidden on md: 768px+) -->
-                <button type="button" id="mobileDrawerOpenBtn" class="md:hidden h-9 w-9 inline-flex items-center justify-center text-brand-ink hover:text-brand-primary hover:bg-gray-100/80 rounded-xl cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60 transition-colors" aria-label="Open mobile navigation menu" aria-expanded="false" aria-controls="mobileDrawer">
+                <!-- Mobile Hamburger Button (Visible on mobile & tablet < 1024px, hidden on lg: 1024px+) -->
+                <button type="button" id="mobileDrawerOpenBtn" class="lg:hidden h-9 w-9 inline-flex items-center justify-center text-brand-ink hover:text-brand-primary hover:bg-gray-100/80 rounded-xl cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/60 transition-colors" aria-label="Open mobile navigation menu" aria-expanded="false" aria-controls="mobileDrawer">
                     <i class="fas fa-bars text-lg"></i>
                 </button>
             </div>
@@ -226,7 +230,7 @@
         </main>
 
         <!-- Distinguished Academic Footer (#174C4B Anchor) -->
-        <footer class="bg-brand-deep text-white py-14 mt-auto border-t border-brand-gold/20">
+        <footer class="{% if is_admin_route %}hidden lg:block{% endif %} bg-brand-deep text-white py-14 mt-auto border-t border-brand-gold/20">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <div class="flex items-center justify-center space-x-3 mb-3">
                     <img src="/static/img/logo.jpeg" alt="Salsabeel Academy Logo" class="h-10 w-10 rounded-full border border-brand-gold/40 object-cover shadow-xs">
@@ -250,9 +254,9 @@
 
     <!-- Member Gift Modal (Rasmul Mushaf Google Classroom) -->
     <div id="memberGiftModal" class="hidden fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="memberGiftTitle">
-        <div class="flex items-center justify-center min-h-screen px-4 py-8 text-center sm:p-0">
+        <div class="flex items-center justify-center min-h-screen px-3 sm:px-4 py-6 sm:py-8 text-center">
             <div class="fixed inset-0 bg-[#06383A]/80 backdrop-blur-xs transition-opacity" id="memberGiftBackdrop"></div>
-            <div class="relative inline-block bg-white rounded-2xl text-left overflow-hidden shadow-academic-modal transform transition-all sm:my-8 sm:max-w-md w-full z-10 border border-brand-border p-6 sm:p-8">
+            <div class="relative inline-block bg-white rounded-2xl text-left overflow-hidden shadow-academic-modal transform transition-all sm:my-8 sm:max-w-md w-full z-10 border border-brand-border p-5 sm:p-7 modal-viewport-dialog overflow-y-auto">
                 <button type="button" id="closeMemberGiftBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 p-1 rounded-lg cursor-pointer">
                     <i class="fas fa-times text-lg"></i>
                 </button>
@@ -300,23 +304,23 @@
     </div>
 
     <!-- Custom Branded Confirmation Dialog Modal -->
-    <div id="customConfirmModal" class="hidden fixed inset-0 z-[9998] overflow-y-auto bg-[#04272C]/80 backdrop-blur-xs flex items-center justify-center p-4" role="dialog" aria-modal="true">
+    <div id="customConfirmModal" class="hidden fixed inset-0 z-[9998] overflow-y-auto bg-[#04272C]/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4" role="dialog" aria-modal="true">
         <div class="fixed inset-0 cursor-pointer" id="confirmModalBackdrop"></div>
-        <div class="relative bg-white rounded-2xl shadow-academic-modal max-w-md w-full p-6 z-10 border border-brand-gold/30 transform transition-all text-left">
-            <div class="flex items-start space-x-4">
-                <div id="confirmModalIconBg" class="w-12 h-12 rounded-xl bg-amber-50 border border-brand-gold/40 flex items-center justify-center flex-shrink-0 text-brand-gold text-xl">
+        <div class="relative bg-white rounded-2xl shadow-academic-modal max-w-md w-full p-5 sm:p-6 z-10 border border-brand-gold/30 transform transition-all text-left modal-viewport-dialog overflow-y-auto">
+            <div class="flex items-start space-x-3.5 sm:space-x-4">
+                <div id="confirmModalIconBg" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-50 border border-brand-gold/40 flex items-center justify-center flex-shrink-0 text-brand-gold text-lg sm:text-xl">
                     <i id="confirmModalIcon" class="fas fa-question-circle"></i>
                 </div>
-                <div class="flex-grow">
-                    <h3 id="confirmModalTitle" class="text-lg font-bold text-brand-dark tracking-tight">Confirm Action</h3>
-                    <p id="confirmModalMessage" class="text-sm text-gray-600 mt-1 leading-relaxed font-body">Are you sure you want to proceed?</p>
+                <div class="flex-grow min-w-0">
+                    <h3 id="confirmModalTitle" class="text-base sm:text-lg font-bold text-brand-dark tracking-tight">Confirm Action</h3>
+                    <p id="confirmModalMessage" class="text-xs sm:text-sm text-gray-600 mt-1 leading-relaxed font-body">Are you sure you want to proceed?</p>
                 </div>
             </div>
-            <div class="mt-6 flex justify-end gap-3">
-                <button type="button" id="confirmModalCancelBtn" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer">
+            <div class="mt-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-2.5 sm:gap-3">
+                <button type="button" id="confirmModalCancelBtn" class="w-full sm:w-auto px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer text-center">
                     Cancel
                 </button>
-                <button type="button" id="confirmModalConfirmBtn" class="px-5 py-2 text-sm font-bold text-white bg-brand-primary hover:bg-brand-deep rounded-xl transition-all shadow-sm cursor-pointer">
+                <button type="button" id="confirmModalConfirmBtn" class="w-full sm:w-auto px-5 py-2 text-sm font-bold text-white bg-brand-primary hover:bg-brand-deep rounded-xl transition-all shadow-sm cursor-pointer text-center">
                     Confirm
                 </button>
             </div>
@@ -325,9 +329,9 @@
 
     <!-- Auth Modal (Clean Academic Dialog) -->
     <div id="authModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modalTitle" role="dialog" aria-modal="true">
-        <div class="flex items-center justify-center min-h-screen px-4 py-8 text-center sm:p-0">
+        <div class="flex items-center justify-center min-h-screen px-3 sm:px-4 py-6 sm:py-8 text-center">
             <div class="fixed inset-0 bg-[#04272C]/80 backdrop-blur-xs transition-opacity modal-overlay" aria-hidden="true"></div>
-            <div class="relative inline-block bg-white rounded-2xl text-left overflow-hidden shadow-academic-modal transform transition-all sm:my-8 sm:max-w-md w-full z-10 border border-brand-gold/20 p-6 sm:p-8">
+            <div class="relative inline-block bg-white rounded-2xl text-left overflow-hidden shadow-academic-modal transform transition-all sm:my-8 sm:max-w-md w-full z-10 border border-brand-gold/20 p-5 sm:p-7 modal-viewport-dialog overflow-y-auto">
                 <div class="absolute top-4 right-4">
                     <button type="button" class="modal-close text-gray-400 hover:text-gray-600 focus:outline-none p-1 rounded-lg cursor-pointer">
                         <i class="fas fa-times text-lg"></i>
@@ -376,9 +380,9 @@
 
     <!-- Forgot Password Modal -->
     <div id="forgotPasswordModal" class="hidden fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
-        <div class="flex items-center justify-center min-h-screen px-4 py-8 text-center sm:p-0">
+        <div class="flex items-center justify-center min-h-screen px-3 sm:px-4 py-6 sm:py-8 text-center">
             <div class="fixed inset-0 bg-[#04272C]/80 backdrop-blur-xs transition-opacity forgot-modal-overlay"></div>
-            <div class="relative inline-block bg-white rounded-2xl text-left overflow-hidden shadow-academic-modal transform transition-all sm:my-8 sm:max-w-md w-full z-10 border border-brand-gold/20 p-6 sm:p-8">
+            <div class="relative inline-block bg-white rounded-2xl text-left overflow-hidden shadow-academic-modal transform transition-all sm:my-8 sm:max-w-md w-full z-10 border border-brand-gold/20 p-5 sm:p-7 modal-viewport-dialog overflow-y-auto">
                 <div class="absolute top-4 right-4">
                     <button type="button" id="closeForgotModalBtn" class="text-gray-400 hover:text-gray-600 focus:outline-none p-1 rounded-lg cursor-pointer">
                         <i class="fas fa-times text-lg"></i>

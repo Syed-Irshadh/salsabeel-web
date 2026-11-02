@@ -3,40 +3,57 @@
 {% block title %}Academic Administration Console - Salsabeel Academy{% endblock %}
 
 {% block content %}
-<div class="min-h-[calc(100vh-76px)] bg-brand-ivory flex flex-col lg:flex-row">
+<div class="min-h-screen lg:min-h-[calc(100vh-76px)] bg-brand-ivory flex flex-col lg:flex-row">
     <!-- Dedicated Dark Teal Sidebar (#06383A) -->
-    <aside class="w-full lg:w-72 bg-brand-deep text-white border-r border-brand-gold/20 flex-shrink-0 flex flex-col justify-between">
+    <aside class="w-full lg:w-72 bg-brand-deep text-white border-r border-brand-gold/20 flex-shrink-0 flex flex-col justify-between lg:min-h-full sticky top-0 z-40 lg:static shadow-sm lg:shadow-none">
         <div>
             <!-- Sidebar Header / Academic Monogram -->
-            <div class="p-6 border-b border-brand-gold/20">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-brand-dark/80 text-brand-gold border border-brand-gold/40 flex items-center justify-center text-lg font-bold shadow-xs flex-shrink-0">
+            <div class="p-4 sm:p-5 lg:p-6 border-b border-brand-gold/20 flex items-center justify-between">
+                <div class="flex items-center space-x-3 min-w-0">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-brand-dark/80 text-brand-gold border border-brand-gold/40 flex items-center justify-center text-base sm:text-lg font-bold shadow-xs flex-shrink-0">
                         <i class="fas fa-university"></i>
                     </div>
-                    <div class="overflow-hidden">
-                        <h2 class="text-sm font-bold tracking-tight text-white uppercase font-sans">Salsabeel Console</h2>
-                        <p class="text-[11px] text-brand-gold-light truncate">Academic Administration</p>
+                    <div class="min-w-0">
+                        <h2 class="text-xs sm:text-sm font-bold tracking-tight text-white uppercase font-sans truncate">Salsabeel Console</h2>
+                        <p class="text-[10px] sm:text-[11px] text-brand-gold-light truncate">Academic Administration</p>
                     </div>
+                </div>
+
+                <!-- Mobile Quick Actions Bar (< lg) -->
+                <div class="flex items-center gap-1.5 lg:hidden flex-shrink-0">
+                    <a href="/" class="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-gray-200 text-xs transition-colors flex items-center gap-1.5 min-h-[38px]" title="View Public Site" aria-label="View Public Site">
+                        <i class="fas fa-external-link-alt text-xs"></i>
+                        <span class="hidden sm:inline text-[11px]">Site</span>
+                    </a>
+                    <button type="button" id="adminMobileLogoutBtn" class="p-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs transition-colors cursor-pointer flex items-center gap-1.5 min-h-[38px]" title="Sign Out" aria-label="Sign Out">
+                        <i class="fas fa-sign-out-alt text-xs"></i>
+                        <span class="hidden sm:inline text-[11px]">Sign Out</span>
+                    </button>
                 </div>
             </div>
 
-            <!-- Mobile Tab Navigation Bar (Horizontal on phone screens) -->
-            <div class="lg:hidden p-3 bg-brand-dark/40 border-b border-white/10 flex overflow-x-auto gap-1 scrollbar-none" style="-webkit-overflow-scrolling: touch;">
-                <button type="button" class="admin-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-gold text-brand-dark flex items-center gap-1.5 transition-all cursor-pointer" data-view="overview">
-                    <i class="fas fa-chart-pie"></i> Overview
-                </button>
-                <button type="button" class="admin-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1.5 transition-all cursor-pointer" data-view="courses">
-                    <i class="fas fa-book-open"></i> Courses
-                </button>
-                <button type="button" class="admin-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1.5 transition-all cursor-pointer" data-view="enrolments">
-                    <i class="fas fa-user-graduate"></i> Enrolments
-                </button>
-                <button type="button" class="admin-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1.5 transition-all cursor-pointer" data-view="admins">
-                    <i class="fas fa-user-shield"></i> Admins
-                </button>
-                <button type="button" class="admin-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1.5 transition-all cursor-pointer" data-view="settings">
-                    <i class="fas fa-cog"></i> Settings
-                </button>
+            <!-- Mobile Tab Navigation Bar (Horizontal on phone screens with dark scroll cue) -->
+            <div class="lg:hidden relative border-b border-white/10 bg-brand-dark/50 scroll-fade-dark">
+                <div class="flex overflow-x-auto gap-1.5 p-2 sm:p-2.5 pr-5 scrollbar-none items-center" style="-webkit-overflow-scrolling: touch;" role="tablist" aria-label="Console navigation tabs">
+                    <button type="button" role="tab" aria-selected="true" class="admin-tab-btn flex-shrink-0 px-3.5 py-2 rounded-lg text-xs font-semibold bg-brand-gold text-brand-dark flex items-center gap-1.5 transition-all cursor-pointer min-h-[40px]" data-view="overview">
+                        <i class="fas fa-chart-pie text-xs"></i> <span>Overview</span>
+                    </button>
+                    <button type="button" role="tab" aria-selected="false" class="admin-tab-btn flex-shrink-0 px-3.5 py-2 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1.5 transition-all cursor-pointer min-h-[40px]" data-view="courses">
+                        <i class="fas fa-book-open text-xs"></i> <span>Courses</span>
+                    </button>
+                    <button type="button" role="tab" aria-selected="false" class="admin-tab-btn flex-shrink-0 px-3.5 py-2 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1.5 transition-all cursor-pointer min-h-[40px]" data-view="faculty">
+                        <i class="fas fa-chalkboard-teacher text-xs"></i> <span>Faculty</span>
+                    </button>
+                    <button type="button" role="tab" aria-selected="false" class="admin-tab-btn flex-shrink-0 px-3.5 py-2 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1.5 transition-all cursor-pointer min-h-[40px]" data-view="enrolments">
+                        <i class="fas fa-user-graduate text-xs"></i> <span>Enrolments</span>
+                    </button>
+                    <button type="button" role="tab" aria-selected="false" class="admin-tab-btn flex-shrink-0 px-3.5 py-2 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1.5 transition-all cursor-pointer min-h-[40px]" data-view="admins">
+                        <i class="fas fa-user-shield text-xs"></i> <span>Admins</span>
+                    </button>
+                    <button type="button" role="tab" aria-selected="false" class="admin-tab-btn flex-shrink-0 px-3.5 py-2 rounded-lg text-xs font-medium text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1.5 transition-all cursor-pointer min-h-[40px]" data-view="settings">
+                        <i class="fas fa-cog text-xs"></i> <span>Settings</span>
+                    </button>
+                </div>
             </div>
 
             <!-- Desktop Sidebar Navigation Links -->
@@ -59,6 +76,14 @@
                         <span>Courses & Posters</span>
                     </span>
                     <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-brand-gold-light">{{ courses|length }}</span>
+                </button>
+
+                <button type="button" class="admin-tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-gray-200 hover:text-white hover:bg-white/10 transition-all cursor-pointer" data-view="faculty">
+                    <span class="flex items-center gap-3">
+                        <i class="fas fa-chalkboard-teacher w-4 text-center text-brand-gold"></i>
+                        <span>Leadership & Faculty</span>
+                    </span>
+                    <span id="sidebarFacultyCount" class="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-brand-gold-light">{{ faculty_count|default(1) }}</span>
                 </button>
 
                 <button type="button" class="admin-tab-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-gray-200 hover:text-white hover:bg-white/10 transition-all cursor-pointer" data-view="enrolments">
@@ -87,8 +112,8 @@
             </nav>
         </div>
 
-        <!-- Sidebar Footer: Current Administrator Badge & Back to Site -->
-        <div class="p-4 border-t border-brand-gold/20 bg-brand-dark/40 space-y-3">
+        <!-- Sidebar Footer: Current Administrator Badge & Back to Site (Preserved for Desktop >= 1024px / lg:) -->
+        <div class="hidden lg:block p-4 border-t border-brand-gold/20 bg-brand-dark/40 space-y-3">
             <div class="flex items-center space-x-3 px-2">
                 <div id="adminUserAvatar" class="w-9 h-9 rounded-xl bg-brand-gold text-brand-dark font-bold text-sm flex items-center justify-center flex-shrink-0 select-none shadow-xs">
                     A
@@ -113,9 +138,9 @@
     </aside>
 
     <!-- Spacious Ivory Workspace Content Area (#F8F7F2) -->
-    <main class="flex-grow p-5 sm:p-8 lg:p-10 overflow-y-auto">
+    <main class="flex-grow p-3.5 sm:p-6 lg:p-10 overflow-y-auto">
         <!-- Top Workspace Bar -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-brand-gold/20">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-3.5 mb-4 sm:pb-6 sm:mb-8 border-b border-brand-gold/20">
             <div>
                 <span class="text-xs font-semibold uppercase tracking-widest text-brand-bronze block mb-1">
                     Salsabeel Administration Workspace
@@ -138,39 +163,39 @@
         </div>
 
         <!-- VIEW 1: Minimal Luxury Academic Overview -->
-        <div id="viewOverview" class="admin-view space-y-8">
-            <!-- 3 Quiet Academic Metric Cards (No noisy charts) -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div id="viewOverview" class="admin-view space-y-4 sm:space-y-6 lg:space-y-8">
+            <!-- 3 Quiet Academic Metric Cards (2-column on mobile 320-375px, 3-column on sm+) -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6">
                 <!-- Courses Metric -->
-                <div class="bg-white rounded-xl border border-brand-hairline p-6 shadow-editorial flex items-center space-x-4">
-                    <div class="w-12 h-12 rounded-lg bg-brand-deep text-brand-gold-light flex items-center justify-center text-xl flex-shrink-0 border border-brand-gold/30">
+                <div class="col-span-1 bg-white rounded-xl border border-brand-hairline p-3.5 sm:p-6 shadow-editorial flex items-center space-x-3 sm:space-x-4">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-brand-deep text-brand-gold-light flex items-center justify-center text-lg sm:text-xl flex-shrink-0 border border-brand-gold/30">
                         <i class="fas fa-book-open"></i>
                     </div>
-                    <div>
-                        <div class="font-serif text-2xl sm:text-3xl font-bold text-brand-ink tracking-tight">{{ courses|length }}</div>
-                        <div class="text-xs font-medium text-brand-muted uppercase tracking-wider mt-0.5">Active Courses</div>
+                    <div class="min-w-0">
+                        <div class="font-serif text-xl sm:text-3xl font-bold text-brand-ink tracking-tight truncate">{{ courses|length }}</div>
+                        <div class="text-[10px] sm:text-xs font-medium text-brand-muted uppercase tracking-wider mt-0.5 truncate">Active Courses</div>
                     </div>
                 </div>
 
                 <!-- Enrollments Metric -->
-                <div class="bg-white rounded-xl border border-brand-hairline p-6 shadow-editorial flex items-center space-x-4">
-                    <div class="w-12 h-12 rounded-lg bg-brand-surface text-brand-primary flex items-center justify-center text-xl flex-shrink-0 border border-brand-hairline">
+                <div class="col-span-1 bg-white rounded-xl border border-brand-hairline p-3.5 sm:p-6 shadow-editorial flex items-center space-x-3 sm:space-x-4">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-brand-surface text-brand-primary flex items-center justify-center text-lg sm:text-xl flex-shrink-0 border border-brand-hairline">
                         <i class="fas fa-user-graduate"></i>
                     </div>
-                    <div>
-                        <div id="overviewEnrollmentCount" class="font-serif text-2xl sm:text-3xl font-bold text-brand-ink tracking-tight">0</div>
-                        <div class="text-xs font-medium text-brand-muted uppercase tracking-wider mt-0.5">Enrolled Seekers</div>
+                    <div class="min-w-0">
+                        <div id="overviewEnrollmentCount" class="font-serif text-xl sm:text-3xl font-bold text-brand-ink tracking-tight truncate">0</div>
+                        <div class="text-[10px] sm:text-xs font-medium text-brand-muted uppercase tracking-wider mt-0.5 truncate">Enrolled Seekers</div>
                     </div>
                 </div>
 
                 <!-- Administrators Metric -->
-                <div class="bg-white rounded-xl border border-brand-hairline p-6 shadow-editorial flex items-center space-x-4">
-                    <div class="w-12 h-12 rounded-lg bg-brand-surface text-brand-bronze flex items-center justify-center text-xl flex-shrink-0 border border-brand-hairline">
+                <div class="col-span-2 sm:col-span-1 bg-white rounded-xl border border-brand-hairline p-3.5 sm:p-6 shadow-editorial flex items-center space-x-3 sm:space-x-4">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-brand-surface text-brand-bronze flex items-center justify-center text-lg sm:text-xl flex-shrink-0 border border-brand-hairline">
                         <i class="fas fa-user-shield"></i>
                     </div>
-                    <div>
-                        <div id="overviewAdminCount" class="font-serif text-2xl sm:text-3xl font-bold text-brand-ink tracking-tight">1</div>
-                        <div class="text-xs font-medium text-brand-muted uppercase tracking-wider mt-0.5">Authorized Admins</div>
+                    <div class="min-w-0">
+                        <div id="overviewAdminCount" class="font-serif text-xl sm:text-3xl font-bold text-brand-ink tracking-tight truncate">1</div>
+                        <div class="text-[10px] sm:text-xs font-medium text-brand-muted uppercase tracking-wider mt-0.5 truncate">Authorized Admins</div>
                     </div>
                 </div>
             </div>
@@ -283,8 +308,8 @@
                     </button>
                 </div>
 
-                <!-- Courses List Table -->
-                <div class="overflow-x-auto">
+                <!-- Desktop Courses List Table (>= 1024px / lg:) -->
+                <div class="hidden lg:block overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50/80">
                             <tr>
@@ -366,6 +391,129 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Mobile Course Cards (< 1024px / lg:hidden) -->
+                <div class="lg:hidden space-y-3.5" id="coursesMobileCardsContainer">
+                    {% for course in courses %}
+                    <div class="bg-brand-ivory/60 border border-brand-gold/20 rounded-2xl p-4 space-y-3 shadow-xs">
+                        <div class="flex items-start gap-3">
+                            <div class="w-16 h-20 rounded-xl overflow-hidden flex-shrink-0 border border-brand-gold/30 bg-brand-deep/10 shadow-xs">
+                                <img src="{{ course.image_url }}" alt="{{ course.title }}" class="w-full h-full object-contain" onerror="this.src='/static/img/logo.jpeg';">
+                            </div>
+                            <div class="flex-grow min-w-0">
+                                <div class="flex items-center gap-1.5 flex-wrap mb-1">
+                                    <span class="inline-block bg-brand-deep/5 text-brand-deep border border-brand-deep/15 text-[10px] font-semibold px-2 py-0.5 rounded-md">
+                                        {{ course.category }}
+                                    </span>
+                                    {% set st = (course.status or '') | lower | trim %}
+                                    {% if st == 'ongoing' or st == 'current' %}
+                                    <span class="badge-status-ongoing inline-flex items-center text-[10px] px-2 py-0.5 rounded-md">Ongoing</span>
+                                    {% elif st == 'upcoming' %}
+                                    <span class="badge-status-upcoming inline-flex items-center text-[10px] px-2 py-0.5 rounded-md">Upcoming</span>
+                                    {% elif st == 'completed' or st == 'past' %}
+                                    <span class="badge-status-completed inline-flex items-center text-[10px] px-2 py-0.5 rounded-md">Completed</span>
+                                    {% else %}
+                                    <span class="badge-status-neutral inline-flex items-center text-[10px] px-2 py-0.5 rounded-md">{{ course.status | capitalize if course.status else 'Program' }}</span>
+                                    {% endif %}
+                                </div>
+                                <a href="/viewer/{{ course.id }}" target="_blank" class="text-sm font-bold text-brand-dark hover:text-brand-primary transition-colors line-clamp-2 leading-snug">
+                                    {{ course.title }}
+                                </a>
+                                <div class="text-[11px] text-gray-500 mt-1 flex items-center gap-2 flex-wrap">
+                                    <span>{{ course.language or 'Tamil' }}</span>
+                                    <span>·</span>
+                                    <span class="font-bold text-brand-dark">{{ course.price or 'Free' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% if course.start_date %}
+                        <div class="text-xs text-gray-600 bg-white/80 px-3 py-1.5 rounded-lg border border-brand-gold/15 flex items-center gap-1.5">
+                            <i class="far fa-calendar-alt text-brand-primary text-[11px] flex-shrink-0"></i>
+                            <span class="truncate">{{ course.start_date }}</span>
+                        </div>
+                        {% endif %}
+                        <div class="flex items-center justify-between gap-2 pt-2 border-t border-brand-gold/15">
+                            <a href="/viewer/{{ course.id }}" target="_blank" class="px-3 py-2 rounded-xl bg-white border border-gray-200 text-gray-700 text-xs font-semibold hover:bg-gray-50 transition-colors flex items-center gap-1.5 min-h-[44px]">
+                                <i class="fas fa-eye text-xs"></i> <span>Preview</span>
+                            </a>
+                            <div class="flex items-center gap-2">
+                                <button type="button" 
+                                        class="admin-edit-course-btn inline-flex items-center px-3.5 py-2 rounded-xl bg-brand-deep hover:bg-brand-primary text-brand-gold hover:text-white font-bold text-xs transition-all cursor-pointer border border-brand-gold/40 shadow-xs min-h-[44px]"
+                                        data-id="{{ course.id }}"
+                                        data-title="{{ course.title }}"
+                                        data-category="{{ course.category }}"
+                                        data-status="{{ course.status | default('upcoming') }}"
+                                        data-language="{{ course.language or 'Tamil' }}"
+                                        data-price="{{ course.price or 'Free' }}"
+                                        data-startdate="{{ course.start_date or '' }}"
+                                        data-desc="{{ course.description or '' }}"
+                                        data-content="{{ course.content or '' }}"
+                                        data-poster="{{ course.image_url }}"
+                                        data-youtube-url="{{ course.youtube_url or '' }}">
+                                    <i class="fas fa-edit mr-1.5"></i> Edit
+                                </button>
+                                <button type="button" 
+                                        class="delete-course-btn inline-flex items-center px-3 py-2 rounded-xl bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 transition-colors cursor-pointer min-h-[44px]"
+                                        data-id="{{ course.id }}"
+                                        title="Delete Course">
+                                    <i class="fas fa-trash-alt mr-1.5"></i> <span>Delete</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="p-8 text-center text-gray-500 text-xs bg-white rounded-xl border border-gray-200">
+                        No courses found. Click "+ Add New Course" to create your first course.
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: Dedicated Leadership & Faculty Management Page (Monogram-Based) -->
+        <div id="viewFaculty" class="admin-view hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-brand-gold/20 p-4 sm:p-6 shadow-xs">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-gray-100">
+                    <div>
+                        <h3 class="text-lg sm:text-xl font-bold text-brand-dark flex items-center">
+                            <i class="fas fa-chalkboard-teacher text-brand-primary mr-2.5"></i> Leadership & Faculty Directory
+                        </h3>
+                        <p class="text-xs text-gray-500 mt-1">Manage academy scholars, instructors, credentials, and public display sequence.</p>
+                    </div>
+                    <button type="button" id="openAddFacultyModalBtn" class="inline-flex items-center self-start sm:self-auto bg-brand-deep hover:bg-brand-primary text-brand-gold hover:text-white font-bold py-2.5 px-4 rounded-xl transition-all text-xs cursor-pointer border border-brand-gold/40 shadow-xs min-h-[40px]">
+                        <i class="fas fa-plus mr-1.5"></i> Add New Tutor
+                    </button>
+                </div>
+
+                <!-- Desktop Faculty Table (>= 1024px / hidden lg:block) -->
+                <div class="hidden lg:block overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50/80">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-bold text-brand-dark uppercase tracking-wider">Tutor & Monogram</th>
+                                <th class="px-4 py-3 text-left text-xs font-bold text-brand-dark uppercase tracking-wider">Designation / Credentials</th>
+                                <th class="px-4 py-3 text-left text-xs font-bold text-brand-dark uppercase tracking-wider">Experience</th>
+                                <th class="px-4 py-3 text-center text-xs font-bold text-brand-dark uppercase tracking-wider">Order</th>
+                                <th class="px-4 py-3 text-center text-xs font-bold text-brand-dark uppercase tracking-wider">Status</th>
+                                <th class="px-4 py-3 text-right text-xs font-bold text-brand-dark uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="facultyTableBody" class="divide-y divide-gray-200 bg-white">
+                            <tr>
+                                <td colspan="6" class="px-6 py-8 text-center text-gray-400 text-xs">
+                                    <i class="fas fa-spinner fa-spin mr-2"></i> Loading faculty directory...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Mobile Faculty Cards (< 1024px / lg:hidden) -->
+                <div class="lg:hidden space-y-3.5" id="facultyCardsContainer">
+                    <div class="p-8 text-center text-gray-400 text-xs bg-white rounded-xl border border-gray-200">
+                        <i class="fas fa-spinner fa-spin mr-2"></i> Loading faculty directory...
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -434,8 +582,8 @@
                 <!-- Quick Course Summary Pills -->
                 <div id="coursePillsContainer" class="flex flex-wrap gap-1.5 mb-4"></div>
 
-                <!-- Enrollments Table -->
-                <div class="overflow-x-auto">
+                <!-- Enrollments Table (Desktop >= 1024px / lg:) -->
+                <div class="hidden lg:block overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
@@ -451,6 +599,13 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Mobile Enrollments Cards (< 1024px / lg:hidden) -->
+                <div class="lg:hidden space-y-3.5" id="enrollmentsCardsContainer">
+                    <div class="p-8 text-center text-gray-500 text-xs bg-white rounded-xl border border-gray-200">
+                        Loading enrollments...
+                    </div>
                 </div>
             </div>
         </div>
@@ -503,8 +658,8 @@
                     </form>
                 </div>
 
-                <!-- Administrators Table -->
-                <div class="overflow-x-auto">
+                <!-- Administrators Table (Desktop >= 1024px) -->
+                <div class="hidden lg:block overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
@@ -520,6 +675,13 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Administrators Mobile Cards (< 1024px) -->
+                <div class="lg:hidden space-y-3.5" id="adminsCardsContainer">
+                    <div class="p-8 text-center text-gray-500 text-xs bg-white rounded-xl border border-gray-200">
+                        Loading administrators...
+                    </div>
                 </div>
             </div>
         </div>
@@ -922,6 +1084,130 @@
     </div>
 </div>
 
+<!-- Leadership & Faculty Modal (Monogram-Based, No Photographs) -->
+<div id="facultyModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="facultyModalTitle">
+    <div id="facultyModalBackdrop" class="fixed inset-0 cursor-pointer" aria-hidden="true"></div>
+    
+    <div class="relative max-w-xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] border border-brand-gold/30 z-10">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between px-6 py-4 bg-brand-deep text-white border-b-2 border-brand-gold flex-shrink-0">
+            <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-lg bg-brand-gold/20 flex items-center justify-center text-brand-gold">
+                    <i class="fas fa-chalkboard-teacher text-sm"></i>
+                </div>
+                <div>
+                    <h3 id="facultyModalTitle" class="text-base sm:text-lg font-bold tracking-tight">Add New Tutor</h3>
+                    <p class="text-[11px] text-brand-gold/80">Monogram-based academic faculty directory</p>
+                </div>
+            </div>
+            <button type="button" id="closeFacultyModal" class="text-white/70 hover:text-white p-1 rounded-lg transition-colors cursor-pointer text-lg">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Modal Form Body -->
+        <form id="facultyForm" class="p-6 overflow-y-auto space-y-4 text-xs">
+            <input type="hidden" id="facultyId" name="id" value="">
+            <input type="hidden" id="facultyIsFounder" name="is_founder" value="false">
+
+            <!-- Founder Protected Identity Notice -->
+            <div id="facultyFounderNotice" class="hidden p-3.5 bg-amber-50 border border-brand-gold/50 rounded-xl text-amber-950 font-medium space-y-1">
+                <div class="flex items-center font-bold text-amber-900 text-xs">
+                    <i class="fas fa-crown text-brand-gold mr-1.5 text-sm"></i> Protected Founder & Director Record
+                </div>
+                <p class="text-[11px] text-amber-800">This profile holds permanent academic leadership authority. Founder designation and active status are protected against deletion and accidental modification.</p>
+            </div>
+
+            <!-- Monogram Live Visualizer Tile -->
+            <div class="p-3.5 bg-brand-ivory rounded-2xl border border-brand-gold/30 flex items-center gap-3.5">
+                <div id="facultyMonogramPreview" class="w-12 h-12 rounded-xl bg-brand-deep text-brand-gold font-bold text-lg flex items-center justify-center border border-brand-gold/40 shadow-xs flex-shrink-0 font-serif">
+                    ?
+                </div>
+                <div class="min-w-0">
+                    <div class="text-[10px] uppercase font-bold text-brand-primary tracking-wider">Automated Monogram Tile</div>
+                    <div class="text-xs font-semibold text-brand-dark truncate" id="facultyMonogramNamePreview">Tutor Name</div>
+                    <p class="text-[11px] text-gray-500">Rendered in deep teal with antique gold Unicode lettering (supports Tamil, Arabic, & Latin).</p>
+                </div>
+            </div>
+
+            <!-- Full Name (Required) -->
+            <div>
+                <label for="facultyName" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">
+                    Full Name <span class="text-red-500">*</span>
+                </label>
+                <input type="text" id="facultyName" name="name" required placeholder="e.g., Hazira Umma, Ustadh Muhammad, ஹாஜிரா உம்மா" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-brand-primary focus:border-brand-primary">
+            </div>
+
+            <!-- Designation (Required) -->
+            <div>
+                <label for="facultyDesignation" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">
+                    Designation / Title <span class="text-red-500">*</span>
+                </label>
+                <input type="text" id="facultyDesignation" name="designation" required placeholder="e.g., Founder & Director, Senior Qur'an Faculty, Islamic Studies Tutor" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-brand-primary focus:border-brand-primary">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Credentials / Qualifications (Optional) -->
+                <div>
+                    <label for="facultyCredentials" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">
+                        Credentials / Qualifications
+                    </label>
+                    <input type="text" id="facultyCredentials" name="credentials" placeholder="e.g., BE, BAIS, Alimiyyah" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-brand-primary focus:border-brand-primary">
+                </div>
+
+                <!-- Teaching Experience (Optional) -->
+                <div>
+                    <label for="facultyExperience" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">
+                        Teaching Experience
+                    </label>
+                    <input type="text" id="facultyExperience" name="experience" placeholder="e.g., 10+ Years Experience" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-brand-primary focus:border-brand-primary">
+                </div>
+            </div>
+
+            <!-- Biography / Introduction (Optional) -->
+            <div>
+                <label for="facultyBio" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">
+                    Biography / Academic Introduction
+                </label>
+                <textarea id="facultyBio" name="bio" rows="3" placeholder="Brief scholar biography or teaching philosophy to display on the public About page..." class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center pt-1">
+                <!-- Display Order -->
+                <div>
+                    <label for="facultyDisplayOrder" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">
+                        Display Order Sequence
+                    </label>
+                    <input type="number" id="facultyDisplayOrder" name="display_order" min="0" max="9999" value="10" class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-brand-primary focus:border-brand-primary">
+                    <p class="text-[10px] text-gray-500 mt-1">Lower numbers appear first. Founder is always #1.</p>
+                </div>
+
+                <!-- Active Status Toggle -->
+                <div class="pt-2">
+                    <label class="relative flex items-center gap-3 cursor-pointer select-none">
+                        <input type="checkbox" id="facultyIsActive" name="is_active" checked class="w-4 h-4 text-brand-primary rounded border-gray-300 focus:ring-brand-primary">
+                        <div>
+                            <span class="text-xs font-bold text-brand-dark">Active on Public Website</span>
+                            <p class="text-[10px] text-gray-500">Uncheck to hide profile without deleting.</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Modal Footer Controls -->
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 flex-shrink-0">
+                <button type="button" id="cancelFacultyModalBtn" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-100 font-semibold text-xs cursor-pointer transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" id="saveFacultyBtn" class="px-6 py-2.5 rounded-xl bg-brand-deep hover:bg-brand-primary text-brand-gold hover:text-white font-bold text-xs transition-all shadow-xs flex items-center gap-2 border border-brand-gold/40 cursor-pointer">
+                    <i class="fas fa-save"></i>
+                    <span>Save Tutor Profile</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- SheetJS library for genuine client-side Excel (.xlsx) generation -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
@@ -962,6 +1248,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const views = {
         'overview': document.getElementById('viewOverview'),
         'courses': document.getElementById('viewCourses'),
+        'faculty': document.getElementById('viewFaculty'),
         'enrolments': document.getElementById('viewEnrolments'),
         'admins': document.getElementById('viewAdmins'),
         'settings': document.getElementById('viewSettings')
@@ -969,6 +1256,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const viewTitles = {
         'overview': 'Dashboard Overview',
         'courses': 'Courses & Posters Directory',
+        'faculty': 'Leadership & Faculty Management',
         'enrolments': 'Student Rosters & Enrolments',
         'admins': 'Platform Administrators',
         'settings': 'Security & System Settings'
@@ -1488,8 +1776,82 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
         });
 
+        // Mobile Enrollments Cards (< 1024px)
+        const enrollmentsCardsContainer = document.getElementById('enrollmentsCardsContainer');
+        if (enrollmentsCardsContainer) {
+            enrollmentsCardsContainer.innerHTML = '';
+            if (filtered.length === 0) {
+                enrollmentsCardsContainer.innerHTML = `
+                    <div class="p-8 text-center text-gray-500 text-xs bg-white rounded-xl border border-gray-200">
+                        <i class="fas fa-users-slash text-2xl text-gray-300 mb-2 block"></i>
+                        No enrollments found with current filters.
+                    </div>
+                `;
+            } else {
+                filtered.forEach(e => {
+                    const initial = window.getUnicodeInitial ? window.getUnicodeInitial(e.student_name || e.student_email || 'S') : 'S';
+                    const st = (e.course_status || '').toLowerCase().trim();
+                    let statusBadge = '';
+                    if (st === 'ongoing' || st === 'current') {
+                        statusBadge = '<span class="badge-status-ongoing text-[10px] font-semibold px-2 py-0.5 rounded-full">Ongoing</span>';
+                    } else if (st === 'upcoming') {
+                        statusBadge = '<span class="badge-status-upcoming text-[10px] font-semibold px-2 py-0.5 rounded-full">Upcoming</span>';
+                    } else if (st === 'completed' || st === 'past') {
+                        statusBadge = '<span class="badge-status-completed text-[10px] font-semibold px-2 py-0.5 rounded-full">Completed</span>';
+                    } else {
+                        statusBadge = `<span class="badge-status-neutral text-[10px] font-semibold px-2 py-0.5 rounded-full">${e.course_status || 'Program'}</span>`;
+                    }
+
+                    enrollmentsCardsContainer.innerHTML += `
+                        <div class="bg-white rounded-2xl border border-brand-gold/20 p-4 shadow-xs space-y-3">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <div class="w-10 h-10 rounded-xl bg-brand-deep text-brand-gold font-bold text-xs flex items-center justify-center border border-brand-gold/30 flex-shrink-0">
+                                        ${initial}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="text-sm font-bold text-brand-dark truncate">${e.student_name}</div>
+                                        <div class="text-xs text-gray-500 truncate">${e.student_email}</div>
+                                    </div>
+                                </div>
+                                <div class="flex-shrink-0 text-right">
+                                    ${statusBadge}
+                                </div>
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-brand-ivory/60 border border-brand-gold/15 text-xs">
+                                <div class="font-bold text-brand-dark">${e.course_title}</div>
+                                <div class="text-[11px] text-gray-500 mt-0.5 flex items-center justify-between">
+                                    <span>${e.course_category}</span>
+                                    <span><i class="far fa-calendar-alt text-brand-primary mr-1"></i> ${e.date}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 pt-1 border-t border-gray-100">
+                                <button type="button" 
+                                        class="remove-enrollment-btn flex-1 inline-flex items-center justify-center text-xs font-semibold text-amber-700 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-2 rounded-xl transition-colors cursor-pointer min-h-[44px]" 
+                                        data-id="${e.id}" 
+                                        data-student="${e.student_name}" 
+                                        data-email="${e.student_email}" 
+                                        data-course="${e.course_title}">
+                                    <i class="fas fa-user-minus mr-1.5 text-amber-600"></i> Unenroll
+                                </button>
+                                <button type="button" 
+                                        class="delete-student-btn inline-flex items-center justify-center text-xs font-semibold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 px-3.5 py-2 rounded-xl transition-colors cursor-pointer min-h-[44px]" 
+                                        data-user-id="${e.student_id}" 
+                                        data-student="${e.student_name}" 
+                                        data-email="${e.student_email}">
+                                    <i class="fas fa-user-times mr-1 text-red-600"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
         // Attach Unenroll Handlers
-        enrollmentsTableBody.querySelectorAll('.remove-enrollment-btn').forEach(btn => {
+        const viewEnrolmentsContainer = document.getElementById('viewEnrolments');
+        if (viewEnrolmentsContainer) {
+            viewEnrolmentsContainer.querySelectorAll('.remove-enrollment-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const enrollmentId = btn.getAttribute('data-id');
                 const student = btn.getAttribute('data-student');
@@ -1531,7 +1893,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         // Attach Delete User Handlers
-        enrollmentsTableBody.querySelectorAll('.delete-student-btn').forEach(btn => {
+        viewEnrolmentsContainer.querySelectorAll('.delete-student-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const userId = btn.getAttribute('data-user-id');
                 const student = btn.getAttribute('data-student');
@@ -1576,6 +1938,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
         });
+        }
     }
 
     async function loadEnrollments() {
@@ -1738,6 +2101,472 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadEnrollments();
 
     // -------------------------------------------------------------
+    // Leadership & Faculty Management Logic (Monogram-Based)
+    // -------------------------------------------------------------
+    let allFaculty = [];
+    const facultyTableBody = document.getElementById('facultyTableBody');
+    const facultyCardsContainer = document.getElementById('facultyCardsContainer');
+    const overviewFacultyCount = document.getElementById('overviewFacultyCount');
+    const overviewFacultyBadge = document.getElementById('overviewFacultyBadge');
+    const sidebarFacultyCount = document.getElementById('sidebarFacultyCount');
+
+    const facultyModal = document.getElementById('facultyModal');
+    const facultyModalBackdrop = document.getElementById('facultyModalBackdrop');
+    const closeFacultyModal = document.getElementById('closeFacultyModal');
+    const cancelFacultyModalBtn = document.getElementById('cancelFacultyModalBtn');
+    const openAddFacultyModalBtn = document.getElementById('openAddFacultyModalBtn');
+    const facultyForm = document.getElementById('facultyForm');
+    const saveFacultyBtn = document.getElementById('saveFacultyBtn');
+    const facultyModalTitle = document.getElementById('facultyModalTitle');
+    const facultyFounderNotice = document.getElementById('facultyFounderNotice');
+    const facultyMonogramPreview = document.getElementById('facultyMonogramPreview');
+    const facultyMonogramNamePreview = document.getElementById('facultyMonogramNamePreview');
+
+    const facultyIdInput = document.getElementById('facultyId');
+    const facultyIsFounderInput = document.getElementById('facultyIsFounder');
+    const facultyNameInput = document.getElementById('facultyName');
+    const facultyDesignationInput = document.getElementById('facultyDesignation');
+    const facultyCredentialsInput = document.getElementById('facultyCredentials');
+    const facultyExperienceInput = document.getElementById('facultyExperience');
+    const facultyBioInput = document.getElementById('facultyBio');
+    const facultyDisplayOrderInput = document.getElementById('facultyDisplayOrder');
+    const facultyIsActiveInput = document.getElementById('facultyIsActive');
+
+    function updateFacultyMonogramPreview() {
+        if (!facultyMonogramPreview || !facultyNameInput) return;
+        const nameVal = facultyNameInput.value.trim();
+        const initial = window.getUnicodeInitial ? window.getUnicodeInitial(nameVal || '?') : (nameVal ? nameVal.charAt(0) : '?');
+        facultyMonogramPreview.textContent = initial || '?';
+        if (facultyMonogramNamePreview) {
+            facultyMonogramNamePreview.textContent = nameVal || 'Tutor Name';
+        }
+    }
+    if (facultyNameInput) facultyNameInput.addEventListener('input', updateFacultyMonogramPreview);
+
+    function openAddFacultyModal() {
+        if (!facultyModal || !facultyForm) return;
+        facultyForm.reset();
+        if (facultyIdInput) facultyIdInput.value = '';
+        if (facultyIsFounderInput) facultyIsFounderInput.value = 'false';
+        if (facultyDisplayOrderInput) facultyDisplayOrderInput.value = '10';
+        if (facultyIsActiveInput) {
+            facultyIsActiveInput.checked = true;
+            facultyIsActiveInput.disabled = false;
+        }
+        if (facultyModalTitle) facultyModalTitle.textContent = 'Add New Tutor';
+        if (facultyFounderNotice) facultyFounderNotice.classList.add('hidden');
+        updateFacultyMonogramPreview();
+        facultyModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function openEditFacultyModal(member) {
+        if (!facultyModal || !facultyForm) return;
+        facultyForm.reset();
+        if (facultyIdInput) facultyIdInput.value = member.id || '';
+        const isFounder = Boolean(member.is_founder);
+        if (facultyIsFounderInput) facultyIsFounderInput.value = isFounder ? 'true' : 'false';
+        if (facultyNameInput) facultyNameInput.value = member.name || '';
+        if (facultyDesignationInput) facultyDesignationInput.value = member.designation || '';
+        if (facultyCredentialsInput) facultyCredentialsInput.value = member.credentials || '';
+        if (facultyExperienceInput) facultyExperienceInput.value = member.experience || '';
+        if (facultyBioInput) facultyBioInput.value = member.bio || '';
+        if (facultyDisplayOrderInput) facultyDisplayOrderInput.value = member.display_order ?? 10;
+        if (facultyIsActiveInput) {
+            facultyIsActiveInput.checked = Boolean(member.is_active);
+            if (isFounder) {
+                facultyIsActiveInput.disabled = true; // Founder cannot be deactivated
+            } else {
+                facultyIsActiveInput.disabled = false;
+            }
+        }
+
+        if (isFounder) {
+            if (facultyModalTitle) facultyModalTitle.textContent = 'Edit Leadership Profile (Founder)';
+            if (facultyFounderNotice) facultyFounderNotice.classList.remove('hidden');
+        } else {
+            if (facultyModalTitle) facultyModalTitle.textContent = 'Edit Tutor Profile';
+            if (facultyFounderNotice) facultyFounderNotice.classList.add('hidden');
+        }
+
+        updateFacultyMonogramPreview();
+        facultyModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeFacultyModalFn() {
+        if (!facultyModal) return;
+        facultyModal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    if (openAddFacultyModalBtn) openAddFacultyModalBtn.addEventListener('click', openAddFacultyModal);
+    if (closeFacultyModal) closeFacultyModal.addEventListener('click', closeFacultyModalFn);
+    if (cancelFacultyModalBtn) cancelFacultyModalBtn.addEventListener('click', closeFacultyModalFn);
+    if (facultyModalBackdrop) facultyModalBackdrop.addEventListener('click', closeFacultyModalFn);
+
+    function renderFaculty(facultyList) {
+        if (!facultyTableBody) return;
+        allFaculty = facultyList || [];
+
+        const totalCount = allFaculty.length;
+        const activeCount = allFaculty.filter(f => f.is_active).length;
+
+        if (overviewFacultyCount) overviewFacultyCount.textContent = totalCount;
+        if (overviewFacultyBadge) overviewFacultyBadge.textContent = `${activeCount} Active`;
+        if (sidebarFacultyCount) sidebarFacultyCount.textContent = totalCount;
+
+        // Desktop Table
+        facultyTableBody.innerHTML = '';
+        if (allFaculty.length === 0) {
+            facultyTableBody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="px-6 py-10 text-center text-gray-400 text-xs">
+                        <i class="fas fa-chalkboard-teacher text-2xl text-gray-300 mb-2 block"></i>
+                        No faculty members found. Click "+ Add New Tutor" to add one.
+                    </td>
+                </tr>
+            `;
+        } else {
+            allFaculty.forEach(m => {
+                const initial = window.getUnicodeInitial ? window.getUnicodeInitial(m.name) : (m.name ? m.name.charAt(0) : 'T');
+                const isFounder = Boolean(m.is_founder);
+                const isActive = Boolean(m.is_active);
+
+                const statusBadge = isActive
+                    ? '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200"><i class="fas fa-check-circle mr-1"></i> Active</span>'
+                    : '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 text-gray-500 border border-gray-200"><i class="fas fa-eye-slash mr-1"></i> Inactive</span>';
+
+                const founderBadge = isFounder
+                    ? '<span class="inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-900 border border-brand-gold/60 ml-2 shadow-xs"><i class="fas fa-crown text-brand-gold mr-1"></i> Founder</span>'
+                    : '';
+
+                let actionsHtml = `
+                    <div class="flex items-center justify-end gap-1.5">
+                        <button type="button" class="edit-faculty-btn inline-flex items-center text-xs font-semibold text-brand-primary hover:text-brand-deep bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/20 px-2.5 py-1 rounded-md transition-colors cursor-pointer shadow-xs min-h-[32px]" data-id="${m.id}" title="Edit tutor profile">
+                            <i class="fas fa-edit mr-1"></i> Edit
+                        </button>
+                `;
+
+                if (isFounder) {
+                    actionsHtml += `
+                        <span class="inline-flex items-center text-[11px] text-amber-800/80 font-medium px-2 py-1 bg-amber-50 rounded-md border border-brand-gold/30" title="Founder is protected from deactivation and deletion">
+                            <i class="fas fa-lock text-brand-gold mr-1"></i> Protected
+                        </span>
+                    `;
+                } else {
+                    const toggleBtnText = isActive ? '<i class="fas fa-eye-slash mr-1"></i> Deactivate' : '<i class="fas fa-eye mr-1"></i> Activate';
+                    const toggleBtnClass = isActive
+                        ? 'text-gray-600 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 border border-gray-200'
+                        : 'text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200';
+
+                    actionsHtml += `
+                        <button type="button" class="toggle-faculty-btn inline-flex items-center text-xs font-semibold ${toggleBtnClass} px-2.5 py-1 rounded-md transition-colors cursor-pointer shadow-xs min-h-[32px]" data-id="${m.id}" title="${isActive ? 'Hide from public about page' : 'Publish to public about page'}">
+                            ${toggleBtnText}
+                        </button>
+                        <button type="button" class="delete-faculty-btn inline-flex items-center text-xs font-semibold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 px-2.5 py-1 rounded-md transition-colors cursor-pointer shadow-xs min-h-[32px]" data-id="${m.id}" data-name="${m.name}" title="Delete tutor record">
+                            <i class="fas fa-trash-alt mr-1"></i> Delete
+                        </button>
+                    `;
+                }
+                actionsHtml += '</div>';
+
+                facultyTableBody.innerHTML += `
+                    <tr class="hover:bg-gray-50/80 transition-colors">
+                        <td class="px-4 py-3.5 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-9 h-9 rounded-xl bg-brand-deep text-brand-gold font-bold text-xs flex items-center justify-center mr-3 border border-brand-gold/30 flex-shrink-0 font-serif shadow-xs">
+                                    ${initial}
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="text-sm font-bold text-brand-dark flex items-center">
+                                        <span class="truncate">${m.name}</span>
+                                        ${founderBadge}
+                                    </div>
+                                    <div class="text-xs text-gray-500 truncate max-w-xs">${m.bio ? m.bio.substring(0, 50) + (m.bio.length > 50 ? '...' : '') : 'Academic Faculty'}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3.5">
+                            <div class="text-xs font-bold text-brand-dark">${m.designation}</div>
+                            ${m.credentials ? `<div class="text-[11px] text-brand-primary font-medium mt-0.5">${m.credentials}</div>` : ''}
+                        </td>
+                        <td class="px-4 py-3.5 whitespace-nowrap text-xs text-gray-600">
+                            ${m.experience || '<span class="text-gray-400 italic">Not specified</span>'}
+                        </td>
+                        <td class="px-4 py-3.5 whitespace-nowrap text-center text-xs font-bold text-brand-dark">
+                            ${isFounder ? '<span class="text-brand-gold font-extrabold" title="Always appears first">1 (Fixed)</span>' : m.display_order}
+                        </td>
+                        <td class="px-4 py-3.5 whitespace-nowrap text-center text-xs">
+                            ${statusBadge}
+                        </td>
+                        <td class="px-4 py-3.5 whitespace-nowrap text-right text-sm">
+                            ${actionsHtml}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Mobile Cards
+        if (facultyCardsContainer) {
+            facultyCardsContainer.innerHTML = '';
+            if (allFaculty.length === 0) {
+                facultyCardsContainer.innerHTML = `
+                    <div class="p-8 text-center text-gray-400 text-xs bg-white rounded-xl border border-gray-200">
+                        <i class="fas fa-chalkboard-teacher text-2xl text-gray-300 mb-2 block"></i>
+                        No faculty members found. Click "+ Add New Tutor" to add one.
+                    </div>
+                `;
+            } else {
+                allFaculty.forEach(m => {
+                    const initial = window.getUnicodeInitial ? window.getUnicodeInitial(m.name) : (m.name ? m.name.charAt(0) : 'T');
+                    const isFounder = Boolean(m.is_founder);
+                    const isActive = Boolean(m.is_active);
+
+                    const statusBadge = isActive
+                        ? '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200"><i class="fas fa-check-circle mr-1"></i> Active</span>'
+                        : '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 text-gray-500 border border-gray-200"><i class="fas fa-eye-slash mr-1"></i> Inactive</span>';
+
+                    const founderBadge = isFounder
+                        ? '<span class="inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-900 border border-brand-gold/60 shadow-xs"><i class="fas fa-crown text-brand-gold mr-1"></i> Founder</span>'
+                        : '';
+
+                    let mobileActions = `
+                        <button type="button" class="edit-faculty-btn flex-1 inline-flex items-center justify-center text-xs font-semibold text-brand-primary hover:text-brand-deep bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/20 px-3 py-2 rounded-xl transition-colors cursor-pointer min-h-[44px]" data-id="${m.id}">
+                            <i class="fas fa-edit mr-1.5"></i> Edit Profile
+                        </button>
+                    `;
+
+                    if (isFounder) {
+                        mobileActions += `
+                            <div class="flex-1 flex items-center justify-center text-xs font-medium text-amber-900 bg-amber-50 border border-brand-gold/40 rounded-xl px-3 py-2 min-h-[44px]">
+                                <i class="fas fa-lock text-brand-gold mr-1.5"></i> Protected
+                            </div>
+                        `;
+                    } else {
+                        const toggleBtnText = isActive ? '<i class="fas fa-eye-slash mr-1.5"></i> Deactivate' : '<i class="fas fa-eye mr-1.5"></i> Activate';
+                        const toggleBtnClass = isActive
+                            ? 'text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300'
+                            : 'text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300';
+
+                        mobileActions += `
+                            <button type="button" class="toggle-faculty-btn flex-1 inline-flex items-center justify-center text-xs font-semibold ${toggleBtnClass} px-3 py-2 rounded-xl transition-colors cursor-pointer min-h-[44px]" data-id="${m.id}">
+                                ${toggleBtnText}
+                            </button>
+                            <button type="button" class="delete-faculty-btn inline-flex items-center justify-center text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 px-3 py-2 rounded-xl transition-colors cursor-pointer min-h-[44px]" data-id="${m.id}" data-name="${m.name}" title="Delete tutor">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        `;
+                    }
+
+                    facultyCardsContainer.innerHTML += `
+                        <div class="bg-white rounded-2xl border border-brand-gold/20 p-4 shadow-xs space-y-3">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <div class="w-12 h-12 rounded-xl bg-brand-deep text-brand-gold font-bold text-sm flex items-center justify-center border border-brand-gold/40 flex-shrink-0 font-serif shadow-xs">
+                                        ${initial}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="text-sm font-bold text-brand-dark flex flex-wrap items-center gap-1.5">
+                                            <span class="truncate">${m.name}</span>
+                                            ${founderBadge}
+                                        </div>
+                                        <div class="text-xs font-semibold text-brand-primary mt-0.5">${m.designation}</div>
+                                        ${m.credentials ? `<div class="text-[11px] text-gray-500 font-medium">${m.credentials}</div>` : ''}
+                                    </div>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    ${statusBadge}
+                                </div>
+                            </div>
+
+                            ${m.experience ? `
+                            <div class="text-xs text-gray-600 flex items-center gap-1.5 pt-1 border-t border-gray-100">
+                                <i class="fas fa-briefcase text-brand-primary/70"></i>
+                                <span>${m.experience}</span>
+                            </div>
+                            ` : ''}
+
+                            ${m.bio ? `
+                            <p class="text-xs text-gray-600 italic bg-brand-ivory/60 p-2.5 rounded-xl border border-brand-gold/15 line-clamp-3">
+                                "${m.bio}"
+                            </p>
+                            ` : ''}
+
+                            <div class="flex items-center justify-between text-[11px] text-gray-500 pt-1">
+                                <span>Sequence Order: <strong class="text-brand-dark">${isFounder ? '1 (Founder)' : m.display_order}</strong></span>
+                            </div>
+
+                            <div class="flex items-center gap-2 pt-2 border-t border-gray-100">
+                                ${mobileActions}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        // Attach Event Listeners to both table and mobile cards
+        const facultyContainer = document.getElementById('viewFaculty');
+        if (facultyContainer) {
+            // Edit handlers
+            facultyContainer.querySelectorAll('.edit-faculty-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const fid = btn.getAttribute('data-id');
+                    const member = allFaculty.find(f => String(f.id) === String(fid));
+                    if (member) openEditFacultyModal(member);
+                });
+            });
+
+            // Toggle active status handlers
+            facultyContainer.querySelectorAll('.toggle-faculty-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const fid = btn.getAttribute('data-id');
+                    const originalHtml = btn.innerHTML;
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    try {
+                        const res = await fetch(`/api/admin/faculty/${fid}/toggle-status`, {
+                            method: 'PATCH',
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        const data = await res.json();
+                        if (res.ok) {
+                            if (window.showToast) window.showToast(data.message || 'Status updated.', 'success');
+                            loadFaculty();
+                        } else {
+                            if (window.showToast) window.showToast(data.detail || 'Failed to update status.', 'error');
+                            btn.disabled = false;
+                            btn.innerHTML = originalHtml;
+                        }
+                    } catch (err) {
+                        if (window.showToast) window.showToast('Network error updating status.', 'error');
+                        btn.disabled = false;
+                        btn.innerHTML = originalHtml;
+                    }
+                });
+            });
+
+            // Delete handlers
+            facultyContainer.querySelectorAll('.delete-faculty-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const fid = btn.getAttribute('data-id');
+                    const name = btn.getAttribute('data-name');
+                    const member = allFaculty.find(f => String(f.id) === String(fid));
+                    if (member && member.is_founder) {
+                        if (window.showToast) window.showToast('The Founder & Director profile is permanently protected and cannot be deleted.', 'warning');
+                        return;
+                    }
+
+                    if (window.confirmModal) {
+                        window.confirmModal({
+                            title: 'Delete Tutor Profile',
+                            message: `Are you sure you want to remove tutor "${name}" from the academy faculty directory?`,
+                            confirmText: 'Delete Profile',
+                            isDestructive: true,
+                            onConfirm: async () => {
+                                btn.disabled = true;
+                                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                                try {
+                                    const delRes = await fetch(`/api/admin/faculty/${fid}`, {
+                                        method: 'DELETE',
+                                        headers: { 'Authorization': `Bearer ${token}` }
+                                    });
+                                    const delData = await delRes.json();
+                                    if (delRes.ok) {
+                                        if (window.showToast) window.showToast(delData.message || 'Tutor profile deleted.', 'success');
+                                        loadFaculty();
+                                    } else {
+                                        if (window.showToast) window.showToast(delData.detail || 'Failed to delete tutor.', 'error');
+                                        btn.disabled = false;
+                                        btn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                                    }
+                                } catch (err) {
+                                    if (window.showToast) window.showToast('Network error deleting profile.', 'error');
+                                    btn.disabled = false;
+                                    btn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        }
+    }
+
+    async function loadFaculty() {
+        if (!facultyTableBody) return;
+        try {
+            const res = await fetch('/api/admin/faculty', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                renderFaculty(data);
+            } else if (res.status === 401 || res.status === 403) {
+                if (window.showToast) window.showToast("Admin authorization required.", "warning");
+                setTimeout(() => { window.location.href = '/'; }, 800);
+            }
+        } catch (err) {
+            console.error('Failed to load faculty:', err);
+        }
+    }
+
+    if (facultyForm) {
+        facultyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fid = facultyIdInput.value;
+            const isFounder = facultyIsFounderInput.value === 'true';
+
+            const payload = {
+                name: facultyNameInput.value.trim(),
+                designation: facultyDesignationInput.value.trim(),
+                credentials: facultyCredentialsInput.value.trim() || null,
+                experience: facultyExperienceInput.value.trim() || null,
+                bio: facultyBioInput.value.trim() || null,
+                display_order: parseInt(facultyDisplayOrderInput.value, 10) || 10,
+                is_active: isFounder ? true : facultyIsActiveInput.checked
+            };
+
+            const originalBtnHtml = saveFacultyBtn.innerHTML;
+            saveFacultyBtn.disabled = true;
+            saveFacultyBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i> Saving...';
+
+            try {
+                const url = fid ? `/api/admin/faculty/${fid}` : '/api/admin/faculty';
+                const method = fid ? 'PUT' : 'POST';
+
+                const res = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const resData = await res.json();
+                if (res.ok) {
+                    if (window.showToast) window.showToast(resData.message || (fid ? 'Faculty profile updated!' : 'New tutor added!'), 'success');
+                    closeFacultyModalFn();
+                    loadFaculty();
+                } else {
+                    if (window.showToast) window.showToast(resData.detail || 'Failed to save faculty profile.', 'error');
+                }
+            } catch (err) {
+                if (window.showToast) window.showToast('Network error while saving faculty profile.', 'error');
+            } finally {
+                saveFacultyBtn.disabled = false;
+                saveFacultyBtn.innerHTML = originalBtnHtml;
+            }
+        });
+    }
+
+    // Initial load of faculty
+    loadFaculty();
+
+    // -------------------------------------------------------------
     // Administrators Management Logic
     // -------------------------------------------------------------
     const currentUserId = localStorage.getItem('userId');
@@ -1819,6 +2648,57 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </tr>
                     `;
                 });
+
+                // Mobile Admin Cards (< 1024px)
+                const adminsCardsContainer = document.getElementById('adminsCardsContainer');
+                if (adminsCardsContainer) {
+                    adminsCardsContainer.innerHTML = '';
+                    admins.forEach(a => {
+                        const isMe = String(a.id) === String(currentUserId);
+                        const initial = window.getUnicodeInitial ? window.getUnicodeInitial(a.name || a.email) : 'A';
+                        let roleBadge = a.is_main_admin
+                            ? `<span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-900 border border-brand-gold/60"><i class="fas fa-crown mr-1.5 text-brand-gold"></i> Main Admin (Owner)</span>`
+                            : `<span class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-full bg-brand-deep text-brand-gold"><i class="fas fa-shield-alt mr-1.5"></i> Admin</span>`;
+
+                        let mobileActionHtml = '';
+                        if (isMe) {
+                            mobileActionHtml = '<span class="text-xs text-gray-400 italic">Current User</span>';
+                        } else if (a.is_main_admin) {
+                            mobileActionHtml = '<span class="text-xs text-amber-700 font-semibold italic"><i class="fas fa-lock text-brand-gold mr-1"></i> Owner</span>';
+                        } else if (currentIsMain) {
+                            mobileActionHtml = `
+                                <button class="remove-admin-btn text-xs font-semibold text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 px-3 py-2 rounded-xl transition-colors cursor-pointer min-h-[44px]" data-id="${a.id}" data-email="${a.email}">
+                                    <i class="fas fa-user-minus mr-1.5"></i> Demote
+                                </button>
+                            `;
+                        } else {
+                            mobileActionHtml = '<span class="text-xs text-gray-400 font-medium"><i class="fas fa-lock text-gray-300 mr-1"></i> Main Admin Only</span>';
+                        }
+
+                        adminsCardsContainer.innerHTML += `
+                            <div class="bg-white rounded-2xl border border-brand-gold/20 p-4 shadow-xs space-y-3">
+                                <div class="flex items-center justify-between gap-2">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <div class="w-10 h-10 rounded-xl bg-brand-deep text-brand-gold font-bold text-xs flex items-center justify-center border border-brand-gold/30 flex-shrink-0">
+                                            ${initial}
+                                        </div>
+                                        <div class="min-w-0">
+                                            <div class="text-sm font-bold text-brand-dark flex items-center gap-1.5">
+                                                <span class="truncate">${a.name}</span>
+                                                ${isMe ? '<span class="text-[10px] bg-brand-primary/10 text-brand-primary font-bold px-2 py-0.5 rounded-full">You</span>' : ''}
+                                            </div>
+                                            <div class="text-xs text-gray-500 truncate">${a.email}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between pt-2 border-t border-gray-100">
+                                    <div>${roleBadge}</div>
+                                    <div>${mobileActionHtml}</div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
 
                 // Attach remove handlers
                 document.querySelectorAll('.remove-admin-btn').forEach(btn => {
@@ -2046,6 +2926,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 closeAddModal();
             } else if (adminEditModal && !adminEditModal.classList.contains('hidden')) {
                 closeAdminEdit();
+            } else if (facultyModal && !facultyModal.classList.contains('hidden')) {
+                closeFacultyModalFn();
             } else if (changePasswordModal && !changePasswordModal.classList.contains('hidden')) {
                 closeChangePassword();
             }

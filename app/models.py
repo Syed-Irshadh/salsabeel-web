@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, LargeBinary
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, LargeBinary, Boolean
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -68,3 +68,18 @@ class PasswordResetCode(Base):
     expires_at = Column(DateTime, nullable=False)
     used = Column(Integer, default=0)  # 0 = active/unused, 1 = completed
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+class FacultyMember(Base):
+    __tablename__ = "faculty_members"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255), nullable=False)
+    designation = Column(String(255), nullable=False)
+    credentials = Column(String(255), nullable=True)
+    experience = Column(String(255), nullable=True)
+    bio = Column(Text, nullable=True)
+    display_order = Column(Integer, default=0, index=True)
+    is_active = Column(Boolean, default=True, index=True)
+    is_founder = Column(Boolean, default=False, index=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))

@@ -663,6 +663,171 @@ def test_public_html_rendering_youtube_button():
     html_view_without = r_view_without.text
     assert "Watch on YouTube" not in html_view_without
 
+def test_faculty_management_monogram_system():
+    from app.main import seed_faculty
+
+    # 1. Test Seeding & Idempotency
+    with TestingSessionLocal() as db:
+        seed_faculty(db)
+        founders = db.query(models.FacultyMember).filter(models.FacultyMember.is_founder == True).all()
+        assert len(founders) == 1, "There must be exactly one founder seeded."
+        assert founders[0].name == "Hazira Umma"
+        assert "BE, BAIS" in (founders[0].credentials or "")
+
+        # Call seed_faculty again to verify idempotency (no duplicate founder created)
+        seed_faculty(db)
+        founders_after = db.query(models.FacultyMember).filter(models.FacultyMember.is_founder == True).all()
+        assert len(founders_after) == 1, "seed_faculty must be idempotent and not create duplicate founders."
+
+    # 2. RBAC Checks
+    # Unauthenticated -> 401
+    r_unauth = client.get("/api/admin/faculty")
+    assert r_unauth.status_code == 401
+
+    r_unauth_post = client.post("/api/admin/faculty", json={"name": "Test Tutor", "designation": "Instructor"})
+    assert r_unauth_post.status_code == 401
+
+    # Student -> 403
+    r_login = client.post("/api/token", data={"username": "student_test@example.com", "password": "NewSecurePassword123!"})
+    assert r_login.status_code == 200, f"Student login failed: {r_login.text}"
+    student_token = r_login.json()["access_token"]
+    student_headers = {"Authorization": f"Bearer {student_token}"}
+    r_student = client.get("/api/admin/faculty", headers=student_headers)
+    assert r_student.status_code == 403
+
+    # Admin Auth
+    r_admin_login = client.post("/api/token", data={"username": "admin@salsabeel.com", "password": "AdminSecret123!"})
+    admin_token = r_admin_login.json()["access_token"]
+    admin_headers = {"Authorization": f"Bearer {admin_token}"}
+
+    # 3. Admin Lists Faculty
+    r_list = client.get("/api/admin/faculty", headers=admin_headers)
+    assert r_list.status_code == 200
+    initial_faculty = r_list.json()
+    assert len(initial_faculty) >= 1
+    assert initial_faculty[0]["is_founder"] is True
+    founder_id = initial_faculty[0]["id"]
+
+    # 4. Admin Creates Tutor with Unicode (Tamil)
+    tamil_tutor_payload = {
+        "name": "முஹம்மத் அலி",
+        "designation": "Senior Islamic Scholar",
+        "credentials": "Alimiyyah, MA",
+        "experience": "12+ Years Classical Instruction",
+        "bio": "Specialist in Usul al-Fiqh and Hadith studies.",
+        "display_order": 5,
+        "is_active": True
+    }
+    r_create_tamil = client.post("/api/admin/faculty", json=tamil_tutor_payload, headers=admin_headers)
+    assert r_create_tamil.status_code == 200
+    tamil_tutor = r_create_tamil.json()
+    assert tamil_tutor["name"] == "முஹம்மத் அலி"
+    assert tamil_tutor["is_founder"] is False
+    tamil_tutor_id = tamil_tutor["id"]
+
+    # 5. Admin Creates Tutor with Arabic
+    arabic_tutor_payload = {
+        "name": "عُمَر بن الخطاب",
+        "designation": "Arabic Grammar Tutor",
+        "credentials": "BA Arabic Literature",
+        "experience": "8 Years",
+        "bio": "Dedicated classical Nahw and Sarf educator.",
+        "display_order": 2,
+        "is_active": True
+    }
+    r_create_arabic = client.post("/api/admin/faculty", json=arabic_tutor_payload, headers=admin_headers)
+    assert r_create_arabic.status_code == 200
+    arabic_tutor = r_create_arabic.json()
+    arabic_tutor_id = arabic_tutor["id"]
+
+    # 6. Admin Creates Tutor with lower display_order (e.g., 1)
+    latin_tutor_payload = {
+        "name": "Ustadh Zaid",
+        "designation": "Qur'an Recitation Tutor",
+        "credentials": "Ijazah in Hafs",
+        "experience": "5 Years",
+        "bio": "Tajweed and Qur'anic phonetics mentor.",
+        "display_order": 1,
+        "is_active": True
+    }
+    r_create_latin = client.post("/api/admin/faculty", json=latin_tutor_payload, headers=admin_headers)
+    assert r_create_latin.status_code == 200
+    latin_tutor_id = r_create_latin.json()["id"]
+
+    # 7. Verify Ordering Guarantee: Founder MUST always be #1 regardless of display_order
+    r_ordered = client.get("/api/admin/faculty", headers=admin_headers)
+    assert r_ordered.status_code == 200
+    ordered_list = r_ordered.json()
+    assert ordered_list[0]["id"] == founder_id, "Founder must strictly be the first entry!"
+    assert ordered_list[0]["is_founder"] is True
+    # Subsequent entries should follow display_order: 1 (Zaid), 2 (Arabic), 5 (Tamil)
+    subsequent_orders = [f["display_order"] for f in ordered_list[1:]]
+    assert subsequent_orders == sorted(subsequent_orders), "Non-founder tutors must be sorted by display_order."
+
+    # 8. Founder Protection Constraints:
+    # Attempt to delete founder must return 400
+    r_del_founder = client.delete(f"/api/admin/faculty/{founder_id}", headers=admin_headers)
+    assert r_del_founder.status_code == 400, "Deleting founder must return HTTP 400."
+    assert "Founder & Director profile is protected" in r_del_founder.json()["detail"]
+
+    # Attempt to deactivate founder via toggle must return 400
+    r_toggle_founder = client.patch(f"/api/admin/faculty/{founder_id}/toggle-status", headers=admin_headers)
+    assert r_toggle_founder.status_code == 400, "Deactivating founder must return HTTP 400."
+
+    # Attempt to unset is_founder via PUT must be ignored/preserved
+    r_update_founder = client.put(f"/api/admin/faculty/{founder_id}", json={
+        "name": "Hazira Umma",
+        "designation": "Founder & Academic Director",
+        "credentials": "BE, BAIS",
+        "experience": "15+ Years",
+        "bio": "Dedicated to fostering classical sacred learning.",
+        "display_order": 99,
+        "is_active": False
+    }, headers=admin_headers)
+    assert r_update_founder.status_code == 200
+    updated_founder = r_update_founder.json()
+    assert updated_founder["is_founder"] is True, "is_founder flag must remain True."
+    assert updated_founder["is_active"] is True, "Founder must remain active."
+
+    # 9. Normal Tutor Status Toggle and Public About Page Integration
+    # Deactivate the Tamil tutor
+    r_toggle_tamil = client.patch(f"/api/admin/faculty/{tamil_tutor_id}/toggle-status", headers=admin_headers)
+    assert r_toggle_tamil.status_code == 200
+    assert r_toggle_tamil.json()["is_active"] is False
+
+    # Check public About page (/about)
+    r_about = client.get("/about")
+    assert r_about.status_code == 200
+    about_html = r_about.text
+    # Founder is present
+    assert "Hazira Umma" in about_html
+    assert "Founder & Academic Leadership" in about_html
+    # Active Arabic and Latin tutors are present
+    assert "عُمَر بن الخطاب" in about_html
+    assert "Ustadh Zaid" in about_html
+    # Inactive Tamil tutor must NOT appear in public about page
+    assert "முஹம்மத் அலி" not in about_html
+
+    # Re-activate Tamil tutor
+    r_reactivate = client.patch(f"/api/admin/faculty/{tamil_tutor_id}/toggle-status", headers=admin_headers)
+    assert r_reactivate.status_code == 200
+    assert r_reactivate.json()["is_active"] is True
+
+    # Now Tamil tutor appears on public about page with grapheme monogram
+    r_about_active = client.get("/about")
+    assert r_about_active.status_code == 200
+    assert "முஹம்மத் அலி" in r_about_active.text
+    assert "மு" in r_about_active.text  # Unicode grapheme initial tile
+
+    # 10. Deleting a normal tutor succeeds
+    r_del_latin = client.delete(f"/api/admin/faculty/{latin_tutor_id}", headers=admin_headers)
+    assert r_del_latin.status_code == 200
+    assert r_del_latin.json()["status"] == "success"
+
+    r_ordered_after_del = client.get("/api/admin/faculty", headers=admin_headers)
+    remaining_ids = [f["id"] for f in r_ordered_after_del.json()]
+    assert latin_tutor_id not in remaining_ids
+
 # -----------------------------------------------------------------------------
 # Test Cases: PostgreSQL Staging Integration Verification (Read-Only)
 # -----------------------------------------------------------------------------
@@ -725,6 +890,7 @@ if __name__ == "__main__":
     run_test("Course status upcoming default & 3-part update contract", test_course_status_default_and_youtube_contracts)
     run_test("Authoritative auth status endpoint (/api/auth/status)", test_auth_status_endpoint)
     run_test("Public HTML conditional rendering of YouTube button", test_public_html_rendering_youtube_button)
+    run_test("Dynamic Leadership & Faculty monogram system and founder protection", test_faculty_management_monogram_system)
 
     print("\n--- Phase 2: PostgreSQL Staging Integration Check (Read-Only) ---")
     run_test("Supabase PostgreSQL read-only connectivity and schema", test_postgresql_staging_integration_readonly)

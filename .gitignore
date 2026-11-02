@@ -33,3 +33,6 @@ uv.lock
 
 # Node Dependencies
 node_modules/
+
+# Scratch & Temporary Scripts
+scratch/

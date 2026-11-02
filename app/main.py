@@ -290,13 +290,41 @@ def seed_courses(db: Session):
         db.add_all(courses)
         db.commit()
 
+# Idempotently seed the initial Founder & Director profile without overwriting existing data
+def seed_faculty(db: Session):
+    try:
+        existing_founder = db.query(models.FacultyMember).filter(models.FacultyMember.is_founder == True).first()
+        if not existing_founder:
+            hazira = db.query(models.FacultyMember).filter(models.FacultyMember.name.ilike("%hazira%")).first()
+            if hazira:
+                hazira.is_founder = True
+                hazira.designation = hazira.designation or "Founder & Director"
+                db.commit()
+            else:
+                founder = models.FacultyMember(
+                    name="Hazira Umma",
+                    designation="Founder & Director",
+                    credentials="BE, BAIS",
+                    experience="Pioneer in Classical Islamic Education in Tamil",
+                    bio="Dedicated to fostering classical sacred learning, Qur'anic reflection, and empowering Tamil-speaking families with authentic knowledge.",
+                    display_order=0,
+                    is_active=True,
+                    is_founder=True
+                )
+                db.add(founder)
+                db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"Notice: Faculty seeding deferred or skipped: {e}")
+
 # Safely call seed only in local dev environment
 if not os.getenv("VERCEL"):
     try:
         with database.SessionLocal() as db:
             seed_courses(db)
+            seed_faculty(db)
     except Exception as e:
-        print(f"Notice: Course seeding deferred or skipped: {e}")
+        print(f"Notice: Seeding deferred or skipped: {e}")
 
 @app.get("/")
 async def home(request: Request, db: Session = Depends(database.get_db)):
@@ -322,37 +350,36 @@ async def courses_page(request: Request, db: Session = Depends(database.get_db))
 
 @app.get("/about")
 async def about_page(request: Request, db: Session = Depends(database.get_db)):
-    faculty_members = db.query(models.User).filter(models.User.role == "admin").all()
-    has_hazira = any("hazira" in (f.name or "").lower() for f in faculty_members)
-    display_faculty = []
-    if not has_hazira:
-        display_faculty.append({
-            "name": "Hazira Umma",
-            "title": "Founder & Director",
-            "credentials": "BE, BAIS",
-            "bio": "Dedicated to fostering classical sacred learning, Qur'anic reflection, and empowering Tamil-speaking families with authentic knowledge."
-        })
-    for f in faculty_members:
-        if "hazira" in (f.name or "").lower():
-            display_faculty.append({
-                "name": f.name,
-                "title": "Founder & Director",
+    try:
+        faculty = db.query(models.FacultyMember).filter(
+            models.FacultyMember.is_active == True
+        ).order_by(
+            models.FacultyMember.is_founder.desc(),
+            models.FacultyMember.display_order.asc(),
+            models.FacultyMember.id.asc()
+        ).all()
+    except Exception as e:
+        print(f"Notice: FacultyMember query fallback: {e}")
+        faculty = []
+
+    if not faculty:
+        faculty = [
+            {
+                "name": "Hazira Umma",
+                "designation": "Founder & Director",
                 "credentials": "BE, BAIS",
-                "bio": "Dedicated to fostering classical sacred learning, Qur'anic reflection, and empowering Tamil-speaking families with authentic knowledge."
-            })
-        elif f.name and f.name != "Main Admin":
-            display_faculty.append({
-                "name": f.name,
-                "title": "Faculty & Academic Administration",
-                "credentials": "",
-                "bio": "Academic instruction and student mentorship in sacred Islamic sciences."
-            })
+                "experience": "Pioneer in Classical Islamic Education in Tamil",
+                "bio": "Dedicated to fostering classical sacred learning, Qur'anic reflection, and empowering Tamil-speaking families with authentic knowledge.",
+                "is_founder": True
+            }
+        ]
+
     return templates.TemplateResponse(
         request=request, 
         name="about.html", 
         context={
             "courses_count": get_total_courses_count(),
-            "faculty": display_faculty
+            "faculty": faculty
         }
     )
 
@@ -361,7 +388,19 @@ async def admin_page(request: Request, db: Session = Depends(database.get_db)):
     courses = db.query(models.Course).all()
     _cached_course_count["count"] = len(courses)
     _cached_course_count["timestamp"] = time.time()
-    return templates.TemplateResponse(request=request, name="admin.html", context={"courses": courses, "courses_count": len(courses)})
+    try:
+        faculty_count = db.query(models.FacultyMember).count()
+    except Exception:
+        faculty_count = 1
+    return templates.TemplateResponse(
+        request=request, 
+        name="admin.html", 
+        context={
+            "courses": courses, 
+            "courses_count": len(courses),
+            "faculty_count": faculty_count
+        }
+    )
 
 @app.get("/api/admin/enrollments")
 async def get_admin_enrollments(
@@ -596,6 +635,193 @@ async def change_admin_password(
     db.commit()
     return {"status": "success", "message": "Password changed successfully"}
 
+# -------------------------------------------------------------
+# Leadership & Faculty Management API (Monogram-Based)
+# -------------------------------------------------------------
+class FacultyCreateRequest(BaseModel):
+    name: str
+    designation: str
+    credentials: Optional[str] = ""
+    experience: Optional[str] = ""
+    bio: Optional[str] = ""
+    display_order: Optional[int] = 0
+    is_active: Optional[bool] = True
+
+class FacultyUpdateRequest(BaseModel):
+    name: str
+    designation: str
+    credentials: Optional[str] = ""
+    experience: Optional[str] = ""
+    bio: Optional[str] = ""
+    display_order: Optional[int] = 0
+    is_active: Optional[bool] = True
+
+@app.get("/api/admin/faculty")
+async def get_admin_faculty(
+    current_user: models.User = Depends(auth.get_current_user),
+    db: Session = Depends(database.get_db)
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    seed_faculty(db)
+    members = db.query(models.FacultyMember).order_by(
+        models.FacultyMember.is_founder.desc(),
+        models.FacultyMember.display_order.asc(),
+        models.FacultyMember.id.asc()
+    ).all()
+    
+    return [
+        {
+            "id": m.id,
+            "name": m.name,
+            "designation": m.designation,
+            "credentials": m.credentials or "",
+            "experience": m.experience or "",
+            "bio": m.bio or "",
+            "display_order": m.display_order,
+            "is_active": m.is_active,
+            "is_founder": m.is_founder
+        }
+        for m in members
+    ]
+
+@app.post("/api/admin/faculty")
+async def create_faculty_member(
+    data: FacultyCreateRequest,
+    current_user: models.User = Depends(auth.get_current_user),
+    db: Session = Depends(database.get_db)
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    clean_name = (data.name or "").strip()
+    clean_designation = (data.designation or "").strip()
+    if not clean_name:
+        raise HTTPException(status_code=400, detail="Full Name is required")
+    if not clean_designation:
+        raise HTTPException(status_code=400, detail="Designation is required")
+    
+    # Founder Protection: Exactly one founder permitted. Normal admin creation strictly creates is_founder=False.
+    member = models.FacultyMember(
+        name=clean_name,
+        designation=clean_designation,
+        credentials=(data.credentials or "").strip() or None,
+        experience=(data.experience or "").strip() or None,
+        bio=(data.bio or "").strip() or None,
+        display_order=int(data.display_order or 0),
+        is_active=bool(data.is_active if data.is_active is not None else True),
+        is_founder=False
+    )
+    db.add(member)
+    db.commit()
+    db.refresh(member)
+    return {
+        "status": "success",
+        "message": "Tutor profile created successfully",
+        "faculty_id": member.id,
+        "id": member.id,
+        "name": member.name,
+        "designation": member.designation,
+        "credentials": member.credentials or "",
+        "experience": member.experience or "",
+        "bio": member.bio or "",
+        "display_order": member.display_order,
+        "is_active": member.is_active,
+        "is_founder": member.is_founder
+    }
+
+@app.put("/api/admin/faculty/{faculty_id}")
+async def update_faculty_member(
+    faculty_id: int,
+    data: FacultyUpdateRequest,
+    current_user: models.User = Depends(auth.get_current_user),
+    db: Session = Depends(database.get_db)
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    member = db.query(models.FacultyMember).filter(models.FacultyMember.id == faculty_id).first()
+    if not member:
+        raise HTTPException(status_code=404, detail="Faculty member not found")
+    
+    clean_name = (data.name or "").strip()
+    clean_designation = (data.designation or "").strip()
+    if not clean_name:
+        raise HTTPException(status_code=400, detail="Full Name is required")
+    if not clean_designation:
+        raise HTTPException(status_code=400, detail="Designation is required")
+    
+    member.name = clean_name
+    member.designation = clean_designation
+    member.credentials = (data.credentials or "").strip() or None
+    member.experience = (data.experience or "").strip() or None
+    member.bio = (data.bio or "").strip() or None
+    member.display_order = int(data.display_order or 0)
+    
+    # Founder Protection: Cannot unset is_founder, cannot deactivate Founder
+    if member.is_founder:
+        member.is_active = True
+    else:
+        member.is_active = bool(data.is_active if data.is_active is not None else True)
+        member.is_founder = False
+        
+    db.commit()
+    db.refresh(member)
+    return {
+        "status": "success",
+        "message": "Tutor profile updated successfully",
+        "id": member.id,
+        "name": member.name,
+        "designation": member.designation,
+        "credentials": member.credentials or "",
+        "experience": member.experience or "",
+        "bio": member.bio or "",
+        "display_order": member.display_order,
+        "is_active": member.is_active,
+        "is_founder": member.is_founder
+    }
+
+@app.patch("/api/admin/faculty/{faculty_id}/toggle-status")
+async def toggle_faculty_status(
+    faculty_id: int,
+    current_user: models.User = Depends(auth.get_current_user),
+    db: Session = Depends(database.get_db)
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    member = db.query(models.FacultyMember).filter(models.FacultyMember.id == faculty_id).first()
+    if not member:
+        raise HTTPException(status_code=404, detail="Faculty member not found")
+    
+    if member.is_founder:
+        raise HTTPException(status_code=400, detail="The Founder & Director profile must remain active and cannot be deactivated.")
+        
+    member.is_active = not member.is_active
+    db.commit()
+    return {"status": "success", "is_active": member.is_active}
+
+@app.delete("/api/admin/faculty/{faculty_id}")
+async def delete_faculty_member(
+    faculty_id: int,
+    current_user: models.User = Depends(auth.get_current_user),
+    db: Session = Depends(database.get_db)
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    member = db.query(models.FacultyMember).filter(models.FacultyMember.id == faculty_id).first()
+    if not member:
+        raise HTTPException(status_code=404, detail="Faculty member not found")
+    
+    if member.is_founder:
+        raise HTTPException(status_code=400, detail="The Founder & Director profile is protected and cannot be deleted.")
+        
+    db.delete(member)
+    db.commit()
+    return {"status": "success", "message": "Tutor profile removed successfully."}
+
 @app.get("/viewer/{course_id}")
 async def viewer_page(request: Request, course_id: int, db: Session = Depends(database.get_db)):
     course = db.query(models.Course).filter(models.Course.id == course_id).first()
@@ -768,7 +994,7 @@ async def create_course(
         raise HTTPException(status_code=400, detail="Cover image is required.")
     
     effective_status = (status or "upcoming").strip().lower()
-    if effective_status not in ["current", "upcoming", "past"]:
+    if effective_status not in ["ongoing", "current", "completed", "past", "upcoming"]:
         effective_status = determine_course_status(start_date or "", fallback_status="upcoming")
         
     validated_youtube = None
@@ -846,7 +1072,7 @@ async def update_course(
         course.start_date = start_date.strip() if start_date.strip() else None
     if status is not None and status.strip():
         clean_status = status.strip().lower()
-        if clean_status in ["current", "upcoming", "past"]:
+        if clean_status in ["ongoing", "current", "completed", "past", "upcoming"]:
             course.status = clean_status
     if language is not None and language.strip():
         course.language = language.strip()

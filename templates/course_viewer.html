@@ -25,8 +25,9 @@
                 <span class="inline-flex items-center text-xs font-semibold py-1 px-3 rounded-md bg-white text-brand-ink shadow-xs">
                     Fee: {{ course.price or 'Free' }}
                 </span>
-                {% set st = (course.status or '') | lower | trim %}
-                {% if st == 'ongoing' or st == 'current' %}
+                {% set raw_st = (course.status or '') | lower | trim %}
+                {% set st = 'upcoming' if raw_st == 'upcoming' else ('ongoing' if raw_st in ['ongoing', 'current'] else ('completed' if raw_st in ['completed', 'past'] else 'unavailable')) %}
+                {% if st == 'ongoing' %}
                 <span class="badge-status-ongoing inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
                     Ongoing
                 </span>
@@ -34,13 +35,13 @@
                 <span class="badge-status-upcoming inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
                     Upcoming
                 </span>
-                {% elif st == 'completed' or st == 'past' %}
+                {% elif st == 'completed' %}
                 <span class="badge-status-completed inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
                     Completed
                 </span>
                 {% else %}
                 <span class="badge-status-neutral inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
-                    {{ course.status | capitalize if course.status else 'Program' }}
+                    Unavailable
                 </span>
                 {% endif %}
             </div>
@@ -64,6 +65,62 @@
                 <span class="inline-flex items-center bg-black/25 border border-white/10 px-3 py-1.5 rounded-lg">
                     <i class="fas fa-language mr-2 text-brand-gold-light"></i> Medium: {{ course.language or 'Tamil' }}
                 </span>
+            </div>
+
+            <!-- Mobile-Only Above-The-Fold Admission & Enrollment Bar (< 1024px) -->
+            <div class="lg:hidden mt-6 pt-5 border-t border-white/15 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+                <div class="flex items-baseline space-x-2">
+                    <span class="font-serif text-2xl font-bold text-white tracking-tight">
+                        {{ course.price or 'Free' }}
+                    </span>
+                    {% if course.price and course.price.strip().lower() != 'free' %}
+                    <span class="text-xs text-brand-gold-light">program tuition</span>
+                    {% else %}
+                    <span class="text-xs text-emerald-300 font-medium">Community Access</span>
+                    {% endif %}
+                </div>
+                <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    {% set raw_st = (course.status or '') | lower | trim %}
+                    {% set st = 'upcoming' if raw_st == 'upcoming' else ('ongoing' if raw_st in ['ongoing', 'current'] else ('completed' if raw_st in ['completed', 'past'] else 'unavailable')) %}
+                    {% if st == 'completed' %}
+                        {% if course.youtube_url and course.youtube_url.strip() %}
+                        <a href="{{ course.youtube_url }}" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto bg-white text-brand-ink font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center text-xs shadow-xs cursor-pointer">
+                            <i class="fab fa-youtube text-red-600 mr-2 text-base"></i> Watch on Archive
+                        </a>
+                        {% else %}
+                        <button type="button" disabled aria-disabled="true" class="w-full sm:w-auto bg-white/20 text-white/60 font-medium py-2.5 px-4 rounded-lg text-xs cursor-not-allowed select-none border border-white/20 flex items-center justify-center">
+                            <i class="fab fa-youtube text-white/40 mr-2 text-base"></i> Archive Unavailable
+                        </button>
+                        {% endif %}
+                    {% elif st == 'ongoing' %}
+                        {% if course.youtube_url and course.youtube_url.strip() %}
+                        <a href="{{ course.youtube_url }}" target="_blank" rel="noopener noreferrer" class="youtube-watch-btn w-full sm:w-auto bg-white/15 hover:bg-white/25 text-white font-medium py-2.5 px-4 rounded-lg transition-colors border border-white/20 flex items-center justify-center text-xs cursor-pointer shadow-xs">
+                            <i class="fab fa-youtube text-red-400 mr-2 text-base"></i> Watch on YouTube
+                        </a>
+                        {% endif %}
+                        <button type="button" disabled aria-disabled="true" class="w-full sm:w-auto bg-white/20 text-white/70 font-medium py-2.5 px-4 rounded-lg text-xs cursor-not-allowed select-none border border-white/20 flex items-center justify-center">
+                            Enrolment Closed
+                        </button>
+                    {% elif st == 'upcoming' %}
+                        {% if course.youtube_url and course.youtube_url.strip() %}
+                        <a href="{{ course.youtube_url }}" target="_blank" rel="noopener noreferrer" class="youtube-watch-btn w-full sm:w-auto bg-white/15 hover:bg-white/25 text-white font-medium py-2.5 px-4 rounded-lg transition-colors border border-white/20 flex items-center justify-center text-xs cursor-pointer shadow-xs">
+                            <i class="fab fa-youtube text-red-400 mr-2 text-base"></i> Watch on YouTube
+                        </a>
+                        {% endif %}
+                        <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22%20(Fee%3A%20{{ (course.price or 'Free') | urlencode }}).%20Please%20share%20the%20details." 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="enroll-btn w-full sm:w-auto bg-brand-gold hover:bg-[#A37835] text-brand-deep font-bold py-2.5 px-5 rounded-lg transition-colors shadow-xs flex items-center justify-center text-xs cursor-pointer"
+                           data-id="{{ course.id }}"
+                           data-title="{{ course.title }}">
+                            <i class="fab fa-whatsapp mr-2 text-base"></i> Enroll via WhatsApp
+                        </a>
+                    {% else %}
+                        <button type="button" disabled aria-disabled="true" class="w-full sm:w-auto bg-white/20 text-white/60 font-medium py-2.5 px-4 rounded-lg text-xs cursor-not-allowed select-none border border-white/20 flex items-center justify-center">
+                            Registration Unavailable
+                        </button>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
@@ -161,24 +218,45 @@
                     </div>
 
                     <div class="space-y-3 mb-6">
-                        {% if course.youtube_url %}
-                        <a href="{{ course.youtube_url }}" target="_blank" rel="noopener noreferrer" class="youtube-watch-btn w-full bg-red-50 hover:bg-red-100 text-red-700 font-medium py-3 px-4 rounded-lg transition-colors border border-red-200 flex items-center justify-center text-sm cursor-pointer shadow-xs">
-                            <i class="fab fa-youtube text-red-600 mr-2 text-lg"></i> Watch on YouTube
-                        </a>
-                        {% endif %}
-                        {% if course.status == 'past' %}
-                        <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" rel="noopener noreferrer" class="w-full bg-brand-surface hover:bg-gray-200 text-brand-ink font-medium py-3 px-4 rounded-lg transition-colors border border-brand-hairline flex items-center justify-center text-sm cursor-pointer">
-                            <i class="fab fa-youtube text-red-600 mr-2 text-lg"></i> Watch Recordings on YouTube
-                        </a>
+                        {% set raw_st = (course.status or '') | lower | trim %}
+                        {% set st = 'upcoming' if raw_st == 'upcoming' else ('ongoing' if raw_st in ['ongoing', 'current'] else ('completed' if raw_st in ['completed', 'past'] else 'unavailable')) %}
+                        {% if st == 'completed' %}
+                            {% if course.youtube_url and course.youtube_url.strip() %}
+                            <a href="{{ course.youtube_url }}" target="_blank" rel="noopener noreferrer" class="w-full bg-brand-surface hover:bg-gray-200 text-brand-ink font-medium py-3 px-4 rounded-lg transition-colors border border-brand-hairline flex items-center justify-center text-sm cursor-pointer shadow-xs">
+                                <i class="fab fa-youtube text-red-600 mr-2 text-lg"></i> Watch on Archive
+                            </a>
+                            {% else %}
+                            <button type="button" disabled aria-disabled="true" class="w-full bg-gray-50 text-gray-400 border border-gray-200 font-medium py-3 px-4 rounded-lg text-sm cursor-not-allowed select-none flex items-center justify-center">
+                                <i class="fab fa-youtube text-gray-300 mr-2 text-lg"></i> Archive Unavailable
+                            </button>
+                            {% endif %}
+                        {% elif st == 'ongoing' %}
+                            {% if course.youtube_url and course.youtube_url.strip() %}
+                            <a href="{{ course.youtube_url }}" target="_blank" rel="noopener noreferrer" class="youtube-watch-btn w-full bg-red-50 hover:bg-red-100 text-red-700 font-medium py-3 px-4 rounded-lg transition-colors border border-red-200 flex items-center justify-center text-sm cursor-pointer shadow-xs">
+                                <i class="fab fa-youtube text-red-600 mr-2 text-lg"></i> Watch on YouTube
+                            </a>
+                            {% endif %}
+                            <button type="button" disabled aria-disabled="true" class="w-full bg-gray-100 text-gray-400 border border-gray-200 font-medium py-3 px-4 rounded-lg text-sm cursor-not-allowed select-none flex items-center justify-center">
+                                Enrolment Closed
+                            </button>
+                        {% elif st == 'upcoming' %}
+                            {% if course.youtube_url and course.youtube_url.strip() %}
+                            <a href="{{ course.youtube_url }}" target="_blank" rel="noopener noreferrer" class="youtube-watch-btn w-full bg-red-50 hover:bg-red-100 text-red-700 font-medium py-3 px-4 rounded-lg transition-colors border border-red-200 flex items-center justify-center text-sm cursor-pointer shadow-xs">
+                                <i class="fab fa-youtube text-red-600 mr-2 text-lg"></i> Watch on YouTube
+                            </a>
+                            {% endif %}
+                            <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22%20(Fee%3A%20{{ (course.price or 'Free') | urlencode }}).%20Please%20share%20the%20details." 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               class="enroll-btn w-full bg-brand-deep hover:bg-brand-primary text-white font-medium py-3 px-4 rounded-lg transition-colors shadow-xs flex items-center justify-center text-sm cursor-pointer"
+                               data-id="{{ course.id }}"
+                               data-title="{{ course.title }}">
+                                <i class="fab fa-whatsapp mr-2 text-base"></i> Enroll via WhatsApp
+                            </a>
                         {% else %}
-                        <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22%20(Fee%3A%20{{ (course.price or 'Free') | urlencode }}).%20Please%20share%20the%20details." 
-                           target="_blank" 
-                           rel="noopener noreferrer"
-                           class="enroll-btn w-full bg-brand-deep hover:bg-brand-primary text-white font-medium py-3 px-4 rounded-lg transition-colors shadow-xs flex items-center justify-center text-sm cursor-pointer"
-                           data-id="{{ course.id }}"
-                           data-title="{{ course.title }}">
-                            <i class="fab fa-whatsapp mr-2 text-base"></i> Enroll via WhatsApp
-                        </a>
+                            <button type="button" disabled aria-disabled="true" class="w-full bg-gray-100 text-gray-400 border border-gray-200 font-medium py-3 px-4 rounded-lg text-sm cursor-not-allowed select-none flex items-center justify-center">
+                                Registration Unavailable
+                            </button>
                         {% endif %}
 
                         <!-- Direct WhatsApp Share Button -->

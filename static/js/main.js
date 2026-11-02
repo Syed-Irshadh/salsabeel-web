@@ -62,6 +62,7 @@ window.confirmModal = function({ title, message, confirmText = 'Confirm', cancel
         }
         return;
     }
+    const lastActiveConfirmTrigger = document.activeElement;
     const titleEl = document.getElementById('confirmModalTitle');
     const msgEl = document.getElementById('confirmModalMessage');
     const confirmBtn = document.getElementById('confirmModalConfirmBtn');
@@ -75,9 +76,9 @@ window.confirmModal = function({ title, message, confirmText = 'Confirm', cancel
     if (confirmBtn) {
         confirmBtn.textContent = confirmText;
         if (isDestructive) {
-            confirmBtn.className = 'px-5 py-2 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl transition-all shadow-sm cursor-pointer';
+            confirmBtn.className = 'w-full sm:w-auto px-5 py-2 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl transition-all shadow-sm cursor-pointer text-center';
         } else {
-            confirmBtn.className = 'px-5 py-2 text-sm font-bold text-white bg-navy hover:bg-teal-700 rounded-xl transition-all shadow-sm cursor-pointer';
+            confirmBtn.className = 'w-full sm:w-auto px-5 py-2 text-sm font-bold text-white bg-navy hover:bg-teal-700 rounded-xl transition-all shadow-sm cursor-pointer text-center';
         }
     }
     if (cancelBtn) cancelBtn.textContent = cancelText;
@@ -85,20 +86,26 @@ window.confirmModal = function({ title, message, confirmText = 'Confirm', cancel
     if (icon && iconBg) {
         if (isDestructive) {
             icon.className = 'fas fa-trash-alt text-red-500';
-            iconBg.className = 'w-12 h-12 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center flex-shrink-0 text-xl';
+            iconBg.className = 'w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center flex-shrink-0 text-lg sm:text-xl';
         } else {
             icon.className = 'fas fa-question-circle text-gold';
-            iconBg.className = 'w-12 h-12 rounded-xl bg-amber-50 border border-gold/40 flex items-center justify-center flex-shrink-0 text-xl';
+            iconBg.className = 'w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-50 border border-gold/40 flex items-center justify-center flex-shrink-0 text-lg sm:text-xl';
         }
     }
 
     modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    if (confirmBtn) setTimeout(() => confirmBtn.focus(), 60);
 
     function closeModal() {
         modal.classList.add('hidden');
+        document.body.style.overflow = '';
         if (confirmBtn) confirmBtn.removeEventListener('click', handleConfirm);
         if (cancelBtn) cancelBtn.removeEventListener('click', closeModal);
         if (backdrop) backdrop.removeEventListener('click', closeModal);
+        if (lastActiveConfirmTrigger && typeof lastActiveConfirmTrigger.focus === 'function') {
+            lastActiveConfirmTrigger.focus();
+        }
     }
 
     function handleConfirm() {
@@ -445,10 +452,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Keyboard accessibility: Escape key closes drawer
+    // Keyboard accessibility: Escape key closes drawer and modals
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && mobileDrawer && !mobileDrawer.classList.contains('-translate-x-full')) {
-            closeMobileDrawer(true);
+        if (e.key === 'Escape') {
+            if (mobileDrawer && !mobileDrawer.classList.contains('-translate-x-full')) {
+                closeMobileDrawer(true);
+            } else if (authModal && !authModal.classList.contains('hidden')) {
+                closeModal();
+            } else if (memberGiftModal && !memberGiftModal.classList.contains('hidden')) {
+                closeMemberGiftModal();
+            } else if (forgotModal && !forgotModal.classList.contains('hidden')) {
+                closeForgotModal();
+            }
         }
     });
 
@@ -545,14 +560,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const nameInput = document.getElementById('name');
 
     let isSignUp = false;
+    let lastActiveModalTrigger = null;
 
     function openModal() {
+        lastActiveModalTrigger = document.activeElement;
         closeMobileDrawer();
-        if (authModal) authModal.classList.remove('hidden');
+        if (authModal) {
+            authModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                const targetInput = isSignUp ? document.getElementById('name') : document.getElementById('email');
+                if (targetInput) targetInput.focus();
+            }, 60);
+        }
     }
 
     function closeModal() {
-        if (authModal) authModal.classList.add('hidden');
+        if (authModal) {
+            authModal.classList.add('hidden');
+            document.body.style.overflow = '';
+            if (lastActiveModalTrigger && typeof lastActiveModalTrigger.focus === 'function') {
+                lastActiveModalTrigger.focus();
+            }
+        }
     }
 
     function setAuthMode(signUpMode) {
@@ -686,7 +716,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const giftSignInTriggerBtn = document.getElementById('giftSignInTriggerBtn');
     const copyGiftLinkBtn = document.getElementById('copyGiftLinkBtn');
 
+    let lastActiveGiftTrigger = null;
+
     async function openMemberGiftModal() {
+        lastActiveGiftTrigger = document.activeElement;
         closeMobileDrawer();
         if (window.__authReady) {
             await window.__authReady;
@@ -709,6 +742,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (memberGiftModal) memberGiftModal.classList.add('hidden');
         document.body.style.overflow = '';
         sessionStorage.setItem('dismissed_visitor_gift_promo', 'true');
+        if (lastActiveGiftTrigger && typeof lastActiveGiftTrigger.focus === 'function') {
+            lastActiveGiftTrigger.focus();
+        }
     }
     window.closeMemberGiftModal = closeMemberGiftModal;
 
@@ -812,19 +848,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let activeResetEmail = '';
 
+    let lastActiveForgotTrigger = null;
+
     function openForgotModal() {
+        lastActiveForgotTrigger = document.activeElement;
         closeModal();
         if (forgotStep1) forgotStep1.classList.remove('hidden');
         if (forgotStep2) forgotStep2.classList.add('hidden');
         if (forgotEmailInput) {
             const currentLoginEmail = document.getElementById('email')?.value.trim();
             if (currentLoginEmail) forgotEmailInput.value = currentLoginEmail;
+            setTimeout(() => forgotEmailInput.focus(), 60);
         }
-        if (forgotModal) forgotModal.classList.remove('hidden');
+        if (forgotModal) {
+            forgotModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
     }
 
     function closeForgotModal() {
-        if (forgotModal) forgotModal.classList.add('hidden');
+        if (forgotModal) {
+            forgotModal.classList.add('hidden');
+            document.body.style.overflow = '';
+            if (lastActiveForgotTrigger && typeof lastActiveForgotTrigger.focus === 'function') {
+                lastActiveForgotTrigger.focus();
+            }
+        }
     }
 
     if (forgotOpenBtn) forgotOpenBtn.addEventListener('click', openForgotModal);

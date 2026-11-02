@@ -17,9 +17,9 @@
     </div>
 
     <!-- Live Search & Multi-Level Filtering Control Hub (Muted Sage Surface) -->
-    <div class="bg-brand-sage/40 rounded-2xl border border-brand-sage/60 shadow-editorial p-5 sm:p-6 mb-10">
+    <div class="bg-brand-sage/40 rounded-2xl border border-brand-sage/60 shadow-editorial p-3.5 sm:p-5 lg:p-6 mb-6 sm:mb-8 lg:mb-10">
         <!-- Search Input -->
-        <div class="relative flex items-center mb-6">
+        <div class="relative flex items-center mb-4 sm:mb-6">
             <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-brand-deep">
                 <i class="fas fa-search text-sm"></i>
             </span>
@@ -33,7 +33,7 @@
         </div>
 
         <!-- Discipline Category Filter Hub -->
-        <div class="mb-5 pb-5 border-b border-brand-sage/60">
+        <div class="mb-4 sm:mb-5 pb-4 sm:pb-5 border-b border-brand-sage/60">
             <div class="flex items-center justify-between mb-3 text-xs">
                 <span class="font-bold uppercase tracking-wider text-brand-deep flex items-center">
                     Islamic Science Disciplines
@@ -43,8 +43,8 @@
                 </button>
             </div>
 
-            <!-- Mobile Quick Dropdown (Visible on Phone Screens) -->
-            <div class="sm:hidden mb-3">
+            <!-- Mobile Quick Dropdown (Visible on Phone Screens < sm for 100% discoverability) -->
+            <div class="sm:hidden mb-2">
                 <label for="mobileCategorySelect" class="sr-only">Filter by Discipline</label>
                 <div class="relative">
                     <select id="mobileCategorySelect" class="w-full bg-white border border-brand-sage rounded-lg px-3.5 py-2.5 text-xs font-medium text-brand-ink focus:ring-1 focus:ring-brand-deep focus:border-brand-deep appearance-none">
@@ -65,38 +65,40 @@
                 </div>
             </div>
 
-            <!-- Horizontally Scrollable Pills on Phones, Wrapping on Desktop -->
-            <div class="flex overflow-x-auto pb-2 sm:pb-0 sm:flex-wrap gap-2 scrollbar-none -mx-2 px-2 sm:mx-0 sm:px-0" id="categoryFilterBar" style="-webkit-overflow-scrolling: touch;">
-                <button type="button" class="category-pill active flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-deep text-white shadow-xs cursor-pointer transition-all" data-category="all">
-                    All Disciplines
-                </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="tafseer">
-                    Tafseer
-                </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="tajweed">
-                    Tajweed & Qira'at
-                </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="hadith">
-                    Hadith & Sunnah
-                </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="arabic">
-                    Arabic Language
-                </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="quran">
-                    Quran & Hifz
-                </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="fiqh">
-                    Fiqh & Shariah
-                </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="seerah">
-                    Seerah & History
-                </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="tazkiyah">
-                    Tazkiyah & Adab
-                </button>
-                <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="aqeedah">
-                    Aqeedah
-                </button>
+            <!-- Discipline Filter Pills (Visible on sm+ screens) -->
+            <div class="hidden sm:block">
+                <div class="flex flex-wrap gap-2" id="categoryFilterBar">
+                    <button type="button" class="category-pill active flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-deep text-white shadow-xs cursor-pointer transition-all" data-category="all">
+                        All Disciplines
+                    </button>
+                    <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="tafseer">
+                        Tafseer
+                    </button>
+                    <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="tajweed">
+                        Tajweed & Qira'at
+                    </button>
+                    <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="hadith">
+                        Hadith & Sunnah
+                    </button>
+                    <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="arabic">
+                        Arabic Language
+                    </button>
+                    <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="quran">
+                        Quran & Hifz
+                    </button>
+                    <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="fiqh">
+                        Fiqh & Shariah
+                    </button>
+                    <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="seerah">
+                        Seerah & History
+                    </button>
+                    <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="tazkiyah">
+                        Tazkiyah & Adab
+                    </button>
+                    <button type="button" class="category-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-brand-ink hover:bg-brand-sand/50 border border-brand-sage cursor-pointer transition-all" data-category="aqeedah">
+                        Aqeedah
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -167,8 +169,8 @@
              data-category="{{ course.category | lower }}"
              data-language="{{ (course.language or 'Tamil') | lower }}"
              data-desc="{{ (course.description or '') | lower }}">
-            <!-- Course Image with Clickable Zoom Overlay & Branded Fallback -->
-            <div class="relative group cursor-pointer overflow-hidden open-poster-btn aspect-[16/10] bg-brand-sand/30 flex-shrink-0"
+            <!-- Course Image with Clickable Zoom Overlay & Branded Fallback (Uncropped Proportions) -->
+            <div class="poster-frame aspect-[16/11] sm:aspect-[16/10] bg-[#EBE5D8] flex-shrink-0 border-b border-brand-hairline relative group cursor-pointer overflow-hidden open-poster-btn"
                  data-id="{{ course.id }}"
                  data-poster="{{ course.image_url }}"
                  data-title="{{ course.title }}"
@@ -182,12 +184,13 @@
                  data-youtube-url="{{ course.youtube_url or '' }}"
                  title="Click to view full poster">
                 {% if course.image_url and course.image_url.strip() %}
+                <img src="{{ course.image_url }}" alt="" class="poster-ambient-backdrop" aria-hidden="true">
                 <img src="{{ course.image_url }}" 
                      alt="{{ course.title }}" 
-                     class="course-card-image w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                     class="course-card-image poster-img-contain group-hover:scale-[1.01]"
                      onerror="this.style.display='none'; if(this.nextElementSibling){this.nextElementSibling.classList.remove('hidden');}"
                      loading="lazy">
-                <div class="course-poster-fallback hidden w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#F7F4EC] via-[#EFE9DC] to-[#E5DEC9] text-center border-b border-brand-hairline relative select-none">
+                <div class="course-poster-fallback hidden w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#F7F4EC] via-[#EFE9DC] to-[#E5DEC9] text-center border-b border-brand-hairline relative select-none z-10">
                     <span class="absolute text-5xl font-arabic text-brand-deep/5 pointer-events-none select-none">«سَلْسَبِيلًا»</span>
                     <div class="w-12 h-12 rounded-xl bg-white/80 border border-brand-gold/30 flex items-center justify-center mb-2 shadow-xs text-brand-deep">
                         {% set cat = (course.category or '') | lower %}
@@ -210,7 +213,7 @@
                     <span class="text-[11px] font-bold uppercase tracking-wider text-brand-deep/80">{{ course.category }}</span>
                 </div>
                 {% else %}
-                <div class="course-poster-fallback w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#F7F4EC] via-[#EFE9DC] to-[#E5DEC9] text-center border-b border-brand-hairline relative select-none">
+                <div class="course-poster-fallback w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#F7F4EC] via-[#EFE9DC] to-[#E5DEC9] text-center border-b border-brand-hairline relative select-none z-10">
                     <span class="absolute text-5xl font-arabic text-brand-deep/5 pointer-events-none select-none">«سَلْسَبِيلًا»</span>
                     <div class="w-12 h-12 rounded-xl bg-white/80 border border-brand-gold/30 flex items-center justify-center mb-2 shadow-xs text-brand-deep">
                         {% set cat = (course.category or '') | lower %}
@@ -233,22 +236,21 @@
                     <span class="text-[11px] font-bold uppercase tracking-wider text-brand-deep/80">{{ course.category }}</span>
                 </div>
                 {% endif %}
-                <!-- Hover Overlay with 'View Poster' hint -->
-                <div class="absolute inset-0 bg-brand-deep/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center backdrop-blur-xs">
+                <!-- Hover Overlay with 'View Details' hint -->
+                <div class="absolute inset-0 bg-brand-deep/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center backdrop-blur-xs z-15">
                     <span class="inline-flex items-center text-xs font-medium px-3 py-1.5 rounded-lg bg-white text-brand-ink shadow-md">
                         <i class="fas fa-search-plus mr-1.5 text-brand-deep"></i> View Details
                     </span>
                 </div>
-                <!-- Price Badge Overlay -->
-                <div class="absolute top-3 left-3 pointer-events-none">
+                <!-- Top Non-Obscuring Badge Bar -->
+                <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none z-20">
                     <span class="course-card-price-badge inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-md bg-white/95 text-brand-ink shadow-xs border border-brand-hairline">
                         {{ course.price or 'Free' }}
                     </span>
-                </div>
-                <!-- Status Badge Overlay (100% Opaque & Accessible with Neutral Fallback) -->
-                <div class="absolute top-3 right-3 pointer-events-none">
-                    {% set st = (course.status or '') | lower | trim %}
-                    {% if st == 'ongoing' or st == 'current' %}
+                    <!-- Status Badge Overlay (100% Opaque & Accessible with Neutral Fallback) -->
+                    {% set raw_st = (course.status or '') | lower | trim %}
+                    {% set st = 'upcoming' if raw_st == 'upcoming' else ('ongoing' if raw_st in ['ongoing', 'current'] else ('completed' if raw_st in ['completed', 'past'] else 'unavailable')) %}
+                    {% if st == 'ongoing' %}
                     <span class="course-card-status-badge badge-status-ongoing inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
                         Ongoing
                     </span>
@@ -256,19 +258,19 @@
                     <span class="course-card-status-badge badge-status-upcoming inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
                         Upcoming
                     </span>
-                    {% elif st == 'completed' or st == 'past' %}
+                    {% elif st == 'completed' %}
                     <span class="course-card-status-badge badge-status-completed inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
                         Completed
                     </span>
                     {% else %}
                     <span class="course-card-status-badge badge-status-neutral inline-flex items-center text-xs px-2.5 py-1 rounded-md shadow-xs">
-                        {{ course.status | capitalize if course.status else 'Program' }}
+                        Unavailable
                     </span>
                     {% endif %}
                 </div>
             </div>
 
-            <div class="p-6 flex flex-col flex-grow">
+            <div class="p-4 sm:p-6 flex flex-col flex-grow">
                 <div class="flex items-center justify-between mb-3 text-xs">
                     <div class="flex items-center gap-2 flex-wrap">
                         <span class="course-card-category-badge font-semibold text-brand-deep uppercase tracking-wider text-[11px]">
@@ -280,7 +282,7 @@
                         </span>
                     </div>
                     <button type="button" 
-                            class="open-poster-btn text-[11px] font-semibold text-brand-deep hover:underline transition-colors flex items-center cursor-pointer"
+                            class="open-poster-btn text-[11px] font-semibold text-brand-deep hover:underline transition-colors flex items-center cursor-pointer min-h-[36px]"
                             data-id="{{ course.id }}"
                             data-poster="{{ course.image_url }}" 
                             data-title="{{ course.title }}" 
@@ -297,15 +299,15 @@
                     </button>
                 </div>
 
-                <h3 class="font-serif text-xl font-bold tracking-tight text-brand-ink mb-2 leading-snug line-clamp-2">
+                <h3 class="font-serif text-lg sm:text-xl font-bold tracking-tight text-brand-ink mb-2 leading-snug line-clamp-2">
                     <a href="/viewer/{{ course.id }}" class="course-card-title-link hover:text-brand-deep transition-colors" title="View Full Course Syllabus & Details">
                         {{ course.title }}
                     </a>
                 </h3>
-                <p class="course-card-desc text-brand-muted mb-5 flex-grow text-sm leading-relaxed line-clamp-3">{{ course.description }}</p>
+                <p class="course-card-desc text-brand-muted mb-4 sm:mb-5 flex-grow text-xs sm:text-sm leading-relaxed line-clamp-3">{{ course.description }}</p>
                 
                 <!-- Schedule & Price Labels -->
-                <div class="flex flex-wrap items-center gap-2 mb-5 text-xs">
+                <div class="flex flex-wrap items-center gap-2 mb-4 sm:mb-5 text-xs">
                     {% if course.start_date %}
                     <span class="course-card-date text-[#3B4E50] bg-brand-ivory px-2.5 py-1 rounded-md border border-brand-hairline inline-flex items-center">
                         <i class="far fa-calendar-alt mr-1.5 text-brand-deep"></i> {{ course.start_date }}
@@ -317,30 +319,51 @@
                 </div>
                 
                 <!-- Action Buttons based on Status -->
-                {% if course.youtube_url %}
-                <a href="{{ course.youtube_url }}" target="_blank" rel="noopener noreferrer" class="youtube-watch-btn w-full bg-red-50 hover:bg-red-100 text-red-700 font-medium py-2 rounded-lg transition-colors border border-red-200 flex items-center justify-center text-xs sm:text-sm mb-2 shadow-2xs">
-                    <i class="fab fa-youtube text-red-600 mr-2 text-base"></i> Watch on YouTube
-                </a>
-                {% endif %}
-                {% set st = (course.status or '') | lower | trim %}
-                {% if st == 'past' or st == 'completed' %}
-                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full bg-brand-ivory hover:bg-brand-sand text-brand-ink font-semibold py-2.5 rounded-lg transition-colors border border-brand-hairline flex items-center justify-center text-sm shadow-xs">
-                    <i class="fab fa-youtube text-red-600 mr-2 text-base"></i> Watch Archive
-                </a>
+                {% set raw_st = (course.status or '') | lower | trim %}
+                {% set st = 'upcoming' if raw_st == 'upcoming' else ('ongoing' if raw_st in ['ongoing', 'current'] else ('completed' if raw_st in ['completed', 'past'] else 'unavailable')) %}
+                {% if st == 'completed' %}
+                    {% if course.youtube_url and course.youtube_url.strip() %}
+                    <a href="{{ course.youtube_url }}" target="_blank" rel="noopener noreferrer" class="w-full bg-brand-ivory hover:bg-brand-sand text-brand-ink font-semibold py-2.5 rounded-lg transition-colors border border-brand-hairline flex items-center justify-center text-sm shadow-xs min-h-[44px] cursor-pointer">
+                        <i class="fab fa-youtube text-red-600 mr-2 text-base"></i> Watch on Archive
+                    </a>
+                    {% else %}
+                    <button type="button" disabled aria-disabled="true" class="w-full bg-gray-50 text-gray-400 border border-gray-200 font-medium py-2.5 rounded-lg text-sm cursor-not-allowed select-none min-h-[44px] flex items-center justify-center">
+                        <i class="fab fa-youtube text-gray-300 mr-2 text-base"></i> Archive Unavailable
+                    </button>
+                    {% endif %}
+                {% elif st == 'ongoing' %}
+                    {% if course.youtube_url and course.youtube_url.strip() %}
+                    <a href="{{ course.youtube_url }}" target="_blank" rel="noopener noreferrer" class="youtube-watch-btn w-full bg-red-50 hover:bg-red-100 text-red-700 font-medium py-2 rounded-lg transition-colors border border-red-200 flex items-center justify-center text-xs sm:text-sm mb-2 shadow-2xs min-h-[40px]">
+                        <i class="fab fa-youtube text-red-600 mr-2 text-base"></i> Watch on YouTube
+                    </a>
+                    {% endif %}
+                    <button type="button" disabled aria-disabled="true" class="w-full bg-gray-100 text-gray-400 border border-gray-200 font-medium py-2.5 rounded-lg text-sm cursor-not-allowed select-none min-h-[44px] flex items-center justify-center">
+                        Enrolment Closed
+                    </button>
+                {% elif st == 'upcoming' %}
+                    {% if course.youtube_url and course.youtube_url.strip() %}
+                    <a href="{{ course.youtube_url }}" target="_blank" rel="noopener noreferrer" class="youtube-watch-btn w-full bg-red-50 hover:bg-red-100 text-red-700 font-medium py-2 rounded-lg transition-colors border border-red-200 flex items-center justify-center text-xs sm:text-sm mb-2 shadow-2xs min-h-[40px]">
+                        <i class="fab fa-youtube text-red-600 mr-2 text-base"></i> Watch on YouTube
+                    </a>
+                    {% endif %}
+                    <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22%20(Fee%3A%20{{ (course.price or 'Free') | urlencode }}).%20Please%20share%20the%20details." 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="enroll-btn w-full bg-brand-deep hover:bg-[#123E3D] text-white font-medium py-2.5 rounded-lg transition-colors shadow-xs flex items-center justify-center text-sm cursor-pointer min-h-[44px]" 
+                       data-id="{{ course.id }}" 
+                       data-title="{{ course.title }}">
+                        <i class="fab fa-whatsapp mr-2 text-base"></i> Enroll via WhatsApp
+                    </a>
                 {% else %}
-                <a href="https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22{{ course.title | urlencode }}%22%20(Fee%3A%20{{ (course.price or 'Free') | urlencode }}).%20Please%20share%20the%20details." 
-                   target="_blank" 
-                   class="enroll-btn w-full bg-brand-deep hover:bg-[#123E3D] text-white font-medium py-2.5 rounded-lg transition-colors shadow-xs flex items-center justify-center text-sm cursor-pointer" 
-                   data-id="{{ course.id }}" 
-                   data-title="{{ course.title }}">
-                    <i class="fab fa-whatsapp mr-2 text-base"></i> Enroll via WhatsApp
-                </a>
+                    <button type="button" disabled aria-disabled="true" class="w-full bg-gray-100 text-gray-400 border border-gray-200 font-medium py-2.5 rounded-lg text-sm cursor-not-allowed select-none min-h-[44px] flex items-center justify-center">
+                        Registration Unavailable
+                    </button>
                 {% endif %}
 
                 <!-- Admin Action Row (Visible only to authenticated administrators) -->
                 <div class="admin-only hidden pt-3 mt-3 border-t border-brand-hairline flex items-center gap-2">
                     <button type="button" 
-                            class="edit-course-btn flex-1 bg-brand-ivory hover:bg-brand-sand text-brand-ink font-medium py-2 px-3 rounded-lg transition-colors text-xs flex items-center justify-center cursor-pointer border border-brand-hairline"
+                            class="edit-course-btn flex-1 bg-brand-ivory hover:bg-brand-sand text-brand-ink font-medium py-2 px-3 rounded-lg transition-colors text-xs flex items-center justify-center cursor-pointer border border-brand-hairline min-h-[44px]"
                             data-id="{{ course.id }}"
                             data-title="{{ course.title }}"
                             data-category="{{ course.category }}"
@@ -355,7 +378,7 @@
                         <i class="fas fa-edit mr-1.5 text-brand-deep"></i> Edit Poster & Details
                     </button>
                     <button type="button" 
-                            class="delete-course-btn flex-shrink-0 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 hover:border-red-600 font-medium py-2 px-3 rounded-lg transition-colors text-xs flex items-center justify-center cursor-pointer" 
+                            class="delete-course-btn flex-shrink-0 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 hover:border-red-600 font-medium py-2 px-3 rounded-lg transition-colors text-xs flex items-center justify-center cursor-pointer min-h-[44px]" 
                             data-id="{{ course.id }}"
                             title="Delete Course">
                         <i class="fas fa-trash-alt"></i>
@@ -384,19 +407,19 @@
 <div id="posterModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="posterModalTitle">
     <div id="posterModalBackdrop" class="fixed inset-0 cursor-pointer" aria-hidden="true"></div>
     
-    <div class="relative max-w-2xl w-full bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-brand-hairline z-10">
+    <div class="relative max-w-2xl w-full bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col modal-viewport-dialog border border-brand-hairline z-10">
         <!-- Modal Header -->
-        <div class="flex items-center justify-between px-6 py-4 bg-brand-deep text-white border-b border-brand-hairline flex-shrink-0">
-            <div class="flex items-center space-x-3 overflow-hidden">
+        <div class="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 bg-brand-deep text-white border-b border-brand-hairline flex-shrink-0">
+            <div class="flex items-center space-x-2.5 sm:space-x-3 overflow-hidden min-w-0">
                 <span id="posterModalCategory" class="inline-block bg-white/20 text-white text-xs font-semibold uppercase tracking-wider py-0.5 px-2.5 rounded-md flex-shrink-0">Category</span>
-                <h3 id="posterModalTitle" class="font-serif text-lg sm:text-xl font-bold truncate">Course Poster</h3>
+                <h3 id="posterModalTitle" class="font-serif text-base sm:text-lg font-bold truncate">Course Poster</h3>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                 <button type="button" 
                         id="posterModalEditBtn" 
-                        class="admin-only hidden text-xs font-medium px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all flex items-center cursor-pointer"
+                        class="admin-only hidden text-xs font-medium px-2.5 sm:px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all flex items-center cursor-pointer"
                         title="Edit this course poster and details">
-                    <i class="fas fa-edit mr-1.5"></i> Edit Details
+                    <i class="fas fa-edit sm:mr-1.5"></i> <span class="hidden sm:inline">Edit Details</span>
                 </button>
                 <button type="button" id="closePosterModal" class="text-gray-300 hover:text-white text-2xl leading-none p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer" title="Close">
                     <i class="fas fa-times"></i>
@@ -405,13 +428,13 @@
         </div>
 
         <!-- Poster Image Container -->
-        <div class="overflow-auto p-4 sm:p-6 flex items-center justify-center bg-gray-900/5 flex-grow">
-            <img id="posterModalImage" src="/static/img/logo.jpeg" alt="Course Poster" class="max-h-[62vh] w-auto max-w-full rounded-lg shadow-md object-contain border border-brand-hairline">
+        <div class="overflow-auto p-3 sm:p-6 flex items-center justify-center bg-gray-900/5 flex-grow">
+            <img id="posterModalImage" src="/static/img/logo.jpeg" alt="Course Poster" class="max-h-[calc(100dvh-170px)] sm:max-h-[62vh] w-auto max-w-full rounded-lg shadow-md object-contain border border-brand-hairline">
         </div>
 
         <!-- Modal Footer -->
-        <div class="px-6 py-4 bg-brand-ivory border-t border-brand-hairline flex flex-col sm:flex-row items-center justify-between gap-3 flex-shrink-0">
-            <div class="text-xs text-brand-muted flex flex-wrap items-center gap-3">
+        <div class="px-4 sm:px-6 py-3 sm:py-4 bg-brand-ivory border-t border-brand-hairline flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 flex-shrink-0">
+            <div class="text-xs text-brand-muted flex flex-wrap items-center gap-2 sm:gap-3">
                 <span id="posterModalDate" class="hidden font-medium bg-white px-2.5 py-1 rounded-md border border-brand-hairline">
                     <i class="far fa-calendar-alt mr-1 text-brand-deep"></i> <span id="posterModalDateText"></span>
                 </span>
@@ -506,9 +529,9 @@
                         Status
                     </label>
                     <select id="editCourseStatus" name="status" class="w-full px-3.5 py-2.5 rounded-lg border border-brand-hairline text-sm focus:outline-none focus:ring-1 focus:ring-brand-deep focus:border-brand-deep bg-white">
-                        <option value="current">Ongoing</option>
+                        <option value="ongoing">Ongoing</option>
                         <option value="upcoming">Upcoming</option>
-                        <option value="past">Completed</option>
+                        <option value="completed">Completed</option>
                     </select>
                 </div>
                 <div>
@@ -897,21 +920,46 @@ document.addEventListener('DOMContentLoaded', () => {
             posterModalDate.classList.add('hidden');
         }
 
-        // Action button in footer
-        if (data.status === 'past') {
+        // Action button in footer based on canonical status
+        const rawStatus = (data.status || '').toLowerCase().trim();
+        const canonicalStatus = (rawStatus === 'upcoming') ? 'upcoming' :
+                                (rawStatus === 'ongoing' || rawStatus === 'current') ? 'ongoing' :
+                                (rawStatus === 'completed' || rawStatus === 'past') ? 'completed' : 'unavailable';
+
+        if (canonicalStatus === 'completed') {
+            if (data.youtube_url && data.youtube_url.trim()) {
+                posterModalAction.innerHTML = `
+                    <a href="${data.youtube_url.trim()}" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto inline-flex items-center justify-center bg-brand-ivory hover:bg-brand-sand text-brand-ink font-semibold py-2 px-5 rounded-lg transition-colors text-sm border border-brand-hairline cursor-pointer shadow-xs">
+                        <i class="fab fa-youtube text-red-600 mr-2 text-base"></i> Watch on Archive
+                    </a>
+                `;
+            } else {
+                posterModalAction.innerHTML = `
+                    <button type="button" disabled aria-disabled="true" class="w-full sm:w-auto inline-flex items-center justify-center bg-gray-100 text-gray-400 font-medium py-2 px-5 rounded-lg text-sm border border-gray-200 cursor-not-allowed select-none">
+                        <i class="fab fa-youtube text-gray-300 mr-2 text-base"></i> Archive Unavailable
+                    </button>
+                `;
+            }
+        } else if (canonicalStatus === 'ongoing') {
             posterModalAction.innerHTML = `
-                <a href="https://youtube.com/@salsabeelacademy-r1y?si=Tywlo6wUhx_En7f9" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center bg-brand-ivory hover:bg-brand-sand text-brand-ink font-medium py-2 px-5 rounded-lg transition-colors text-sm border border-brand-hairline cursor-pointer">
-                    <i class="fab fa-youtube text-red-600 mr-2 text-base"></i> Watch Archive
-                </a>
+                <button type="button" disabled aria-disabled="true" class="w-full sm:w-auto inline-flex items-center justify-center bg-gray-100 text-gray-400 font-medium py-2 px-5 rounded-lg text-sm border border-gray-200 cursor-not-allowed select-none">
+                    Enrolment Closed
+                </button>
             `;
-        } else {
+        } else if (canonicalStatus === 'upcoming') {
             const encodedTitle = encodeURIComponent(data.title || '');
             const encodedFee = encodeURIComponent(data.price || 'Free');
             const waUrl = `https://wa.me/919940523013?text=Assalamu%20Alaikum%20Salsabeel%20Academy%2C%20I%20would%20like%20to%20enroll%20in%20the%20course%3A%20%22${encodedTitle}%22%20(Fee%3A%20${encodedFee}).%20Please%20share%20the%20details.`;
             posterModalAction.innerHTML = `
-                <a href="${waUrl}" target="_blank" class="enroll-btn w-full sm:w-auto inline-flex items-center justify-center bg-brand-deep hover:bg-[#123E3D] text-white font-medium py-2 px-5 rounded-lg transition-colors text-sm shadow-xs cursor-pointer" data-id="${data.id || ''}" data-title="${data.title || ''}">
+                <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="enroll-btn w-full sm:w-auto inline-flex items-center justify-center bg-brand-deep hover:bg-[#123E3D] text-white font-medium py-2 px-5 rounded-lg transition-colors text-sm shadow-xs cursor-pointer" data-id="${data.id || ''}" data-title="${data.title || ''}">
                     <i class="fab fa-whatsapp mr-2 text-base"></i> Enroll via WhatsApp
                 </a>
+            `;
+        } else {
+            posterModalAction.innerHTML = `
+                <button type="button" disabled aria-disabled="true" class="w-full sm:w-auto inline-flex items-center justify-center bg-gray-100 text-gray-400 font-medium py-2 px-5 rounded-lg text-sm border border-gray-200 cursor-not-allowed select-none">
+                    Registration Unavailable
+                </button>
             `;
         }
 
@@ -964,7 +1012,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('editCourseId').value = data.id || '';
         document.getElementById('editCourseTitle').value = data.title || '';
         document.getElementById('editCourseCategory').value = data.category || '';
-        document.getElementById('editCourseStatus').value = data.status || 'current';
+        const rawModalStatus = (data.status || '').toLowerCase().trim();
+        const canonicalModalStatus = (rawModalStatus === 'upcoming') ? 'upcoming' :
+                                     (rawModalStatus === 'ongoing' || rawModalStatus === 'current') ? 'ongoing' :
+                                     (rawModalStatus === 'completed' || rawModalStatus === 'past') ? 'completed' : 'ongoing';
+        document.getElementById('editCourseStatus').value = canonicalModalStatus;
         document.getElementById('editCourseLanguage').value = data.language || 'Tamil';
         document.getElementById('editCoursePrice').value = data.price || '';
         document.getElementById('editCourseStartDate').value = data.startdate || '';
